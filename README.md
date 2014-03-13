@@ -7,3 +7,5 @@ training-computer-database-template
 
 3 - Start coding
 
+Note : 
+Go to https://github.com/jasonconard/ProjetFormationExcilys in order to see the beginning of the project.
