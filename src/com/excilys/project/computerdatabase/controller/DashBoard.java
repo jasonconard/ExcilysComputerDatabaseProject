@@ -68,7 +68,7 @@ public class DashBoard extends HttpServlet {
 		request.setAttribute("order", visibleOrder);
 		request.setAttribute("dir", dir);
 		logger.info("Order attribute setted");
-		
+		  
 		/* Searching managment */
 		String search = request.getParameter("search");
 		List<Computer> allComputer = null;
