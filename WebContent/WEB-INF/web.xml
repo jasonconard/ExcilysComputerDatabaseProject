@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>computer-database</display-name>
+  <welcome-file-list>
+    <welcome-file>DashBoard</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.sql.dataSource</param-name>
+    <param-value>jdbc/data</param-value>
+  </context-param>
+  <servlet>
+    <description></description>
+    <display-name>DashBoard</display-name>
+    <servlet-name>DashBoard</servlet-name>
+    <servlet-class>com.excilys.project.computerdatabase.controller.DashBoard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DashBoard</servlet-name>
+    <url-pattern>/DashBoard</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AddComputer</display-name>
+    <servlet-name>AddComputer</servlet-name>
+    <servlet-class>com.excilys.project.computerdatabase.controller.AddComputer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddComputer</servlet-name>
+    <url-pattern>/AddComputer</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditComputer</display-name>
+    <servlet-name>EditComputer</servlet-name>
+    <servlet-class>com.excilys.project.computerdatabase.controller.EditComputer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditComputer</servlet-name>
+    <url-pattern>/EditComputer</url-pattern>
+  </servlet-mapping>
+</web-app>
