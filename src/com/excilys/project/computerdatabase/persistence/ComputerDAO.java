@@ -3,12 +3,14 @@ package com.excilys.project.computerdatabase.persistence;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-
 import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
@@ -18,6 +20,7 @@ public class ComputerDAO {
 	private static final String table = "computer";
 	
 	public static ComputerDAO instance = null;
+	public static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
 	public List<Computer> retrieveAll(){
 		Connection con = ConnectionManager.getConnection();
@@ -51,8 +54,9 @@ public class ComputerDAO {
 			}
 			
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve all computers error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve all computers completed.");
 			closeAll(results,preparedStatement,con);
 		}
 		
@@ -94,8 +98,9 @@ public class ComputerDAO {
 			results.close();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve all computers with company name error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve all computers with company name completed.");
 			closeAll(results, preparedStatement, con);
 		}
 		
@@ -138,8 +143,9 @@ public class ComputerDAO {
 			results.close();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve all computers with company name and orderBy clause error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve all computers with company name and orderBy clause completed.");
 			closeAll(results, preparedStatement, con);
 		}
 		
@@ -179,8 +185,9 @@ public class ComputerDAO {
 			            .build());
 			}
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve all computers with company name and like clause error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve all computers with company name and like clause completed.");
 			closeAll(results,preparedStatement,con);
 		}
 
@@ -222,8 +229,9 @@ public class ComputerDAO {
 				);
 			}
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve all computers with company name and orderBy and like clause completed.");
 			closeAll(results,preparedStatement,con);
 		}
 
@@ -251,8 +259,9 @@ public class ComputerDAO {
 			results.close();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve company using computer id error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve company using computer id completed.");
 			closeAll(results,preparedStatement,con);
 		}
 		
@@ -267,7 +276,9 @@ public class ComputerDAO {
 		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
 				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
 				+ "WHERE cu.id = ?";
-		
+		String visualQuery = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
+				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
+				+ "WHERE cu.id = "+idComputer;
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 		
@@ -293,8 +304,9 @@ public class ComputerDAO {
 				            .build();
 			}
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve computer using id error. SQL query : "+visualQuery);
 		} finally{
+			logger.info("Retrieve computer using id completed.");
 			closeAll(results, preparedStatement, con);
 		}
 		
@@ -305,7 +317,12 @@ public class ComputerDAO {
 		Connection con = ConnectionManager.getConnection();
 		
 		String query = "INSERT INTO "+table+" VALUES(?,?,?,?,?)";
-		
+		String visualQuery = "INSERT INTO "+table+" VALUES("+computer.getId()+",'"+computer.getName()+"','"+computer.getIntroduced()+"','"+computer.getDiscontinued()+"'";
+		if(computer.getCompany()!=null){		
+			visualQuery += ","+computer.getCompany().getId()+")";
+		}else{
+			visualQuery += ", 0)";
+		}
 		PreparedStatement preparedStatement = null;
 		
 		try{
@@ -335,8 +352,9 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Insert computer error. SQL query : "+visualQuery);
 		} finally{
+			logger.info("Insert computer completed.");
 			closeAll(null,preparedStatement,con);
 		}
 	}
@@ -345,7 +363,7 @@ public class ComputerDAO {
 		Connection con = ConnectionManager.getConnection();
 		
 		String query = "DELETE FROM "+table+" WHERE id = ?";
-		
+		String visualQuery = "DELETE FROM "+table+" WHERE id = "+id;
 		PreparedStatement preparedStatement = null;
 		
 		try{
@@ -355,8 +373,9 @@ public class ComputerDAO {
 				
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Delete computer error. SQL query : "+visualQuery);
 		} finally{
+			logger.info("Delete computer completed.");
 			closeAll(null,preparedStatement,con);
 		}
 	}
@@ -368,6 +387,13 @@ public class ComputerDAO {
 		PreparedStatement preparedStatement = null;
 		
 		String query = "UPDATE "+table+" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?";
+		String visualQuery = "UPDATE "+table+" SET name='"+c.getName()+"', introduced='"+c.getIntroduced()
+							+"', discontinued='"+c.getDiscontinued()+"'";
+		if(c.getCompany()!=null){
+			visualQuery += ", company_id="+c.getCompany().getId()+" WHERE id = "+c.getId();
+		}else{
+			visualQuery += ", company_id= NULL WHERE id = "+c.getId();
+		}
 		try{
 			
 			
@@ -394,12 +420,12 @@ public class ComputerDAO {
 			}
 			
 			preparedStatement.setLong(5, c.getId());
-			
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			System.out.println("SQL query problem : "+query);
+			logger.error("Update computer error. SQL query : "+visualQuery);
 		} finally{
+			logger.info("Update computer completed.");
 			closeAll(results, preparedStatement, con);
 		}
 	}
@@ -415,7 +441,9 @@ public class ComputerDAO {
 			if(cn!=null){
 				cn.close();
 			}
+			logger.info("Every connections closed !");
 		} catch (SQLException e) {
+			logger.error("Connections closing failed.");
 			e.printStackTrace();
 		}
 	}

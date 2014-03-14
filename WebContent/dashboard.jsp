@@ -65,15 +65,29 @@
 			<tr>
 				<td colspan="4" style="vertical-align:middle;">
 						<c:if test="${lastPage!=-1}">
+							<a href="DashBoard?page=1&search=${search}&order=${order}&dir=${dir}">
+								<span class="glyphicon glyphicon-fast-backward"></span>
+							</a>
 							<a href="DashBoard?page=${lastPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-backward"></span>
 							</a>
+						</c:if>
+						<c:if test="${lastPage==-1}">
+							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
+							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
 						Page(${idPage}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
 							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-forward"></span>
 							</a>
+							<a href="DashBoard?page=${nbPage}&search=${search}&order=${order}&dir=${dir}">
+								<span class="glyphicon glyphicon-fast-forward"></span>
+							</a>
+						</c:if>
+						<c:if test="${nextPage==-1}">
+							<span class="unclickable glyphicon glyphicon-forward"></span>
+							<span class="unclickable glyphicon glyphicon-fast-forward"></span>
 						</c:if>
 				</td>
 				<td>	
@@ -106,15 +120,29 @@
 			<tr>
 				<td colspan="4" style="vertical-align:middle;">
 						<c:if test="${lastPage!=-1}">
+							<a href="DashBoard?page=1&search=${search}&order=${order}&dir=${dir}">
+								<span class="glyphicon glyphicon-fast-backward"></span>
+							</a>
 							<a href="DashBoard?page=${lastPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-backward"></span>
 							</a>
+						</c:if>
+						<c:if test="${lastPage==-1}">
+							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
+							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
 						Page(${idPage}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
 							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-forward"></span>
 							</a>
+							<a href="DashBoard?page=${nbPage}&search=${search}&order=${order}&dir=${dir}">
+								<span class="glyphicon glyphicon-fast-forward"></span>
+							</a>
+						</c:if>
+						<c:if test="${nextPage==-1}">
+							<span class="unclickable glyphicon glyphicon-forward"></span>
+							<span class="unclickable glyphicon glyphicon-fast-forward"></span>
 						</c:if>
 				</td>
 				<td>	

@@ -85,3 +85,6 @@ table.computers .header a {
 .select-form{
 	width: 400px;
 }
+.unclickable{
+	color : rgb(190, 190, 190);
+}

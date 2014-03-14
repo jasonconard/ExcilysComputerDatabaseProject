@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ConnectionManager {
 
 	private static boolean firstUsing = true;
@@ -10,16 +13,19 @@ public class ConnectionManager {
 	private static final String usr = "jee-cdb";
 	private static final String pwd = "password";
 	
+	public static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
+	
 	public static Connection getConnection(){
 		
 		/* Load jdbc driver one only time */
 		if(firstUsing){
 			try {
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				logger.info("JDBC driver loaded");
 				firstUsing = false;
 			} catch (InstantiationException | IllegalAccessException
 					| ClassNotFoundException e) {
-				e.printStackTrace();
+				logger.error("JDBC driver loading error");
 			}
 		}
 		
@@ -29,8 +35,10 @@ public class ConnectionManager {
 		try {
 			conn = DriverManager.getConnection(url,usr,pwd);
 		} catch (SQLException e) {
-			System.err.println("Connection problem with JDBC ... ");
+			logger.error("Connection problem with JDBC ... ");
 		}
+		
+		logger.info("Connection request complete");
 		return conn;
 	}
 }

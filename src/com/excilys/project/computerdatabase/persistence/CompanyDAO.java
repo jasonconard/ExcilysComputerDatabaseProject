@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
-
 import java.util.List;
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.project.computerdatabase.domain.Company;
 
@@ -15,6 +17,7 @@ public class CompanyDAO {
 	private static final String table = "company";
 	
 	public static CompanyDAO instance = null;
+	public static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
 	public List<Company> retrieveAll(){
 		Connection con = ConnectionManager.getConnection();
@@ -37,8 +40,9 @@ public class CompanyDAO {
 			}
 			
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Retrieve All Companies error. SQL query : "+query);
 		} finally{
+			logger.info("Retrieve All Companies complete !");
 			closeAll(results,preparedStatement,con);
 		}
 		
@@ -66,8 +70,10 @@ public class CompanyDAO {
 			}
 			
 		} catch (SQLException e) {
+			logger.error("Retrieve Company By Id error. SQL query : "+query);
 			System.err.println("SQL query problem : "+query);
 		} finally{
+			logger.info("Retrieve Company By Id complete !");
 			closeAll(results,preparedStatement,con);
 		}
 		
@@ -78,6 +84,7 @@ public class CompanyDAO {
 		Connection con = ConnectionManager.getConnection();
 		
 		String query = "INSERT INTO "+table+" VALUES(?,?)";
+		String visualQuery = "INSERT INTO "+table+" VALUES("+c.getId()+",'"+c.getName()+"')";
 		
 		PreparedStatement preparedStatement = null;
 		
@@ -90,8 +97,9 @@ public class CompanyDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			System.err.println("SQL query problem : "+query);
+			logger.error("Insert company error. SQL query  : "+visualQuery);
 		} finally{
+			logger.info("Insert company complete !");
 			closeAll(null,preparedStatement,con);
 		}
 	}
@@ -107,7 +115,9 @@ public class CompanyDAO {
 			if(cn!=null){
 				cn.close();
 			}
+			logger.info("Every connections closed !");
 		} catch (SQLException e) {
+			logger.error("Connections closing failed.");
 			e.printStackTrace();
 		}
 	}

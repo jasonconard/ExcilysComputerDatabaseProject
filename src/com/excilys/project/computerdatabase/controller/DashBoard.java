@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 
@@ -20,8 +17,6 @@ public class DashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	ComputerDAO computerDao = ComputerDAO.getInstance();
-	
-	public static Logger logger = LoggerFactory.getLogger(DashBoard.class);
 
 	public static final int NBLINEPERPAGES = 10;
 	
@@ -43,7 +38,6 @@ public class DashBoard extends HttpServlet {
 		if(idString != null && delete!=null && delete.equals("delete")){
 			long id = Long.parseLong(idString);
 			computerDao.delete(id);
-			logger.info("Deleting complete");
 		}
 		
 		
@@ -67,7 +61,6 @@ public class DashBoard extends HttpServlet {
 		
 		request.setAttribute("order", visibleOrder);
 		request.setAttribute("dir", dir);
-		logger.info("Order attribute setted");
 		  
 		/* Searching managment */
 		String search = request.getParameter("search");
