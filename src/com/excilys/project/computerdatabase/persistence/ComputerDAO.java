@@ -42,13 +42,13 @@ public class ComputerDAO {
 		}
 		
 		int idBegin = wc.getPage()*WrapperComputer.NBLINEPERPAGES; 
-		int idEnd   = idBegin+WrapperComputer.NBLINEPERPAGES; 
+		int nbLines   = WrapperComputer.NBLINEPERPAGES; 
 		
 		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
 				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
 				+ "WHERE cu.name LIKE '%"+like+"%' OR ca.name LIKE '%"+like+"%'"
 				+ "ORDER BY "+ order + " "+direction+" "
-				+ "LIMIT "+idBegin+", "+idEnd;
+				+ "LIMIT "+idBegin+", "+nbLines;
 		
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
