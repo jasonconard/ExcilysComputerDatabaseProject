@@ -76,7 +76,7 @@
 							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
 							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
-						Page(${idPage}/${nbPage}) 
+						Page(${page}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
 							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-forward"></span>
@@ -92,7 +92,7 @@
 				</td>
 				<td>	
 					<form action="" class="form-inline" method="GET">
-						<input type="number" id="searchbox" name="page" value="${idPage}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
+						<input type="number" id="searchbox" name="page" value="${page}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
 						<input type="submit" id="pagesubmit" value="Go to page" class="btn btn-primary btn-xs"/>
 						<input type="hidden" id="hiddenSearch" name="search" value="${search}"/>
 						<input type="hidden" id="hiddenOrder" name="order" value="${order}"/>
@@ -131,7 +131,7 @@
 							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
 							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
-						Page(${idPage}/${nbPage}) 
+						Page(${page}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
 							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
 								<span class="glyphicon glyphicon-forward"></span>
@@ -147,7 +147,7 @@
 				</td>
 				<td>	
 					<form action="" class="form-inline" method="GET">
-						<input type="number" id="searchbox" name="page" value="${idPage}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
+						<input type="number" id="searchbox" name="page" value="${page}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
 						<input type="submit" id="pagesubmit" value="Go to page" class="btn btn-primary btn-xs"/>
 						<input type="hidden" id="hiddenSearch" name="search" value="${search}"/>
 						<input type="hidden" id="hiddenOrder" name="order" value="${order}"/>

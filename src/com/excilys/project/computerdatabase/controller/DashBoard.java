@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.persistence.WrapperComputer;
+import com.excilys.project.computerdatabase.domain.WrapperComputer;
 import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
@@ -81,13 +81,9 @@ public class DashBoard extends HttpServlet {
 		}
 		
 		int nbPage = nbComputer/WrapperComputer.NBLINEPERPAGES+1;
-		//int indLineMin = (idPage-1)*NBLINEPERPAGES;
-		//int indLineMax = indLineMin+NBLINEPERPAGES-1;
 		
-		request.setAttribute("idPage", idPage);
+		request.setAttribute("page", idPage);
 		request.setAttribute("nbPage", nbPage);
-		//request.setAttribute("indLineMin", indLineMin);
-		//request.setAttribute("indLineMax", indLineMax);
 		
 		if(idPage<nbPage){
 			request.setAttribute("nextPage", idPage+1);

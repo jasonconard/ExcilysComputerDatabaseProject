@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.project.computerdatabase.domain.Company;
+import com.excilys.project.computerdatabase.services.LogsServices;
 
 public class CompanyDAO {
 	
@@ -18,6 +19,8 @@ public class CompanyDAO {
 	
 	public static CompanyDAO instance = null;
 	public static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
+	
+	private static LogsServices logsServices = LogsServices.getInstance();
 	
 	public List<Company> retrieveAll(Connection connection){
 		
@@ -39,9 +42,11 @@ public class CompanyDAO {
 			}
 			
 		} catch (SQLException e) {
-			logger.error("Retrieve All Companies error. SQL query : "+query);
+			logsServices.insert("Retrieve All Companies error. SQL query : "+query, "Error");
+			//logger.error("Retrieve All Companies error. SQL query : "+query);
 		} finally{
-			logger.info("Retrieve All Companies complete !");
+			logsServices.insert("Retrieve All Companies complete !", "Complete");
+			//logger.info("Retrieve All Companies complete !");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -68,10 +73,12 @@ public class CompanyDAO {
 			}
 			
 		} catch (SQLException e) {
-			logger.error("Retrieve Company By Id error. SQL query : "+query);
-			System.err.println("SQL query problem : "+query);
+			logsServices.insert("Retrieve Company By Id error. SQL query : "+query, "Error");
+			//logger.error("Retrieve Company By Id error. SQL query : "+query);
+			//System.err.println("SQL query problem : "+query);
 		} finally{
-			logger.info("Retrieve Company By Id complete !");
+			logsServices.insert("Retrieve Company By Id complete !", "Complete");
+			//logger.info("Retrieve Company By Id complete !");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -93,9 +100,11 @@ public class CompanyDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logger.error("Insert company error. SQL query  : "+visualQuery);
+			logsServices.insert("Insert company error. SQL query  : "+visualQuery, "Error");
+			//logger.error("Insert company error. SQL query  : "+visualQuery);
 		} finally{
-			logger.info("Insert company complete !");
+			logsServices.insert("Insert company complete !", "Complete");
+			//logger.info("Insert company complete !");
 			closeAll(null,preparedStatement);
 		}
 	}

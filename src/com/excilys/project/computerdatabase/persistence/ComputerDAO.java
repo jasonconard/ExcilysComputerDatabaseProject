@@ -14,13 +14,18 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.domain.WrapperComputer;
+import com.excilys.project.computerdatabase.services.LogsServices;
 
 public class ComputerDAO {
 	
 	private static final String table = "computer";
 	
 	public static ComputerDAO instance = null;
+	
 	public static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	
+	private static LogsServices logsServices = LogsServices.getInstance();
 	
 	public List<Computer> retrieveAllWithCompanyNameByWrapper(WrapperComputer wc, Connection connection){
 		
@@ -76,9 +81,11 @@ public class ComputerDAO {
 				);
 			}
 		} catch (SQLException e) {
-			logger.error("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query);
+			logsServices.insert("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query, "Error");
+			//logger.error("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query);
 		} finally{
-			logger.info("Retrieve all computers with company name and orderBy and like clause completed.");
+			logsServices.insert("Retrieve all computers with company name and orderBy and like clause completed", "Complete");
+			//logger.info("Retrieve all computers with company name and orderBy and like clause completed.");
 			closeAll(results,preparedStatement);
 		}
 
@@ -105,9 +112,11 @@ public class ComputerDAO {
 			results.close();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			logger.error("Retrieve company using computer id error. SQL query : "+query);
+			logsServices.insert("Retrieve company using computer id error. SQL query : "+query, "Error");
+			//logger.error("Retrieve company using computer id error. SQL query : "+query);
 		} finally{
-			logger.info("Retrieve company using computer id completed.");
+			logsServices.insert("Retrieve company using computer id completed.", "Complete");
+			//logger.info("Retrieve company using computer id completed.");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -148,9 +157,11 @@ public class ComputerDAO {
 				            .build();
 			}
 		} catch (SQLException e) {
-			logger.error("Retrieve computer using id error. SQL query : "+visualQuery);
+			logsServices.insert("Retrieve computer using id error. SQL query : "+visualQuery, "Error");
+			//logger.error("Retrieve computer using id error. SQL query : "+visualQuery);
 		} finally{
-			logger.info("Retrieve computer using id completed.");
+			logsServices.insert("Retrieve computer using id completed.", "Complete");
+			//logger.info("Retrieve computer using id completed.");
 			closeAll(results, preparedStatement);
 		}
 		
@@ -194,9 +205,11 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logger.error("Insert computer error. SQL query : "+visualQuery);
+			logsServices.insert("Insert computer error. SQL query : "+visualQuery, "Error");
+			//logger.error("Insert computer error. SQL query : "+visualQuery);
 		} finally{
-			logger.info("Insert computer completed.");
+			logsServices.insert("Insert computer completed.", "Complete");
+			//logger.info("Insert computer completed.");
 			closeAll(null,preparedStatement);
 		}
 	}
@@ -213,9 +226,11 @@ public class ComputerDAO {
 				
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Delete computer error. SQL query : "+visualQuery);
+			logsServices.insert("Delete computer error. SQL query : "+visualQuery, "Error");
+			//logger.error("Delete computer error. SQL query : "+visualQuery);
 		} finally{
-			logger.info("Delete computer completed.");
+			logsServices.insert("Delete computer completed", "Complete");
+			//logger.info("Delete computer completed.");
 			closeAll(null,preparedStatement);
 		}
 	}
@@ -265,9 +280,11 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logger.error("Update computer error. SQL query : "+visualQuery);
+			logsServices.insert("Update computer error. SQL query : "+visualQuery, "Error");
+			//logger.error("Update computer error. SQL query : "+visualQuery);
 		} finally{
-			logger.info("Update computer completed.");
+			logsServices.insert("Update computer completed.", "Complete");
+			//logger.info("Update computer completed.");
 			closeAll(results, preparedStatement);
 		}
 	}
@@ -289,9 +306,11 @@ public class ComputerDAO {
 				count = results.getInt("countComputer");
 			}
 		} catch (SQLException e) {
-			logger.error("Computer count error. SQL query : "+query);
+			logsServices.insert("Computer count error. SQL query : "+query, "Error");
+			//logger.error("Computer count error. SQL query : "+query);
 		} finally{
-			logger.info("Computer count completed.");
+			logsServices.insert("Computer count completed.", "Complete");
+			//logger.info("Computer count completed.");
 			closeAll(results,preparedStatement);
 		}
 
@@ -306,8 +325,10 @@ public class ComputerDAO {
 			if(ps!=null){
 				ps.close();
 			}
+			//logsServices.insert("Every connections closed !", "Complete");
 			logger.info("Every connections closed !");
 		} catch (SQLException e) {
+			//logsServices.insert("Every connections failed !", "Error");
 			logger.error("Connections closing failed.");
 			e.printStackTrace();
 		}

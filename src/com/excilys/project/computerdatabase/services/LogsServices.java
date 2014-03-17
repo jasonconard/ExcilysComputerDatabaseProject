@@ -4,26 +4,26 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.excilys.project.computerdatabase.domain.Company;
-import com.excilys.project.computerdatabase.persistence.CompanyDAO;
+import com.excilys.project.computerdatabase.domain.Logs;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
+import com.excilys.project.computerdatabase.persistence.LogsDAO;
 
-public class CompanyServices {
+public class LogsServices {
 
-	public static CompanyServices instance = null;
+	public static LogsServices instance = null;
 
-	private CompanyDAO companyDAO = CompanyDAO.getInstance();
+	private LogsDAO logsDAO = LogsDAO.getInstance();
 
-	public List<Company> getAllCompanies(){
+	public List<Logs> getAllLogs(){
 		Connection connection = null;
-		List<Company> companies = null;
+		List<Logs> logs = null;
 		try{
 			connection = ConnectionManager.getConnection();
 			connection.setAutoCommit(false);
 
 			//traitement des différentes instructions composant la transaction
-			companies = companyDAO.retrieveAll(connection);
-			if(companies!=null){	  
+			logs = logsDAO.retrieveAll(connection);
+			if(logs!=null){	  
 				connection.commit(); // c'est ici que l'on valide la transaction
 				connection.setAutoCommit(true);
 			}else{
@@ -37,20 +37,20 @@ public class CompanyServices {
 			try{connection.close();}catch(Exception e){}
 		}
 
-		return companies;
+		return logs;
 	}
 
-	public Company getCompany(long idCompany){
+	public Logs getLog(long idLog){
 		Connection connection = null;
-		Company company = null;
+		Logs log = null;
 
 		try{
 			connection = ConnectionManager.getConnection();
 			connection.setAutoCommit(false);
 
-			company = companyDAO.retrieveByCompanyId(idCompany, connection);
+			log = logsDAO.retrieveByLogId(idLog, connection);
 
-			if(company!=null){	  
+			if(log!=null){	  
 				connection.commit();
 				connection.setAutoCommit(true);
 			}else{
@@ -64,17 +64,17 @@ public class CompanyServices {
 			try{connection.close();}catch(Exception e){}
 		}
 
-		return company;
+		return log;
 	}
 
-	public void insert(Company company){
+	public void insert(String description, String type){
 		Connection connection = null;
 
 		try{
 			connection = ConnectionManager.getConnection();
 			connection.setAutoCommit(false);
 
-			companyDAO.insert(company, connection);
+			logsDAO.insert(description, type, connection);
 
 			connection.commit();
 			connection.setAutoCommit(true);
@@ -88,9 +88,9 @@ public class CompanyServices {
 		}
 	}
 
-	synchronized public static CompanyServices getInstance(){
+	synchronized public static LogsServices getInstance(){
 		if(instance == null){
-			instance = new CompanyServices();
+			instance = new LogsServices();
 		}
 		return instance;
 	}

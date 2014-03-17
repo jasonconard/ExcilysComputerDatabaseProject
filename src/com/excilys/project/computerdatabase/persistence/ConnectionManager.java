@@ -15,6 +15,7 @@ public class ConnectionManager {
 	private static final String url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
 	private static final String usr = "jee-cdb";
 	private static final String pwd = "password";
+	//private static int nbAppel = 0;
 	
 	public static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
@@ -74,7 +75,7 @@ public class ConnectionManager {
 			}
 			
 		}
-		
+		//System.out.println("Nombre d'appel = "+(++nbAppel) + "\n nb Connection libres = "+connectionPool.getTotalFree());
 		Connection connection = null;	
 		try {
 			connection = connectionPool.getConnection();
@@ -82,6 +83,7 @@ public class ConnectionManager {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
+		
 		return connection;
 	}
 	

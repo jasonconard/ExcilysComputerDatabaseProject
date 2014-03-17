@@ -1,4 +1,4 @@
-package com.excilys.project.computerdatabase.persistence;
+package com.excilys.project.computerdatabase.domain;
 
 public class WrapperComputer {
 	private int page;
