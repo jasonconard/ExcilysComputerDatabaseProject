@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.persistence.ComputerDAO;
+import com.excilys.project.computerdatabase.persistence.WrapperComputer;
+import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
  * Servlet implementation class DashBoard
@@ -16,9 +17,7 @@ import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 public class DashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	ComputerDAO computerDao = ComputerDAO.getInstance();
-
-	public static final int NBLINEPERPAGES = 10;
+	ComputerServices computerServices = ComputerServices.getInstance();
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -37,7 +36,7 @@ public class DashBoard extends HttpServlet {
 		String delete = request.getParameter("delete");
 		if(idString != null && delete!=null && delete.equals("delete")){
 			long id = Long.parseLong(idString);
-			computerDao.delete(id);
+			computerServices.delete(id);
 		}
 		
 		
@@ -61,22 +60,13 @@ public class DashBoard extends HttpServlet {
 		
 		request.setAttribute("order", visibleOrder);
 		request.setAttribute("dir", dir);
-		  
+		
 		/* Searching managment */
 		String search = request.getParameter("search");
-		List<Computer> allComputer = null;
-		
-		if(search == null || search.length()==0){
-			allComputer = computerDao.retrieveAllWithCompanyNameOrderBy(order, dir);
-			request.setAttribute("search", "");
-		}else{
-			allComputer = computerDao.retrieveAllWithCompanyNameLikeOrder(search, order, dir);
-			request.setAttribute("search", search);
+		if(search==null){
+			search = "";
 		}
-		
-		request.setAttribute("allComputer", allComputer);
-		request.setAttribute("nbComputer", allComputer.size());
-		
+		int nbComputer = computerServices.getComputerNumber(search);
 		
 		/* Pagination managment */
 		String idPageString = request.getParameter("page");
@@ -90,14 +80,14 @@ public class DashBoard extends HttpServlet {
 			}
 		}
 		
-		int nbPage = allComputer.size()/NBLINEPERPAGES +1;
-		int indLineMin = (idPage-1)*NBLINEPERPAGES;
-		int indLineMax = indLineMin+NBLINEPERPAGES-1;
+		int nbPage = nbComputer/WrapperComputer.NBLINEPERPAGES+1;
+		//int indLineMin = (idPage-1)*NBLINEPERPAGES;
+		//int indLineMax = indLineMin+NBLINEPERPAGES-1;
 		
 		request.setAttribute("idPage", idPage);
 		request.setAttribute("nbPage", nbPage);
-		request.setAttribute("indLineMin", indLineMin);
-		request.setAttribute("indLineMax", indLineMax);
+		//request.setAttribute("indLineMin", indLineMin);
+		//request.setAttribute("indLineMax", indLineMax);
 		
 		if(idPage<nbPage){
 			request.setAttribute("nextPage", idPage+1);
@@ -110,6 +100,16 @@ public class DashBoard extends HttpServlet {
 			request.setAttribute("lastPage", -1);
 		}
 		
+		
+		List<Computer> allComputer = null;
+		WrapperComputer params = new WrapperComputer(idPage-1, order, dir, search);
+		
+		allComputer = computerServices.getAllComputers(params);
+		
+		
+		request.setAttribute("search", search);
+		request.setAttribute("allComputer", allComputer);
+		request.setAttribute("nbComputer", nbComputer);
 		
 		/* Redirection */
 		request.getRequestDispatcher("dashboard.jsp").forward(request, response);

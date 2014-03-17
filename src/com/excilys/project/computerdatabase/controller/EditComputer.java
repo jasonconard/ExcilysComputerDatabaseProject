@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.persistence.CompanyDAO;
-import com.excilys.project.computerdatabase.persistence.ComputerDAO;
+import com.excilys.project.computerdatabase.services.CompanyServices;
+import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
  * Servlet implementation class AddComputer
@@ -21,8 +21,8 @@ import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	CompanyDAO companyDao = CompanyDAO.getInstance();
-	ComputerDAO computerDao = ComputerDAO.getInstance();
+	CompanyServices companyServices = CompanyServices.getInstance();
+	ComputerServices computerServices = ComputerServices.getInstance();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -38,14 +38,14 @@ public class EditComputer extends HttpServlet {
 		
 		if(idString != null && idString.length()>0){
 			long id = Long.parseLong(idString);
-			Computer computer = computerDao.retrieveByComputerId(id);
+			Computer computer = computerServices.getComputer(id);
 			if(computer!=null){
 				request.setAttribute("computer",computer);
 			}
 		}
 		
 		List<Company> allCompany = null;
-		allCompany = companyDao.retrieveAll();
+		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		request.getRequestDispatcher("editComputer.jsp").forward(request, response);
 	}
@@ -56,7 +56,7 @@ public class EditComputer extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Searching for all companies		
 		List<Company> allCompany = null;
-		allCompany = companyDao.retrieveAll();
+		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		
 		
@@ -74,7 +74,7 @@ public class EditComputer extends HttpServlet {
 		
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		company = companyDao.retrieveByCompanyId(companyId);
+		company = companyServices.getCompany(companyId);
 		
 		
 		
@@ -117,7 +117,7 @@ public class EditComputer extends HttpServlet {
 		            .discontinued(discontinuedDate)
 		            .build();
 			}
-			computerDao.update(computer);
+			computerServices.update(computer);
 			String message = "Computer modified";
 			request.setAttribute("message", message);
 		}

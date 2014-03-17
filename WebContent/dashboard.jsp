@@ -101,7 +101,7 @@
 				</td>
 			</tr>
 		
-			<c:forEach var="entry" items="${requestScope['allComputer']}" begin="${indLineMin}" end="${indLineMax}">
+			<c:forEach var="entry" items="${requestScope['allComputer']}">
 				<tr>
 					<td>${entry.name}</td>
 					<td>${entry.introduced}</td>

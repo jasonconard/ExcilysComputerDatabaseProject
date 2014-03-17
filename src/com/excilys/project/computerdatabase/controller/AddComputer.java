@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.persistence.CompanyDAO;
-import com.excilys.project.computerdatabase.persistence.ComputerDAO;
+import com.excilys.project.computerdatabase.services.CompanyServices;
+import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
  * Servlet implementation class AddComputer
@@ -21,8 +21,8 @@ import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	CompanyDAO companyDao = CompanyDAO.getInstance();
-	ComputerDAO computerDao = ComputerDAO.getInstance();
+	CompanyServices companyServices = CompanyServices.getInstance();
+	ComputerServices computerServices = ComputerServices.getInstance();
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,7 +36,7 @@ public class AddComputer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Company> allCompany = null;
-		allCompany = companyDao.retrieveAll();
+		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		request.getRequestDispatcher("addComputer.jsp").forward(request, response);
 	}
@@ -58,7 +58,7 @@ public class AddComputer extends HttpServlet {
 		
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		company = companyDao.retrieveByCompanyId(companyId);
+		company = companyServices.getCompany(companyId);
 		
 		
 		/* Error searching */
@@ -99,7 +99,7 @@ public class AddComputer extends HttpServlet {
 		            .discontinued(discontinuedDate)
 		            .build();
 			}
-			computerDao.insert(computer);
+			computerServices.insert(computer);
 			String message = "Computer Added";
 			request.setAttribute("message", message);
 		}

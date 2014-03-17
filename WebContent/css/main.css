@@ -88,3 +88,7 @@ table.computers .header a {
 .unclickable{
 	color : rgb(190, 190, 190);
 }
+.navbar-inverse{
+	background-color: #DFDFDF;
+	border-color: #646464;
+}

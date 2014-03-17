@@ -22,192 +22,39 @@ public class ComputerDAO {
 	public static ComputerDAO instance = null;
 	public static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	
-	public List<Computer> retrieveAll(){
-		Connection con = ConnectionManager.getConnection();
+	public List<Computer> retrieveAllWithCompanyNameByWrapper(WrapperComputer wc, Connection connection){
 		
 		List<Computer> alc = new ArrayList<Computer>();
 		
-		String query = "SELECT * FROM "+table;
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = con.prepareStatement(query);
-			results = preparedStatement.executeQuery();
-			
-			while(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				Date introduced = results.getDate("introduced");
-				Date discontinued = results.getDate("discontinued");
-				long companyId = results.getLong("company_id");
-				alc.add(
-						new Computer.ComputerBuilder(id, name)
-						.introduced(introduced)
-			            .discontinued(discontinued)
-			            .company(
-			            		new Company.CompanyBuilder(companyId)
-			            		.build()
-			            		)
-			            .build()
-				);
-			}
-			
-		} catch (SQLException e) {
-			logger.error("Retrieve all computers error. SQL query : "+query);
-		} finally{
-			logger.info("Retrieve all computers completed.");
-			closeAll(results,preparedStatement,con);
+		String like = "";
+		if(wc.getFilter()!=null){
+			like +=wc.getFilter();
 		}
 		
-		return alc;
-	}
-	
-	public List<Computer> retrieveAllWithCompanyName(){
-		Connection con = ConnectionManager.getConnection();
-		
-		List<Computer> alc = new ArrayList<Computer>();
-		
-		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ";
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = con.prepareStatement(query);
-			results = preparedStatement.executeQuery();
-			while(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				Date introduced = results.getDate("introduced");
-				Date discontinued = results.getDate("discontinued");
-				long companyId = results.getLong("company_id");
-				String companyName = results.getString("name2");
-				alc.add(
-						new Computer.ComputerBuilder(id, name)
-						.introduced(introduced)
-			            .discontinued(discontinued)
-			            .company(
-			            		new Company.CompanyBuilder(companyId)
-			            		.name(companyName)
-			            		.build()
-			            		)
-			            .build()
-				);
-			}
-			results.close();
-			preparedStatement.close();
-		} catch (SQLException e) {
-			logger.error("Retrieve all computers with company name error. SQL query : "+query);
-		} finally{
-			logger.info("Retrieve all computers with company name completed.");
-			closeAll(results, preparedStatement, con);
+		String order = "";
+		if(wc.getColumn()!=null){
+			order +=wc.getColumn();
 		}
 		
-		return alc;
-	}
-	
-	public List<Computer> retrieveAllWithCompanyNameOrderBy(String order, String direction){
-		Connection con = ConnectionManager.getConnection();
-		
-		List<Computer> alc = new ArrayList<Computer>();
-		
-		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "ORDER BY "+ order + " "+direction;
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = con.prepareStatement(query);
-			results = preparedStatement.executeQuery();
-			while(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				Date introduced = results.getDate("introduced");
-				Date discontinued = results.getDate("discontinued");
-				long companyId = results.getLong("company_id");
-				String companyName = results.getString("name2");
-				alc.add(
-						new Computer.ComputerBuilder(id, name)
-						.introduced(introduced)
-			            .discontinued(discontinued)
-			            .company(
-			            		new Company.CompanyBuilder(companyId)
-			            		.name(companyName)
-			            		.build()
-			            		)
-			            .build()
-			    );
-			}
-			results.close();
-			preparedStatement.close();
-		} catch (SQLException e) {
-			logger.error("Retrieve all computers with company name and orderBy clause error. SQL query : "+query);
-		} finally{
-			logger.info("Retrieve all computers with company name and orderBy clause completed.");
-			closeAll(results, preparedStatement, con);
+		String direction = "";
+		if(wc.getDirection()!=null){
+			direction +=wc.getDirection();
 		}
 		
-		return alc;
-	}
-	
-	public List<Computer> retrieveAllWithCompanyNameLike(String like){
-		Connection con = ConnectionManager.getConnection();
-		
-		List<Computer> alc = new ArrayList<Computer>();
-		
-		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "WHERE cu.name LIKE '%"+like+"%' OR ca.name LIKE '%"+like+"%'";
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = con.prepareStatement(query);
-			results = preparedStatement.executeQuery();
-			while(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				Date introduced = results.getDate("introduced");
-				Date discontinued = results.getDate("discontinued");
-				long companyId = results.getLong("company_id");
-				String companyName = results.getString("name2");
-				alc.add(
-						new Computer.ComputerBuilder(id, name)
-						.introduced(introduced)
-			            .discontinued(discontinued)
-			            .company(
-			            		new Company.CompanyBuilder(companyId)
-			            		.name(companyName)
-			            		.build()
-			            		)
-			            .build());
-			}
-		} catch (SQLException e) {
-			logger.error("Retrieve all computers with company name and like clause error. SQL query : "+query);
-		} finally{
-			logger.info("Retrieve all computers with company name and like clause completed.");
-			closeAll(results,preparedStatement,con);
-		}
-
-		return alc;
-	}
-	
-	public List<Computer> retrieveAllWithCompanyNameLikeOrder(String like, String order, String direction){
-		Connection con = ConnectionManager.getConnection();
-		
-		List<Computer> alc = new ArrayList<Computer>();
+		int idBegin = wc.getPage()*WrapperComputer.NBLINEPERPAGES; 
+		int idEnd   = idBegin+WrapperComputer.NBLINEPERPAGES; 
 		
 		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
 				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
 				+ "WHERE cu.name LIKE '%"+like+"%' OR ca.name LIKE '%"+like+"%'"
-				+ "ORDER BY "+ order + " "+direction;
+				+ "ORDER BY "+ order + " "+direction+" "
+				+ "LIMIT "+idBegin+", "+idEnd;
+		
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			results = preparedStatement.executeQuery();
 			while(results.next()){
 				long id = results.getLong("id");
@@ -232,14 +79,13 @@ public class ComputerDAO {
 			logger.error("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query);
 		} finally{
 			logger.info("Retrieve all computers with company name and orderBy and like clause completed.");
-			closeAll(results,preparedStatement,con);
+			closeAll(results,preparedStatement);
 		}
 
 		return alc;
 	}
 	
-	public Company retrieveCompanyByComputerId(long idComputer){
-		Connection con = ConnectionManager.getConnection();
+	public Company retrieveCompanyByComputerId(long idComputer, Connection connection){
 		
 		Company company = null;
 		
@@ -249,7 +95,7 @@ public class ComputerDAO {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			results = preparedStatement.executeQuery();
 			if(results.next()){
 				long id = results.getLong("id");
@@ -262,15 +108,13 @@ public class ComputerDAO {
 			logger.error("Retrieve company using computer id error. SQL query : "+query);
 		} finally{
 			logger.info("Retrieve company using computer id completed.");
-			closeAll(results,preparedStatement,con);
+			closeAll(results,preparedStatement);
 		}
 		
 		return company;
 	}
 	
-	public Computer retrieveByComputerId(long idComputer) {
-		Connection con = ConnectionManager.getConnection();
-		
+	public Computer retrieveByComputerId(long idComputer, Connection connection) {
 		Computer computer = null;
 		
 		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
@@ -283,7 +127,7 @@ public class ComputerDAO {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setLong(1, idComputer);
 			results = preparedStatement.executeQuery();
 			if(results.next()){
@@ -307,15 +151,13 @@ public class ComputerDAO {
 			logger.error("Retrieve computer using id error. SQL query : "+visualQuery);
 		} finally{
 			logger.info("Retrieve computer using id completed.");
-			closeAll(results, preparedStatement, con);
+			closeAll(results, preparedStatement);
 		}
 		
 		return computer;
 	}
 	
-	public void insert(Computer computer){
-		Connection con = ConnectionManager.getConnection();
-		
+	public void insert(Computer computer, Connection connection){
 		String query = "INSERT INTO "+table+" VALUES(?,?,?,?,?)";
 		String visualQuery = "INSERT INTO "+table+" VALUES("+computer.getId()+",'"+computer.getName()+"','"+computer.getIntroduced()+"','"+computer.getDiscontinued()+"'";
 		if(computer.getCompany()!=null){		
@@ -326,7 +168,7 @@ public class ComputerDAO {
 		PreparedStatement preparedStatement = null;
 		
 		try{
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			
 			preparedStatement.setLong  (1, computer.getId()  );
 			preparedStatement.setString(2, computer.getName());
@@ -355,19 +197,17 @@ public class ComputerDAO {
 			logger.error("Insert computer error. SQL query : "+visualQuery);
 		} finally{
 			logger.info("Insert computer completed.");
-			closeAll(null,preparedStatement,con);
+			closeAll(null,preparedStatement);
 		}
 	}
 	
-	public void delete(long id) {
-		Connection con = ConnectionManager.getConnection();
-		
+	public void delete(long id, Connection connection) {
 		String query = "DELETE FROM "+table+" WHERE id = ?";
 		String visualQuery = "DELETE FROM "+table+" WHERE id = "+id;
 		PreparedStatement preparedStatement = null;
 		
 		try{
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			
 			preparedStatement.setLong(1, id);
 				
@@ -376,28 +216,30 @@ public class ComputerDAO {
 			logger.error("Delete computer error. SQL query : "+visualQuery);
 		} finally{
 			logger.info("Delete computer completed.");
-			closeAll(null,preparedStatement,con);
+			closeAll(null,preparedStatement);
 		}
 	}
 
-	public void update(Computer c) {
-		Connection con = ConnectionManager.getConnection();
-		
+	public void update(Computer c, Connection connection) {
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 		
 		String query = "UPDATE "+table+" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?";
 		String visualQuery = "UPDATE "+table+" SET name='"+c.getName()+"', introduced='"+c.getIntroduced()
 							+"', discontinued='"+c.getDiscontinued()+"'";
+		
+		
 		if(c.getCompany()!=null){
 			visualQuery += ", company_id="+c.getCompany().getId()+" WHERE id = "+c.getId();
 		}else{
 			visualQuery += ", company_id= NULL WHERE id = "+c.getId();
 		}
+		
+		
 		try{
 			
 			
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			
 			preparedStatement.setString(1, c.getName());
 			
@@ -426,20 +268,43 @@ public class ComputerDAO {
 			logger.error("Update computer error. SQL query : "+visualQuery);
 		} finally{
 			logger.info("Update computer completed.");
-			closeAll(results, preparedStatement, con);
+			closeAll(results, preparedStatement);
 		}
 	}
 	
-	private void closeAll(ResultSet rs,PreparedStatement ps, Connection cn){
+	public int computerNumberByFilter(String filter, Connection connection) {
+		int count = 0;
+		
+		String query = "SELECT count(*) AS countComputer FROM company AS ca "
+				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
+				+ "WHERE cu.name LIKE '%"+filter+"%' OR ca.name LIKE '%"+filter+"%'";
+		
+		ResultSet results = null;
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			results = preparedStatement.executeQuery();
+			if(results.next()){
+				count = results.getInt("countComputer");
+			}
+		} catch (SQLException e) {
+			logger.error("Computer count error. SQL query : "+query);
+		} finally{
+			logger.info("Computer count completed.");
+			closeAll(results,preparedStatement);
+		}
+
+		return count;
+	}
+	
+	private void closeAll(ResultSet rs,PreparedStatement ps){
 		try {
 			if(rs!=null){
 				rs.close();
 			}
 			if(ps!=null){
 				ps.close();
-			}
-			if(cn!=null){
-				cn.close();
 			}
 			logger.info("Every connections closed !");
 		} catch (SQLException e) {
@@ -454,4 +319,5 @@ public class ComputerDAO {
 		}
 		return instance;
 	}
+
 }

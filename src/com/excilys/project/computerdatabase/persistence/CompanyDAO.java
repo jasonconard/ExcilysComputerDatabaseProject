@@ -19,8 +19,7 @@ public class CompanyDAO {
 	public static CompanyDAO instance = null;
 	public static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	
-	public List<Company> retrieveAll(){
-		Connection con = ConnectionManager.getConnection();
+	public List<Company> retrieveAll(Connection connection){
 		
 		List<Company> alc = new ArrayList<Company>();
 		
@@ -30,7 +29,7 @@ public class CompanyDAO {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			results = preparedStatement.executeQuery(query);
 			
 			while(results.next()){
@@ -43,14 +42,13 @@ public class CompanyDAO {
 			logger.error("Retrieve All Companies error. SQL query : "+query);
 		} finally{
 			logger.info("Retrieve All Companies complete !");
-			closeAll(results,preparedStatement,con);
+			closeAll(results,preparedStatement);
 		}
 		
 		return alc;
 	}
 	
-	public Company retrieveByCompanyId(long idCompany){
-		Connection con = ConnectionManager.getConnection();
+	public Company retrieveByCompanyId(long idCompany, Connection connection){
 		
 		Company company = null;
 		
@@ -60,7 +58,7 @@ public class CompanyDAO {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			results = preparedStatement.executeQuery();
 			
 			if(results.next()){
@@ -74,22 +72,20 @@ public class CompanyDAO {
 			System.err.println("SQL query problem : "+query);
 		} finally{
 			logger.info("Retrieve Company By Id complete !");
-			closeAll(results,preparedStatement,con);
+			closeAll(results,preparedStatement);
 		}
 		
 		return company;
 	}
 	
-	public void insert(Company c){
-		Connection con = ConnectionManager.getConnection();
-		
+	public void insert(Company c, Connection connection){
 		String query = "INSERT INTO "+table+" VALUES(?,?)";
 		String visualQuery = "INSERT INTO "+table+" VALUES("+c.getId()+",'"+c.getName()+"')";
 		
 		PreparedStatement preparedStatement = null;
 		
 		try{
-			preparedStatement = con.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			
 			preparedStatement.setLong(1, c.getId());
 			preparedStatement.setString(2, c.getName());
@@ -100,20 +96,17 @@ public class CompanyDAO {
 			logger.error("Insert company error. SQL query  : "+visualQuery);
 		} finally{
 			logger.info("Insert company complete !");
-			closeAll(null,preparedStatement,con);
+			closeAll(null,preparedStatement);
 		}
 	}
 	
-	private void closeAll(ResultSet rs,PreparedStatement ps, Connection cn){
+	private void closeAll(ResultSet rs, PreparedStatement ps){
 		try {
 			if(rs!=null){
 				rs.close();
 			}
 			if(ps!=null){
 				ps.close();
-			}
-			if(cn!=null){
-				cn.close();
 			}
 			logger.info("Every connections closed !");
 		} catch (SQLException e) {
