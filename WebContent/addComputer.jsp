@@ -66,7 +66,6 @@
 	</c:if>
 </section>
 
-<script src="js/jquery.min.js"></script>
 <script src="js/jquery.form-validator.min.js"></script>
 <script> $.validate(); </script>
 

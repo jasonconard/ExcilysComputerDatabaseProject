@@ -92,3 +92,29 @@ table.computers .header a {
 	background-color: #000;
 	border-color: #646464;
 }
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th{
+	background-color: #302F2F;
+}
+
+body{
+	color: #FFF;
+	background-color: #181B1D;
+}
+input{
+	color: #000;
+}
+
+media="screen"
+.btn-primary {
+	color: #fff;
+	background-color: #22496B;
+	border-color: #183E5F;
+}
+
+media="screen"
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+color: #fff;
+background-color: #112D46;
+border-color: #4392D8;
+}

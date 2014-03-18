@@ -9,6 +9,9 @@
 <link href="css/bootstrap.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
 </head>
+
+<script src="js/jquery.min.js"></script>
+
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<h1 class="fill">
