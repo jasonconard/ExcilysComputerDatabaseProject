@@ -15,11 +15,11 @@ public class ComputerServices {
 	public static ComputerServices instance = null;
 	
 	private ComputerDAO computerDAO = ComputerDAO.getInstance();
+	private LogsServices logsServices = LogsServices.getInstance();
 	
 	public List<Computer> getAllComputers(WrapperComputer wc){
 		Connection connection = null;
 		List<Computer> computers = null;
-		
 		try{
 			connection = ConnectionManager.getConnection(); 
 			connection.setAutoCommit(false);
@@ -29,13 +29,14 @@ public class ComputerServices {
 			if(computers!=null){	  
 				connection.commit();
 				connection.setAutoCommit(true);
+				logsServices.insert("Computers searching completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Computers searching error : computers is null", "Error");
 			}
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computers searching error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -56,13 +57,14 @@ public class ComputerServices {
 			if(company!=null){	  
 				connection.commit();
 				connection.setAutoCommit(true);
+				logsServices.insert("Company searching with computerId("+computerId+") completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Company searching with computerId("+computerId+") error : company does not exists", "Error");
 			}
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Company searching with computerId("+computerId+") error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -83,13 +85,14 @@ public class ComputerServices {
 			if(computer!=null){	  
 				connection.commit();
 				connection.setAutoCommit(true);
+				logsServices.insert("Computer searching with computerId("+computerId+") completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Computer searching with computerId("+computerId+") error : computer does not exists", "Error");
 			}
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computer searching with computerId("+computerId+") error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -108,11 +111,10 @@ public class ComputerServices {
   
 			connection.commit();
 			connection.setAutoCommit(true);
-			
+			logsServices.insert("Computer insertion completed", "Complete");
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computer insertion error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -129,11 +131,10 @@ public class ComputerServices {
 			
 			connection.commit();
 			connection.setAutoCommit(true);
-						
+			logsServices.insert("Computer update completed", "Complete");			
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computer update error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -150,11 +151,10 @@ public class ComputerServices {
 			
 			connection.commit();
 			connection.setAutoCommit(true);
-			
+			logsServices.insert("Computer deleting completed", "Complete");
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computer deleting error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -174,13 +174,14 @@ public class ComputerServices {
 			if(computerNumber>=0){	  
 				connection.commit();
 				connection.setAutoCommit(true);
+				logsServices.insert("Computer number searching completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Computer number searching error : negative number", "Error");
 			}
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Computer number searching error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}

@@ -9,23 +9,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.domain.WrapperComputer;
-import com.excilys.project.computerdatabase.services.LogsServices;
 
 public class ComputerDAO {
 	
 	private static final String table = "computer";
 	
 	public static ComputerDAO instance = null;
-	
-	public static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	
-	private static LogsServices logsServices = LogsServices.getInstance();
 	
 	public List<Computer> retrieveAllWithCompanyNameByWrapper(WrapperComputer wc, Connection connection){
 		
@@ -81,11 +73,7 @@ public class ComputerDAO {
 				);
 			}
 		} catch (SQLException e) {
-			logsServices.insert("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query, "Error");
-			//logger.error("Retrieve all computers with company name and orderBy and like clause error. SQL query : "+query);
 		} finally{
-			logsServices.insert("Retrieve all computers with company name and orderBy and like clause completed", "Complete");
-			//logger.info("Retrieve all computers with company name and orderBy and like clause completed.");
 			closeAll(results,preparedStatement);
 		}
 
@@ -112,11 +100,7 @@ public class ComputerDAO {
 			results.close();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			logsServices.insert("Retrieve company using computer id error. SQL query : "+query, "Error");
-			//logger.error("Retrieve company using computer id error. SQL query : "+query);
 		} finally{
-			logsServices.insert("Retrieve company using computer id completed.", "Complete");
-			//logger.info("Retrieve company using computer id completed.");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -129,9 +113,6 @@ public class ComputerDAO {
 		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
 				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
 				+ "WHERE cu.id = ?";
-		String visualQuery = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "WHERE cu.id = "+idComputer;
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 		
@@ -157,11 +138,7 @@ public class ComputerDAO {
 				            .build();
 			}
 		} catch (SQLException e) {
-			logsServices.insert("Retrieve computer using id error. SQL query : "+visualQuery, "Error");
-			//logger.error("Retrieve computer using id error. SQL query : "+visualQuery);
 		} finally{
-			logsServices.insert("Retrieve computer using id completed.", "Complete");
-			//logger.info("Retrieve computer using id completed.");
 			closeAll(results, preparedStatement);
 		}
 		
@@ -170,12 +147,7 @@ public class ComputerDAO {
 	
 	public void insert(Computer computer, Connection connection){
 		String query = "INSERT INTO "+table+" VALUES(?,?,?,?,?)";
-		String visualQuery = "INSERT INTO "+table+" VALUES("+computer.getId()+",'"+computer.getName()+"','"+computer.getIntroduced()+"','"+computer.getDiscontinued()+"'";
-		if(computer.getCompany()!=null){		
-			visualQuery += ","+computer.getCompany().getId()+")";
-		}else{
-			visualQuery += ", 0)";
-		}
+
 		PreparedStatement preparedStatement = null;
 		
 		try{
@@ -205,18 +177,13 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logsServices.insert("Insert computer error. SQL query : "+visualQuery, "Error");
-			//logger.error("Insert computer error. SQL query : "+visualQuery);
 		} finally{
-			logsServices.insert("Insert computer completed.", "Complete");
-			//logger.info("Insert computer completed.");
 			closeAll(null,preparedStatement);
 		}
 	}
 	
 	public void delete(long id, Connection connection) {
 		String query = "DELETE FROM "+table+" WHERE id = ?";
-		String visualQuery = "DELETE FROM "+table+" WHERE id = "+id;
 		PreparedStatement preparedStatement = null;
 		
 		try{
@@ -226,11 +193,7 @@ public class ComputerDAO {
 				
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			logsServices.insert("Delete computer error. SQL query : "+visualQuery, "Error");
-			//logger.error("Delete computer error. SQL query : "+visualQuery);
 		} finally{
-			logsServices.insert("Delete computer completed", "Complete");
-			//logger.info("Delete computer completed.");
 			closeAll(null,preparedStatement);
 		}
 	}
@@ -240,16 +203,6 @@ public class ComputerDAO {
 		PreparedStatement preparedStatement = null;
 		
 		String query = "UPDATE "+table+" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?";
-		String visualQuery = "UPDATE "+table+" SET name='"+c.getName()+"', introduced='"+c.getIntroduced()
-							+"', discontinued='"+c.getDiscontinued()+"'";
-		
-		
-		if(c.getCompany()!=null){
-			visualQuery += ", company_id="+c.getCompany().getId()+" WHERE id = "+c.getId();
-		}else{
-			visualQuery += ", company_id= NULL WHERE id = "+c.getId();
-		}
-		
 		
 		try{
 			
@@ -280,11 +233,7 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logsServices.insert("Update computer error. SQL query : "+visualQuery, "Error");
-			//logger.error("Update computer error. SQL query : "+visualQuery);
 		} finally{
-			logsServices.insert("Update computer completed.", "Complete");
-			//logger.info("Update computer completed.");
 			closeAll(results, preparedStatement);
 		}
 	}
@@ -306,11 +255,7 @@ public class ComputerDAO {
 				count = results.getInt("countComputer");
 			}
 		} catch (SQLException e) {
-			logsServices.insert("Computer count error. SQL query : "+query, "Error");
-			//logger.error("Computer count error. SQL query : "+query);
 		} finally{
-			logsServices.insert("Computer count completed.", "Complete");
-			//logger.info("Computer count completed.");
 			closeAll(results,preparedStatement);
 		}
 
@@ -325,11 +270,7 @@ public class ComputerDAO {
 			if(ps!=null){
 				ps.close();
 			}
-			//logsServices.insert("Every connections closed !", "Complete");
-			logger.info("Every connections closed !");
 		} catch (SQLException e) {
-			//logsServices.insert("Every connections failed !", "Error");
-			logger.error("Connections closing failed.");
 			e.printStackTrace();
 		}
 	}

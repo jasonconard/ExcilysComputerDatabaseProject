@@ -13,6 +13,7 @@ public class CompanyServices {
 	public static CompanyServices instance = null;
 
 	private CompanyDAO companyDAO = CompanyDAO.getInstance();
+	private LogsServices logsServices = LogsServices.getInstance();
 
 	public List<Company> getAllCompanies(){
 		Connection connection = null;
@@ -26,13 +27,15 @@ public class CompanyServices {
 			if(companies!=null){	  
 				connection.commit(); // c'est ici que l'on valide la transaction
 				connection.setAutoCommit(true);
+				logsServices.insert("Companies searching completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Companies searching error : companies is null", "Error");
 			}
-		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			
+		}catch(SQLException e){
+			try{connection.rollback();}catch(Exception e2){}
+			logsServices.insert("Companies searching error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -50,16 +53,17 @@ public class CompanyServices {
 
 			company = companyDAO.retrieveByCompanyId(idCompany, connection);
 
-			if(company!=null){	  
+			if(company!=null || idCompany == 0){	  
 				connection.commit();
 				connection.setAutoCommit(true);
+				logsServices.insert("Company searching completed", "Complete");
 			}else{
 				connection.rollback();
+				logsServices.insert("Company searching error : no company for id : "+idCompany, "Error");
 			}
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Company searching error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}
@@ -78,11 +82,10 @@ public class CompanyServices {
 
 			connection.commit();
 			connection.setAutoCommit(true);
-
+			logsServices.insert("Company insertion completed", "Complete");
 		}catch(SQLException sqle){
 			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			logsServices.insert("Company insertion error", "Error");
 		}finally{
 			try{connection.close();}catch(Exception e){}
 		}

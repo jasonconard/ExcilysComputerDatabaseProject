@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.project.computerdatabase.domain.Logs;
 
 public class LogsDAO {
@@ -18,7 +15,6 @@ public class LogsDAO {
 	private static final String table = "logs";
 	
 	public static LogsDAO instance = null;
-	public static Logger logger = LoggerFactory.getLogger(LogsDAO.class);
 	
 	public List<Logs> retrieveAll(Connection connection){
 		
@@ -42,9 +38,7 @@ public class LogsDAO {
 			}
 			
 		} catch (SQLException e) {
-			logger.error("Retrieve All Logs error. SQL query : "+query);
 		} finally{
-			logger.info("Retrieve All Logs complete !");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -73,9 +67,7 @@ public class LogsDAO {
 			}
 			
 		} catch (SQLException e) {
-			logger.error("Retrieve Log By Id error. SQL query : "+query);
 		} finally{
-			logger.info("Retrieve Log By Id complete !");
 			closeAll(results,preparedStatement);
 		}
 		
@@ -84,7 +76,6 @@ public class LogsDAO {
 	
 	public void insert(String description, String type, Connection connection){
 		String query = "INSERT INTO "+table+" VALUES(0,?,?,now())";
-		String visualQuery = "INSERT INTO "+table+" VALUES(0,'"+description+"','"+type+"',now())";
 		
 		PreparedStatement preparedStatement = null;
 		
@@ -97,9 +88,7 @@ public class LogsDAO {
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			logger.error("Insert logs error. SQL query  : "+visualQuery);
 		} finally{
-			logger.info("Insert logs complete !");
 			closeAll(null,preparedStatement);
 		}
 	}
@@ -112,9 +101,7 @@ public class LogsDAO {
 			if(ps!=null){
 				ps.close();
 			}
-			logger.info("Every connections closed !");
 		} catch (SQLException e) {
-			logger.error("Connections closing failed.");
 			e.printStackTrace();
 		}
 	}
