@@ -85,13 +85,6 @@ table.computers .header a {
 .select-form{
 	width: 400px;
 }
-.unclickable{
-	color : rgb(190, 190, 190);
-}
-.navbar-inverse{
-	background-color: #000;
-	border-color: #646464;
-}
 
 #colHeader1{
 	width:50%;

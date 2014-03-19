@@ -16,6 +16,7 @@ public class CompanyServices {
 	private LogsServices logsServices = LogsServices.getInstance();
 
 	public List<Company> getAllCompanies(){
+		//ThreadLocal<Connection> tlc = new ThreadLocal<Connection>();
 		Connection connection = null;
 		List<Company> companies = null;
 		try{

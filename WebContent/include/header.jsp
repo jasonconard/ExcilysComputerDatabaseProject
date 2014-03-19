@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="css/bootstrap.css" rel="stylesheet" media="screen">
-<link href="css/main.css" rel="stylesheet" media="screen" class="switchable">
+<link href="css/main.css" rel="stylesheet" media="screen">
+<link href="css/main_light.css" rel="stylesheet" media="screen" class="switchable">
 </head>
 
 <script src="js/jquery.min.js"></script>
@@ -25,7 +26,7 @@
 				</td>
 				<td id="colHeader2">
 					<div id="cssSwitch">
-						<a href="#" rel="css/main.css" class="csslight" title="Light Skin"><img src="img/lightSkinButton.png"/></a>
+						<a href="#" rel="css/main_light.css" class="csslight" title="Light Skin"><img src="img/lightSkinButton.png"/></a>
 						<a href="#" rel="css/main_dark.css" class="cssdark" title="Dark Skin"><img src="img/darkSkinButton.png"/></a>
 						<a href="#" rel="css/main_dark_green.css" class="cssdg" title="Dark Green Skin"><img src="img/darkGreenSkinButton.png"/></a>
 						<a href="#" rel="css/main_little_pony.css" class="csslp" title="Little Pony Skin"><img src="img/littlePonySkinButton.png"/></a>
