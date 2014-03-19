@@ -1,0 +1,44 @@
+.unclickable{
+	color : rgb(190, 190, 190);
+}
+
+.navbar-inverse{
+	background-color: #000;
+	border-color: lime;
+}
+
+.navbar-inverse{
+	color: lime;
+}
+
+a{
+	color: lime;
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th{
+	background-color: #1DFF00;
+}
+
+body{
+	color: red;
+	background-color: #FFF500;
+}
+input{
+	color: #000;
+}
+
+.btn-primary {
+	color: #fff;
+	background-color: #22496B;
+	border-color: #183E5F;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+	color: #fff;
+	background-color: #112D46;
+	border-color: #4392D8;
+}
+
+.table-striped > thead > tr > th, .table-striped > tbody > tr > td, .table-striped{
+	border: 1px solid #FF00E0;
+}

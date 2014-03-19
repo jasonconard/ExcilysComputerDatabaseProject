@@ -5,7 +5,7 @@
 	<h1 id="homeTitle">${nbComputer} Computers found</h1>
 	<div id="actions">
 		<form action="" method="GET">
-			<input type="search" id="searchbox" name="search" value="${search}"
+			<input type="search" id="searchbox" name="search" value="${page.filter}"
 				placeholder="Search name"> <input type="submit"
 				id="searchsubmit" value="Filter by name" class="btn btn-primary">
 		</form>
@@ -18,44 +18,44 @@
 			<tr>
 				<!-- Variable declarations for passing labels as parameters -->
 				<!-- Table header for Computer Name -->
-				<c:if test="${order=='name' && dir=='DESC'}">
+				<c:if test="${page.column=='name' && page.direction=='DESC'}">
 					<th class="col2">Computer Name
-						<a href="DashBoard?page=1&search=${search}&order=name&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=name&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${!(order=='name' && dir=='DESC')}">
+				<c:if test="${!(page.column=='name' && page.direction=='DESC')}">
 					<th class="col2">Computer Name
-						<a href="DashBoard?page=1&search=${search}&order=name&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=name&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${order=='introduced' && dir=='DESC'}">
+				<c:if test="${page.column=='introduced' && page.direction=='DESC'}">
 					<th class="col3">Introduced Date
-						<a href="DashBoard?page=1&search=${search}&order=introduced&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=introduced&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${!(order=='introduced' && dir=='DESC')}">
+				<c:if test="${!(page.column=='introduced' && page.direction=='DESC')}">
 					<th class="col3">Introduced Date
-						<a href="DashBoard?page=1&search=${search}&order=introduced&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=introduced&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${order=='discontinued' && dir=='DESC'}">
+				<c:if test="${page.column=='discontinued' && page.direction=='DESC'}">
 					<th class="col4">Discontinued Date
-						<a href="DashBoard?page=1&search=${search}&order=discontinued&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=discontinued&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${!(order=='discontinued' && dir=='DESC')}">
+				<c:if test="${!(page.column=='discontinued' && page.direction=='DESC')}">
 					<th class="col4">Discontinued Date
-						<a href="DashBoard?page=1&search=${search}&order=discontinued&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=discontinued&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${order=='company' && dir=='DESC'}">
+				<c:if test="${page.column=='company' && page.direction=='DESC'}">
 					<th class="col5">Company
-						<a href="DashBoard?page=1&search=${search}&order=company&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=company&dir=ASC"><span class="glyphicon glyphicon-arrow-up"></span></a>
 					</th>
 				</c:if>
-				<c:if test="${!(order=='company' && dir=='DESC')}">
+				<c:if test="${!(page.column=='company' && page.direction=='DESC')}">
 					<th class="col5">Company
-						<a href="DashBoard?page=1&search=${search}&order=company&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
+						<a href="DashBoard?page=1&search=${page.filter}&order=company&dir=DESC"><span class="glyphicon glyphicon-arrow-down"></span></a>
 					</th>
 				</c:if>
 				<th class="col6">Actions</th>
@@ -65,10 +65,10 @@
 			<tr>
 				<td colspan="4" style="vertical-align:middle;">
 						<c:if test="${lastPage!=-1}">
-							<a href="DashBoard?page=1&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=1&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-fast-backward"></span>
 							</a>
-							<a href="DashBoard?page=${lastPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${lastPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-backward"></span>
 							</a>
 						</c:if>
@@ -76,12 +76,12 @@
 							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
 							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
-						Page(${page}/${nbPage}) 
+						Page(${page.numero}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
-							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${nextPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-forward"></span>
 							</a>
-							<a href="DashBoard?page=${nbPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${nbPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-fast-forward"></span>
 							</a>
 						</c:if>
@@ -92,16 +92,16 @@
 				</td>
 				<td>	
 					<form action="" class="form-inline" method="GET">
-						<input type="number" id="searchbox" name="page" value="${page}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
+						<input type="number" id="searchbox" name="page" value="${page.numero}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
 						<input type="submit" id="pagesubmit" value="Go to page" class="btn btn-primary btn-xs"/>
-						<input type="hidden" id="hiddenSearch" name="search" value="${search}"/>
-						<input type="hidden" id="hiddenOrder" name="order" value="${order}"/>
-						<input type="hidden" id="hiddenDir" name="dir" value="${dir}"/>
+						<input type="hidden" id="hiddenSearch" name="search" value="${page.filter}"/>
+						<input type="hidden" id="hiddenOrder" name="order" value="${page.column}"/>
+						<input type="hidden" id="hiddenDir" name="dir" value="${page.direction}"/>
 					</form>				
 				</td>
 			</tr>
 		
-			<c:forEach var="entry" items="${requestScope['allComputer']}">
+			<c:forEach var="entry" items="${requestScope['list']}">
 				<tr>
 					<td>${entry.name}</td>
 					<td>${entry.introduced}</td>
@@ -109,7 +109,7 @@
 					<td>${entry.company.name}</td>
 					<td>
 						<a href="EditComputer?computerId=${entry.id}"><span class="glyphicon glyphicon-pencil"></span></a> 
-						<a href="DashBoard?computerId=${entry.id}&delete=delete&page=${lastPage}&search=${search}&order=${order}&dir=${dir}"
+						<a href="DashBoard?computerId=${entry.id}&delete=delete&page=${lastPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}"
 						onclick="return confirm('Are you sure to delete?');">
 							<span class="glyphicon glyphicon-trash"></span>
 						</a>
@@ -120,10 +120,10 @@
 			<tr>
 				<td colspan="4" style="vertical-align:middle;">
 						<c:if test="${lastPage!=-1}">
-							<a href="DashBoard?page=1&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=1&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-fast-backward"></span>
 							</a>
-							<a href="DashBoard?page=${lastPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${lastPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-backward"></span>
 							</a>
 						</c:if>
@@ -131,12 +131,12 @@
 							<span class="unclickable glyphicon glyphicon-fast-backward"></span>
 							<span class="unclickable glyphicon glyphicon-backward"></span>
 						</c:if>
-						Page(${page}/${nbPage}) 
+						Page(${page.numero}/${nbPage}) 
 						<c:if test="${nextPage!=-1}">
-							<a href="DashBoard?page=${nextPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${nextPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-forward"></span>
 							</a>
-							<a href="DashBoard?page=${nbPage}&search=${search}&order=${order}&dir=${dir}">
+							<a href="DashBoard?page=${nbPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
 								<span class="glyphicon glyphicon-fast-forward"></span>
 							</a>
 						</c:if>
@@ -147,11 +147,11 @@
 				</td>
 				<td>	
 					<form action="" class="form-inline" method="GET">
-						<input type="number" id="searchbox" name="page" value="${page}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
+						<input type="number" id="searchbox" name="page" value="${page.numero}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
 						<input type="submit" id="pagesubmit" value="Go to page" class="btn btn-primary btn-xs"/>
-						<input type="hidden" id="hiddenSearch" name="search" value="${search}"/>
-						<input type="hidden" id="hiddenOrder" name="order" value="${order}"/>
-						<input type="hidden" id="hiddenDir" name="dir" value="${dir}"/>
+						<input type="hidden" id="hiddenSearch" name="search" value="${page.filter}"/>
+						<input type="hidden" id="hiddenOrder" name="order" value="${page.column}"/>
+						<input type="hidden" id="hiddenDir" name="dir" value="${page.direction}"/>
 					</form>				
 				</td>
 			</tr>

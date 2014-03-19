@@ -9,40 +9,6 @@ public class Computer {
 	private final Date discontinued;
 	private final Company company;
 
-
-	/*public Computer(long id, String name, Date introduced, Date discontinued,
-			long companyId) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		
-		company = new Company.CompanyBuilder(companyId,"").build();
-	}*/
-	
-	/*public Computer(long id, String name, Date introduced, Date discontinued,
-			long companyId, String companyName) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		
-		company = new Company.CompanyBuilder(companyId,companyName).build();
-	}*/
-	
-	/*public Computer(long id, String name, Date introduced, Date discontinued,
-			Company company) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.company = company;
-	}*/
-
-
 	public Computer(ComputerBuilder computerBuilder) {
 		this.id = computerBuilder.id;
         this.name = computerBuilder.name;

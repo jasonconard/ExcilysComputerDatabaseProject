@@ -1,14 +1,13 @@
 package com.excilys.project.computerdatabase.controller;
-import java.io.IOException;
-import java.util.List;
 
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.domain.WrapperComputer;
 import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
@@ -33,7 +32,8 @@ public class DashBoard extends HttpServlet {
 		
 		/* Deleting managment */
 		String idString = request.getParameter("computerId");
-		String delete = request.getParameter("delete");
+		String delete 	= request.getParameter("delete");
+		
 		if(idString != null && delete!=null && delete.equals("delete")){
 			long id = Long.parseLong(idString);
 			computerServices.delete(id);
@@ -42,15 +42,11 @@ public class DashBoard extends HttpServlet {
 		
 		/* Order By managment */
 		String order = request.getParameter("order");
-		String visibleOrder = order; // The order parameter visible by client
 		
 		if(order == null || order.length()==0){
 			order = "cu.name";
-			visibleOrder = "name";
 		}else if(order.equals("company")){
 			order = "ca.name";
-		}else{
-			order = "cu."+order;
 		}
 		
 		String dir = request.getParameter("dir");
@@ -58,31 +54,33 @@ public class DashBoard extends HttpServlet {
 			dir = "ASC";
 		}
 		
-		request.setAttribute("order", visibleOrder);
-		request.setAttribute("dir", dir);
-		
 		/* Searching managment */
 		String search = request.getParameter("search");
 		if(search==null){
 			search = "";
 		}
-		int nbComputer = computerServices.getComputerNumber(search);
 		
 		/* Pagination managment */
 		String idPageString = request.getParameter("page");
 		
 		int idPage = 1;
-		
 		if(idPageString != null && idPageString.length() != 0){
 			idPage = Integer.parseInt(idPageString);
 			if(idPage<1){
 				idPage = 1;
 			}
-		}
+		}		
 		
-		int nbPage = nbComputer/WrapperComputer.NBLINEPERPAGES+1;
+		Page<Computer> page = new Page<Computer>();
+		page.setNumero(idPage-1);
+		page.setColumn(order);
+		page.setDirection(dir);
+		page.setFilter(search);
 		
-		request.setAttribute("page", idPage);
+		page = computerServices.getAllComputers(page);
+		
+		int nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
+		
 		request.setAttribute("nbPage", nbPage);
 		
 		if(idPage<nbPage){
@@ -95,19 +93,11 @@ public class DashBoard extends HttpServlet {
 		}else{
 			request.setAttribute("lastPage", -1);
 		}
-		
-		
-		List<Computer> allComputer = null;
-		WrapperComputer params = new WrapperComputer(idPage-1, order, dir, search);
-		
-		allComputer = computerServices.getAllComputers(params);
-		
-		
-		request.setAttribute("search", search);
-		request.setAttribute("allComputer", allComputer);
-		request.setAttribute("nbComputer", nbComputer);
+
+		request.setAttribute("page", page);
+		request.setAttribute("list", page.getList());
 		
 		/* Redirection */
-		request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
 	}
 }

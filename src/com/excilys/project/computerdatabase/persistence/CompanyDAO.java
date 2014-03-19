@@ -10,104 +10,85 @@ import java.util.ArrayList;
 import com.excilys.project.computerdatabase.domain.Company;
 
 public class CompanyDAO {
-	
+
 	private static final String table = "company";
-	
+
 	public static CompanyDAO instance = null;
-	
-	public List<Company> retrieveAll(Connection connection){
-		
+
+	public List<Company> retrieveAll(Connection connection) throws SQLException{
+
 		List<Company> alc = new ArrayList<Company>();
-		
+
 		String query = "SELECT * FROM "+table;
-		
+
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = connection.prepareStatement(query);
-			results = preparedStatement.executeQuery(query);
-			
-			while(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				alc.add(new Company.CompanyBuilder(id).name(name).build());
-			}
-			
-		} catch (SQLException e) {
-			
-		} finally{
-			closeAll(results,preparedStatement);
+
+		preparedStatement = connection.prepareStatement(query);
+		results = preparedStatement.executeQuery(query);
+
+		while(results.next()){
+			long id = results.getLong("id");
+			String name = results.getString("name");
+			alc.add(new Company.CompanyBuilder(id).name(name).build());
 		}
-		
+
+		closeAll(results,preparedStatement);
+
 		return alc;
 	}
-	
-	public Company retrieveByCompanyId(long idCompany, Connection connection){
-		
+
+	public Company retrieveByCompanyId(long idCompany, Connection connection) throws SQLException{
+
 		Company company = null;
-		
+
 		String query = "SELECT ca.* FROM company AS ca WHERE ca.id = "+idCompany;
-		
+
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
-		
-		try {
-			preparedStatement = connection.prepareStatement(query);
-			results = preparedStatement.executeQuery();
-			
-			if(results.next()){
-				long id = results.getLong("id");
-				String name = results.getString("name");
-				company = new Company.CompanyBuilder(id).name(name).build();
-			}
-			
-		} catch (SQLException e) {
-			
-		} finally{
-			closeAll(results,preparedStatement);
+
+		preparedStatement = connection.prepareStatement(query);
+		results = preparedStatement.executeQuery();
+
+		if(results.next()){
+			long id = results.getLong("id");
+			String name = results.getString("name");
+			company = new Company.CompanyBuilder(id).name(name).build();
 		}
-		
+		closeAll(results,preparedStatement);
+
 		return company;
 	}
-	
-	public void insert(Company c, Connection connection){
+
+	public void insert(Company c, Connection connection) throws SQLException{
 		String query = "INSERT INTO "+table+" VALUES(?,?)";
-		
+
 		PreparedStatement preparedStatement = null;
-		
-		try{
-			preparedStatement = connection.prepareStatement(query);
-			
-			preparedStatement.setLong(1, c.getId());
-			preparedStatement.setString(2, c.getName());
-			
-			preparedStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-		} finally{
-			closeAll(null,preparedStatement);
+
+		preparedStatement = connection.prepareStatement(query);
+
+		preparedStatement.setLong(1, c.getId());
+		preparedStatement.setString(2, c.getName());
+
+		preparedStatement.executeUpdate();
+		closeAll(null,preparedStatement);
+	}
+
+	private void closeAll(ResultSet rs, PreparedStatement ps) throws SQLException{
+
+		if(rs!=null){
+			rs.close();
+		}
+		if(ps!=null){
+			ps.close();
 		}
 	}
-	
-	private void closeAll(ResultSet rs, PreparedStatement ps){
-		try {
-			if(rs!=null){
-				rs.close();
-			}
-			if(ps!=null){
-				ps.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
+
 	synchronized public static CompanyDAO getInstance(){
 		if(instance == null){
 			instance = new CompanyDAO();
 		}
 		return instance;
 	}
-	
+
 }

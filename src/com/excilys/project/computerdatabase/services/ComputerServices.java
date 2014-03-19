@@ -2,11 +2,10 @@ package com.excilys.project.computerdatabase.services;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
+import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.domain.WrapperComputer;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 
@@ -17,16 +16,17 @@ public class ComputerServices {
 	private ComputerDAO computerDAO = ComputerDAO.getInstance();
 	private LogsServices logsServices = LogsServices.getInstance();
 	
-	public List<Computer> getAllComputers(WrapperComputer wc){
+	public Page<Computer> getAllComputers(Page<Computer> pc){
 		Connection connection = null;
-		List<Computer> computers = null;
 		try{
 			connection = ConnectionManager.getConnection(); 
 			connection.setAutoCommit(false);
 
-			computers = computerDAO.retrieveAllWithCompanyNameByWrapper(wc, connection);
+			pc.setList  (computerDAO.retrieveAllWithCompanyNameByWrapper(pc, connection));
+			pc.setNumber(computerDAO.computerNumberByFilter(pc.getFilter(),connection));
 
-			if(computers!=null){	  
+			
+			if(pc.getList()!=null){	  
 				connection.commit();
 				connection.setAutoCommit(true);
 				logsServices.insert("Computers searching completed", "Complete");
@@ -41,7 +41,7 @@ public class ComputerServices {
 			try{connection.close();}catch(Exception e){}
 		}
 		
-		return computers;
+		return pc;
 	}
 	
 	public Company getCompany(long computerId){

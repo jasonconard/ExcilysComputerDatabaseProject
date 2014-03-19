@@ -31,6 +31,7 @@
 						<a href="#" rel="css/main_dark_green.css" class="cssdg" title="Dark Green Skin"><img src="img/darkGreenSkinButton.png"/></a>
 						<a href="#" rel="css/main_little_pony.css" class="csslp" title="Little Pony Skin"><img src="img/littlePonySkinButton.png"/></a>
 						<a href="#" rel="css/main_ice.css" class="cssice" title="Ice Skin"><img src="img/iceSkinButton.png"/></a>
+						<a href="#" rel="css/main_thomas.css" class="csstho" title="Thomas' Skin"><img src="img/thomasSkinButton.png"/></a>
 					</div>
 				</td>
 				<td id="colHeader3">

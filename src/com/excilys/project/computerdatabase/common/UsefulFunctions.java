@@ -1,4 +1,4 @@
-package com.excilys.project.computerdatabase.controller;
+package com.excilys.project.computerdatabase.common;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 

@@ -23,10 +23,9 @@ public class CompanyServices {
 			connection = ConnectionManager.getConnection();
 			connection.setAutoCommit(false);
 
-			//traitement des différentes instructions composant la transaction
 			companies = companyDAO.retrieveAll(connection);
 			if(companies!=null){	  
-				connection.commit(); // c'est ici que l'on valide la transaction
+				connection.commit(); 
 				connection.setAutoCommit(true);
 				logsServices.insert("Companies searching completed", "Complete");
 			}else{

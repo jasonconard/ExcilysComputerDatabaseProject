@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.services.CompanyServices;
@@ -38,7 +39,7 @@ public class AddComputer extends HttpServlet {
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
-		request.getRequestDispatcher("addComputer.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/addComputer.jsp").forward(request, response);
 	}
 
 	/**
@@ -117,8 +118,9 @@ public class AddComputer extends HttpServlet {
 		/*List<Company> allCompanies = null;
 		allCompanies = companyDao.selectAllCompany();
 		request.setAttribute("allCompany", allCompanies);
-		
-		request.getRequestDispatcher("addComputer.jsp").forward(request, response);*/
+		*/
+		//request.getRequestDispatcher("AddComputer").forward(request, response);
+		//response.sendRedirect("AddComputer");
 	}
 
 }
