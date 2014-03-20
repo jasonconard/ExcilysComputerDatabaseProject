@@ -10,7 +10,7 @@ public class Page<E> {
 	private String column;
 	private String direction;
 	private String filter;
-	private List<E> list;
+	private List<E> listElement;
 	
 	public Page() {}
 	
@@ -34,8 +34,8 @@ public class Page<E> {
 		return filter;
 	}
 
-	public List<E> getList() {
-		return list;
+	public List<E> getListElement() {
+		return listElement;
 	}
 	
 	public void setNumero(int numero) {
@@ -58,8 +58,8 @@ public class Page<E> {
 		this.filter = filter;
 	}
 
-	public void setList(List<E> list) {
-		this.list = list;
+	public void setListElement(List<E> listElement) {
+		this.listElement = listElement;
 	}
 
 	

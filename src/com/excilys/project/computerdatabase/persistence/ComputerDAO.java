@@ -19,8 +19,8 @@ public class ComputerDAO {
 
 	public static ComputerDAO instance = null;
 
-	public List<Computer> retrieveAllWithCompanyNameByWrapper(Page<Computer> pc, Connection connection) throws SQLException{
-
+	public List<Computer> retrieveAllWithCompanyNameByWrapper(Page<Computer> pc) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		List<Computer> alc = new ArrayList<Computer>();
 
 		String like = "";
@@ -41,16 +41,16 @@ public class ComputerDAO {
 		int idBegin = pc.getNumero()*Page.NBLINEPERPAGES; 
 		int nbLines   = Page.NBLINEPERPAGES; 
 
-		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "WHERE cu.name LIKE '%"+like+"%' OR ca.name LIKE '%"+like+"%'"
-				+ "ORDER BY "+ order + " "+direction+" "
-				+ "LIMIT "+idBegin+", "+nbLines;
+		StringBuilder query = new StringBuilder("SELECT cu.*, ca.name AS name2 FROM company AS ca ")
+		.append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
+		.append("WHERE cu.name LIKE '%"+like+"%' OR ca.name LIKE '%").append(like).append("%'")
+		.append("ORDER BY ").append(order).append(" ").append(direction)
+		.append(" LIMIT ").append(idBegin).append(", ").append(nbLines);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		results = preparedStatement.executeQuery();
 		while(results.next()){
 			long id = results.getLong("id");
@@ -77,16 +77,18 @@ public class ComputerDAO {
 		return alc;
 	}
 
-	public Company retrieveCompanyByComputerId(long idComputer, Connection connection) throws SQLException{
-
+	public Company retrieveCompanyByComputerId(long idComputer) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Company company = null;
 
-		String query = "SELECT ca.* FROM company AS ca INNER JOIN "+table+" AS cu ON cu.company_id = ca.id WHERE cu.id = "+idComputer;
+		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca INNER JOIN ")
+		.append(table).append("AS cu ON cu.company_id = ca.id WHERE cu.id = ")
+		.append(idComputer);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()){
@@ -100,17 +102,18 @@ public class ComputerDAO {
 		return company;
 	}
 
-	public Computer retrieveByComputerId(long idComputer, Connection connection) throws SQLException {
+	public Computer retrieveByComputerId(long idComputer) throws SQLException {
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Computer computer = null;
 
-		String query = "SELECT cu.*, ca.name AS name2 FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "WHERE cu.id = ?";
+		StringBuilder query = new StringBuilder("SELECT cu.*, ca.name AS name2 FROM company AS ca ")
+		.append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
+		.append("WHERE cu.id = ?");
 		
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		preparedStatement.setLong(1, idComputer);
 		
 		results = preparedStatement.executeQuery();
@@ -138,12 +141,15 @@ public class ComputerDAO {
 		return computer;
 	}
 
-	public void insert(Computer computer, Connection connection) throws SQLException{
-		String query = "INSERT INTO "+table+" VALUES(?,?,?,?,?)";
+	public void insert(Computer computer) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		
+		StringBuilder query = new StringBuilder("INSERT INTO ")
+		.append(table).append(" VALUES(?,?,?,?,?)");
 
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setLong  (1, computer.getId()  );
 		preparedStatement.setString(2, computer.getName());
@@ -172,13 +178,13 @@ public class ComputerDAO {
 
 	}
 
-	public void delete(long id, Connection connection) throws SQLException {
-		
-		String query = "DELETE FROM "+table+" WHERE id = ?";
+	public void delete(long id) throws SQLException {
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		StringBuilder query = new StringBuilder("DELETE FROM ").append(table).append(" WHERE id = ?");
 		
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setLong(1, id);
 
@@ -187,14 +193,15 @@ public class ComputerDAO {
 		closeAll(null,preparedStatement);
 	}
 
-	public void update(Computer c, Connection connection) throws SQLException {
-		
+	public void update(Computer c) throws SQLException {
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		String query = "UPDATE "+table+" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?";
+		StringBuilder query = new StringBuilder("UPDATE ").append(table)
+		.append(" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?");
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setString(1, c.getName());
 
@@ -222,18 +229,19 @@ public class ComputerDAO {
 		closeAll(results, preparedStatement);
 	}
 
-	public int computerNumberByFilter(String filter, Connection connection) throws SQLException {
-		
+	public int computerNumberByFilter(String filter) throws SQLException {
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		int count = 0;
 
-		String query = "SELECT count(*) AS countComputer FROM company AS ca "
-				+ "RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id "
-				+ "WHERE cu.name LIKE '%"+filter+"%' OR ca.name LIKE '%"+filter+"%'";
+		StringBuilder query = new StringBuilder("SELECT count(*) AS countComputer FROM company AS ca ")
+		.append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
+		.append("WHERE cu.name LIKE '%").append(filter)
+		.append("%' OR ca.name LIKE '%").append(filter).append("%'");
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()){

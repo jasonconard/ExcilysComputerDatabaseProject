@@ -1,6 +1,5 @@
 package com.excilys.project.computerdatabase.services;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.excilys.project.computerdatabase.common.Page;
@@ -14,176 +13,139 @@ public class ComputerServices {
 	public static ComputerServices instance = null;
 	
 	private ComputerDAO computerDAO = ComputerDAO.getInstance();
-	private LogsServices logsServices = LogsServices.getInstance();
 	
 	public Page<Computer> getAllComputers(Page<Computer> pc){
-		Connection connection = null;
+		String message = "Computers searching";
 		try{
-			connection = ConnectionManager.getConnection(); 
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			pc.setList  (computerDAO.retrieveAllWithCompanyNameByWrapper(pc, connection));
-			pc.setNumber(computerDAO.computerNumberByFilter(pc.getFilter(),connection));
-
+			pc.setListElement(computerDAO.retrieveAllWithCompanyNameByWrapper(pc));
+			pc.setNumber(computerDAO.computerNumberByFilter(pc.getFilter()));
 			
-			if(pc.getList()!=null){	  
-				connection.commit();
-				connection.setAutoCommit(true);
-				logsServices.insert("Computers searching completed", "Complete");
+			if(pc.getListElement()!=null){	  
+				ConnectionManager.INSTANCE.commit(message);
 			}else{
-				connection.rollback();
-				logsServices.insert("Computers searching error : computers is null", "Error");
+				ConnectionManager.INSTANCE.rollback(message+" (computers is null)");
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computers searching error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 		
 		return pc;
 	}
 	
 	public Company getCompany(long computerId){
-		Connection connection = null;
+		String message = "Companies searching with computerId("+computerId+")";
 		Company company = null;
 		
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			company = computerDAO.retrieveCompanyByComputerId(computerId, connection);
+			company = computerDAO.retrieveCompanyByComputerId(computerId);
 
 			if(company!=null){	  
-				connection.commit();
-				connection.setAutoCommit(true);
-				logsServices.insert("Company searching with computerId("+computerId+") completed", "Complete");
+				ConnectionManager.INSTANCE.commit(message);
 			}else{
-				connection.rollback();
-				logsServices.insert("Company searching with computerId("+computerId+") error : company does not exists", "Error");
+				ConnectionManager.INSTANCE.rollback(message+" (company does not exists)");
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Company searching with computerId("+computerId+") error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 		
 		return company;
 	}
 	
 	public Computer getComputer(long computerId){
-		Connection connection = null;
+		String message = "Computer searching with computerId("+computerId+")";
 		Computer computer = null;
 		
 		try{
-			connection = ConnectionManager.getConnection(); 
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			computer = computerDAO.retrieveByComputerId(computerId, connection);
+			computer = computerDAO.retrieveByComputerId(computerId);
 
 			if(computer!=null){	  
-				connection.commit();
-				connection.setAutoCommit(true);
-				logsServices.insert("Computer searching with computerId("+computerId+") completed", "Complete");
+				ConnectionManager.INSTANCE.commit(message);
 			}else{
-				connection.rollback();
-				logsServices.insert("Computer searching with computerId("+computerId+") error : computer does not exists", "Error");
+				ConnectionManager.INSTANCE.rollback(message+" (computer does not exists)");
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computer searching with computerId("+computerId+") error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 		
 		return computer;
 	}
 	
 	public void insert(Computer computer){
-		Connection connection = null;
-				
+		String message = "Computer insert";
 		try{
-			connection = ConnectionManager.getConnection(); 
-			connection.setAutoCommit(false);
-
-			computerDAO.insert(computer, connection);
-  
-			connection.commit();
-			connection.setAutoCommit(true);
-			logsServices.insert("Computer insertion completed", "Complete");
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
+			computerDAO.insert(computer);
+			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computer insertion error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 	}
 	
 	public void update(Computer computer){
-		Connection connection = null;
-		
+		String message = "Computer update";
 		try{
-			connection = ConnectionManager.getConnection(); 
-			connection.setAutoCommit(false);
-
-			computerDAO.update(computer, connection);
-			
-			connection.commit();
-			connection.setAutoCommit(true);
-			logsServices.insert("Computer update completed", "Complete");			
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
+			computerDAO.update(computer);
+			ConnectionManager.INSTANCE.commit(message);		
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computer update error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 	}
 	
 	public void delete(long computerId){
-		Connection connection = null;
-		
+		String message = "Computer removal";
 		try{
-			connection = ConnectionManager.getConnection(); 
-			connection.setAutoCommit(false);
-
-			computerDAO.delete(computerId, connection);
-			
-			connection.commit();
-			connection.setAutoCommit(true);
-			logsServices.insert("Computer deleting completed", "Complete");
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
+			computerDAO.delete(computerId);
+			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computer deleting error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 		
 	}
 
 	public int getComputerNumber(String filter) {
-		Connection connection = null;
+		String message = "Computer number searching";
 		int computerNumber = -1;
 		
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
-
-			 computerNumber = computerDAO.computerNumberByFilter(filter,connection);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
+			computerNumber = computerDAO.computerNumberByFilter(filter);
 
 			if(computerNumber>=0){	  
-				connection.commit();
-				connection.setAutoCommit(true);
-				logsServices.insert("Computer number searching completed", "Complete");
+				ConnectionManager.INSTANCE.commit(message);
 			}else{
-				connection.rollback();
-				logsServices.insert("Computer number searching error : negative number", "Error");
+				ConnectionManager.INSTANCE.rollback(message+" (negative number)");
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Computer number searching error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 		
 		return computerNumber;

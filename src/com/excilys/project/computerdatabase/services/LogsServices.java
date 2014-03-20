@@ -1,6 +1,5 @@
 package com.excilys.project.computerdatabase.services;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,76 +14,66 @@ public class LogsServices {
 	private LogsDAO logsDAO = LogsDAO.getInstance();
 
 	public List<Logs> getAllLogs(){
-		Connection connection = null;
 		List<Logs> logs = null;
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
-
-			//traitement des différentes instructions composant la transaction
-			logs = logsDAO.retrieveAll(connection);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
+			
+			logs = logsDAO.retrieveAll();
+			
 			if(logs!=null){	  
-				connection.commit(); // c'est ici que l'on valide la transaction
-				connection.setAutoCommit(true);
+				ConnectionManager.INSTANCE.commit(null);
 			}else{
-				connection.rollback();
+				ConnectionManager.INSTANCE.rollback(null);
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			ConnectionManager.INSTANCE.rollback(null);
+			sqle.printStackTrace();
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 
 		return logs;
 	}
 
 	public Logs getLog(long idLog){
-		Connection connection = null;
 		Logs log = null;
 
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			log = logsDAO.retrieveByLogId(idLog, connection);
+			log = logsDAO.retrieveByLogId(idLog);
 
 			if(log!=null){	  
-				connection.commit();
-				connection.setAutoCommit(true);
+				ConnectionManager.INSTANCE.commit(null);
 			}else{
-				connection.rollback();
+				ConnectionManager.INSTANCE.rollback(null);
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			ConnectionManager.INSTANCE.rollback(null);
+			sqle.printStackTrace();
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 
 		return log;
 	}
 
 	public void insert(String description, String type){
-		Connection connection = null;
-
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			logsDAO.insert(description, type, connection);
+			logsDAO.insert(description, type);
 
-			connection.commit();
-			connection.setAutoCommit(true);
+			ConnectionManager.INSTANCE.commit(null);
 
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-		}catch(Exception e){
-			try{connection.rollback();}catch(Exception e1){}
+			ConnectionManager.INSTANCE.rollback(null);
+			sqle.printStackTrace();
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 	}
 

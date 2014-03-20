@@ -48,7 +48,7 @@ public class EditComputer extends HttpServlet {
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
-		request.getRequestDispatcher("WEB-INFO/editComputer.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/editComputer.jsp").forward(request, response);
 	}
 
 	/**

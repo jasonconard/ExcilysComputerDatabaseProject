@@ -15,17 +15,17 @@ public class CompanyDAO {
 
 	public static CompanyDAO instance = null;
 
-	public List<Company> retrieveAll(Connection connection) throws SQLException{
-
+	public List<Company> retrieveAll() throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		List<Company> alc = new ArrayList<Company>();
 
-		String query = "SELECT * FROM "+table;
-
+		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
+		
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
-		results = preparedStatement.executeQuery(query);
+		preparedStatement = connection.prepareStatement(query.toString());
+		results = preparedStatement.executeQuery();
 
 		while(results.next()){
 			long id = results.getLong("id");
@@ -38,16 +38,16 @@ public class CompanyDAO {
 		return alc;
 	}
 
-	public Company retrieveByCompanyId(long idCompany, Connection connection) throws SQLException{
-
+	public Company retrieveByCompanyId(long idCompany) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Company company = null;
 
-		String query = "SELECT ca.* FROM company AS ca WHERE ca.id = "+idCompany;
+		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ").append(idCompany);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		results = preparedStatement.executeQuery();
 
 		if(results.next()){
@@ -60,12 +60,14 @@ public class CompanyDAO {
 		return company;
 	}
 
-	public void insert(Company c, Connection connection) throws SQLException{
-		String query = "INSERT INTO "+table+" VALUES(?,?)";
+	public void insert(Company c) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		
+		StringBuilder query = new StringBuilder("INSERT INTO ").append(table).append(" VALUES(?,?)");
 
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setLong(1, c.getId());
 		preparedStatement.setString(2, c.getName());

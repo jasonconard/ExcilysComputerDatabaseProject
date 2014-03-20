@@ -16,18 +16,18 @@ public class LogsDAO {
 
 	public static LogsDAO instance = null;
 
-	public List<Logs> retrieveAll(Connection connection) throws SQLException{
-
+	public List<Logs> retrieveAll() throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		List<Logs> logs = new ArrayList<Logs>();
 
-		String query = "SELECT * FROM "+table;
+		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
 
-		preparedStatement = connection.prepareStatement(query);
-		results = preparedStatement.executeQuery(query);
+		preparedStatement = connection.prepareStatement(query.toString());
+		results = preparedStatement.executeQuery();
 
 		while(results.next()){
 			long id = results.getLong("id");
@@ -42,17 +42,18 @@ public class LogsDAO {
 		return logs;
 	}
 
-	public Logs retrieveByLogId(long idLog, Connection connection) throws SQLException{
-
+	public Logs retrieveByLogId(long idLog) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Logs log = null;
 
-		String query = "SELECT ca.* FROM company AS ca WHERE ca.id = "+idLog;
+		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ")
+		.append(idLog);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 		results = preparedStatement.executeQuery();
 
 		if(results.next()){
@@ -67,12 +68,15 @@ public class LogsDAO {
 		return log;
 	}
 
-	public void insert(String description, String type, Connection connection) throws SQLException{
-		String query = "INSERT INTO "+table+" VALUES(0,?,?,now())";
+	public void insert(String description, String type) throws SQLException{
+		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		StringBuilder query = new StringBuilder("INSERT INTO ")
+		.append(table).append(" VALUES(0,?,?,now())");
+		
 
 		PreparedStatement preparedStatement = null;
 
-		preparedStatement = connection.prepareStatement(query);
+		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setString(1, description);
 		preparedStatement.setString(2, type);

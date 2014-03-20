@@ -95,7 +95,6 @@ public class DashBoard extends HttpServlet {
 		}
 
 		request.setAttribute("page", page);
-		request.setAttribute("list", page.getList());
 		
 		/* Redirection */
 		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);

@@ -1,6 +1,5 @@
 package com.excilys.project.computerdatabase.services;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,81 +12,67 @@ public class CompanyServices {
 	public static CompanyServices instance = null;
 
 	private CompanyDAO companyDAO = CompanyDAO.getInstance();
-	private LogsServices logsServices = LogsServices.getInstance();
 
 	public List<Company> getAllCompanies(){
-		//ThreadLocal<Connection> tlc = new ThreadLocal<Connection>();
-		Connection connection = null;
+		String message = "Companies searching";
 		List<Company> companies = null;
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			companies = companyDAO.retrieveAll(connection);
-			if(companies!=null){	  
-				connection.commit(); 
-				connection.setAutoCommit(true);
-				logsServices.insert("Companies searching completed", "Complete");
-			}else{
-				connection.rollback();
-				logsServices.insert("Companies searching error : companies is null", "Error");
-			}
+			companies = companyDAO.retrieveAll();
 			
+			if(companies!=null){	  
+				ConnectionManager.INSTANCE.commit(message);
+			}else{
+				ConnectionManager.INSTANCE.rollback(message+" (companies is null)");
+			}
 		}catch(SQLException e){
-			try{connection.rollback();}catch(Exception e2){}
-			logsServices.insert("Companies searching error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 
 		return companies;
 	}
 
 	public Company getCompany(long idCompany){
-		Connection connection = null;
+		String message = "Company searching";
 		Company company = null;
 
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			company = companyDAO.retrieveByCompanyId(idCompany, connection);
+			company = companyDAO.retrieveByCompanyId(idCompany);
 
 			if(company!=null || idCompany == 0){	  
-				connection.commit();
-				connection.setAutoCommit(true);
-				logsServices.insert("Company searching completed", "Complete");
+				ConnectionManager.INSTANCE.commit(message);
 			}else{
-				connection.rollback();
-				logsServices.insert("Company searching error : no company for id : "+idCompany, "Error");
+				ConnectionManager.INSTANCE.rollback(message+" (company is null)");
 			}
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Company searching error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 
 		return company;
 	}
 
 	public void insert(Company company){
-		Connection connection = null;
-
+		String message = "Company insert";
 		try{
-			connection = ConnectionManager.getConnection();
-			connection.setAutoCommit(false);
+			ConnectionManager.INSTANCE.getConnection();
+			ConnectionManager.INSTANCE.startTransaction();
 
-			companyDAO.insert(company, connection);
+			companyDAO.insert(company);
 
-			connection.commit();
-			connection.setAutoCommit(true);
-			logsServices.insert("Company insertion completed", "Complete");
+			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
-			try{connection.rollback();}catch(Exception e){}
-			logsServices.insert("Company insertion error", "Error");
+			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
-			try{connection.close();}catch(Exception e){}
+			ConnectionManager.INSTANCE.closeConnection();
 		}
 	}
 
