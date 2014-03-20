@@ -2,7 +2,6 @@ package com.excilys.project.computerdatabase.controller;
 
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,11 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.dto.ComputerDTO;
+import com.excilys.project.computerdatabase.mapper.ComputerMapper;
 import com.excilys.project.computerdatabase.services.CompanyServices;
 import com.excilys.project.computerdatabase.services.ComputerServices;
+import com.excilys.project.computerdatabase.validator.ComputerValidator;
 
 /**
  * Servlet implementation class AddComputer
@@ -60,75 +61,39 @@ public class EditComputer extends HttpServlet {
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		
-		
 		// Parameters searching
 		String idString = request.getParameter("idComputer");
 		String name = request.getParameter("name");
 		String introducedDateString =  request.getParameter("introducedDate");
 		String discontinuedDateString =  request.getParameter("discontinuedDate");
 		String companyIdString =  request.getParameter("company");
-		
-		Date introducedDate = null;
-		Date discontinuedDate = null;
-		Company company = null;
-		
-		
+				
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		company = companyServices.getCompany(companyId);
+		Company company = companyServices.getCompany(companyId);
 		
+		long id = Long.parseLong(idString);
 		
-		
-		/* Error searching */
-		String error = ""; 
-		if(introducedDateString!=null && introducedDateString.length()>0){
-			introducedDate = UsefulFunctions.stringToDate(introducedDateString);
-			if(introducedDate == null){
-				error += "Introduced date is not correct ("+introducedDateString+")<br/>";
-			}
-		}
-		if(discontinuedDateString!=null && discontinuedDateString.length()>0){
-			discontinuedDate = UsefulFunctions.stringToDate(discontinuedDateString);
-			if(introducedDate == null){
-				error += "Discontinued date is not correct ("+discontinuedDateString+")<br/>";
-			}
-		}
-		if( name==null || name.length()==0 ){
-			error += "Computer name is required.";
-		}
-				
+		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
+		.introduced(introducedDateString)
+		.discontinued(discontinuedDateString)
+		.company(company)
+		.build();
+			
+		String error = ComputerValidator.validate(cdto);
 		
 		/* Validation case */
 		if(error.length()==0){
-			long id = Long.parseLong(idString);
-			Computer computer = null;
-			if(company!=null){
-				computer = new Computer.ComputerBuilder(id, name)
-					.introduced(introducedDate)
-					.discontinued(discontinuedDate)
-					.company(
-						new Company.CompanyBuilder(company.getId())
-						.name(company.getName())
-						.build()
-					)
-					.build();
-			}else{
-				computer = new Computer.ComputerBuilder(id, name)
-					.introduced(introducedDate)
-		            .discontinued(discontinuedDate)
-		            .build();
-			}
-			computerServices.update(computer);
+			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
+			computerServices.update(neoComputer);
 			String message = "Computer modified";
 			request.setAttribute("message", message);
 		}
-		
 		
 		/* Error case */
 		if(error.length()>0){
 			request.setAttribute("error", error);
 		}
-		
 		
 		doGet(request,response);
 		/*if(idString != null && idString.length()>0){

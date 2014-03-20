@@ -9,7 +9,7 @@ public class ComputerDTO {
 	private final String discontinued;
 	private final Company company;
 
-	public ComputerDTO(ComputerBuilder computerBuilder) {
+	public ComputerDTO(ComputerDTOBuilder computerBuilder) {
 		this.id = computerBuilder.id;
         this.name = computerBuilder.name;
         this.introduced = computerBuilder.introduced;
@@ -82,29 +82,29 @@ public class ComputerDTO {
 		return true;
 	}
 	
-	public static class ComputerBuilder {
+	public static class ComputerDTOBuilder {
 		private final long id;
 		private final String name;
 		private String introduced;
 		private String discontinued;
 		private Company company = null;
         
-        public ComputerBuilder(long id, String name) {
+        public ComputerDTOBuilder(long id, String name) {
             this.id = id;
             this.name = name;
         }
         
-        public ComputerBuilder introduced(String introduced) {
+        public ComputerDTOBuilder introduced(String introduced) {
             this.introduced = introduced;
             return this;
         }
  
-        public ComputerBuilder discontinued(String discontinued) {
+        public ComputerDTOBuilder discontinued(String discontinued) {
             this.discontinued = discontinued;
             return this;
         }
  
-        public ComputerBuilder company(Company company) {
+        public ComputerDTOBuilder company(Company company) {
             this.company = company;
             return this;
         }

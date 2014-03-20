@@ -13,7 +13,7 @@ public class UsefulFunctions {
 		try {
 			date = formatter.parse(stringDate);
 		} catch (ParseException e) {
-			System.err.println("Problème de parsing (yyyy-MM-dd) :"+stringDate);
+			System.err.println("Date parsing error (yyyy-MM-dd) :"+stringDate);
 		}
 		return date;
 	}

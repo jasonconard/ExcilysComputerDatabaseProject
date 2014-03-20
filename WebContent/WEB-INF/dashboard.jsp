@@ -17,7 +17,7 @@
 	<table class="computers table table-striped table-bordered">
 		<db:header/>
 		<tbody>
-			<db:paginationTR/>		
+			<db:paginationTR/>
 			<c:forEach var="entry" items="${page.listElement}">
 				<tr>
 					<td>${entry.name}</td>
