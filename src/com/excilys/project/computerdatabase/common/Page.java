@@ -16,7 +16,7 @@ public class Page<E> {
 	
 	public int getNumero(){
 		return numero;
-	}
+	}				
 
 	public int getNumber() {
 		return number;

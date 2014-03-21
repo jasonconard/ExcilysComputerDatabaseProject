@@ -5,7 +5,7 @@
 
 	<h1>Edit Computer</h1>
 	<form action="EditComputer" class="form-inline" method="POST" id="editComputerForm">
-		<input type="hidden" name="idComputer" value="${computer.id}"/>
+		<input type="hidden" name="computerId" value="${computer.id}"/>
 		<fieldset>
 			<div class="clearfix">
 				<label for="name">Computer name:</label>
@@ -20,7 +20,7 @@
 			<div class="clearfix">
 				<label for="introduced">Introduced date:</label>
 				<div class="input">
-					<input type="date" class="form-control date-form" name="introducedDate" value="${computer.introduced}"
+					<input type="date" class="form-control date-form" name="introduced" value="${computer.introduced}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>
@@ -31,7 +31,7 @@
 			<div class="clearfix">
 				<label for="discontinued">Discontinued date:</label>
 				<div class="input">
-					<input type="date" class="form-control date-form" name="discontinuedDate" value="${computer.discontinued}"
+					<input type="date" class="form-control date-form" name="discontinued" value="${computer.discontinued}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>

@@ -3,7 +3,7 @@
 <%@ taglib prefix="db" tagdir="/WEB-INF/tags/dashboard" %>
 
 <section id="main">
-	<h1 id="homeTitle">${nbComputer} Computers found</h1>
+	<h1 id="homeTitle">${page.number} Computers found</h1>
 	<div id="actions">
 		<form action="" method="GET">
 			<input type="search" id="searchbox" name="search" value="${page.filter}"

@@ -1,6 +1,7 @@
 package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,21 @@ public class DashBoard extends HttpServlet {
 
 	ComputerServices computerServices = ComputerServices.getInstance();
 	
+	private static final String ATTR_COMPA = "company";
+	private static final String ATTR_COMPU_ID = "computerId";
+	private static final String ATTR_DELETE = "delete";
+	private static final String ATTR_ORDER = "order";
+	private static final String ATTR_ORDER_CU_NAME = "cu.name";
+	private static final String ATTR_ORDER_CA_NAME = "ca.name";
+	private static final String ATTR_DIR = "dir";
+	private static final String ATTR_ASC = "ASC";
+	private static final String ATTR_SEARCH = "search";
+	private static final String ATTR_PAGE = "page";
+	private static final String ATTR_NB_PAGE = "nbPage";
+	private static final String ATTR_NEXT_PAGE = "nextPage";
+	private static final String ATTR_LAST_PAGE = "lastPage";
+	private static final String ATTR_NUM = "numero";
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -31,37 +47,37 @@ public class DashBoard extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		
 		/* Deleting managment */
-		String idString = request.getParameter("computerId");
-		String delete 	= request.getParameter("delete");
+		String idString = request.getParameter(ATTR_COMPU_ID);
+		String delete 	= request.getParameter(ATTR_DELETE);
 		
-		if(idString != null && delete!=null && delete.equals("delete")){
+		if(idString != null && delete!=null && delete.equals(ATTR_DELETE)){
 			long id = Long.parseLong(idString);
 			computerServices.delete(id);
 		}
 		
 		
 		/* Order By managment */
-		String order = request.getParameter("order");
+		String order = request.getParameter(ATTR_ORDER);
 		
 		if(order == null || order.length()==0){
-			order = "cu.name";
-		}else if(order.equals("company")){
-			order = "ca.name";
+			order = ATTR_ORDER_CU_NAME;
+		}else if(order.equals(ATTR_COMPA)){
+			order = ATTR_ORDER_CA_NAME;
 		}
 		
-		String dir = request.getParameter("dir");
+		String dir = request.getParameter(ATTR_DIR);
 		if(dir == null || dir.length()==0){
-			dir = "ASC";
+			dir = ATTR_ASC;
 		}
 		
 		/* Searching managment */
-		String search = request.getParameter("search");
+		String search = request.getParameter(ATTR_SEARCH);
 		if(search==null){
 			search = "";
 		}
 		
 		/* Pagination managment */
-		String idPageString = request.getParameter("page");
+		String idPageString = request.getParameter(ATTR_PAGE);
 		
 		int idPage = 1;
 		if(idPageString != null && idPageString.length() != 0){
@@ -81,21 +97,21 @@ public class DashBoard extends HttpServlet {
 		
 		int nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
 		
-		request.setAttribute("nbPage", nbPage);
+		request.setAttribute(ATTR_NB_PAGE, nbPage);
 		
 		if(idPage<nbPage){
-			request.setAttribute("nextPage", idPage+1);
+			request.setAttribute(ATTR_NEXT_PAGE, idPage+1);
 		}else{
-			request.setAttribute("nextPage", -1);
+			request.setAttribute(ATTR_NEXT_PAGE, -1);
 		}
 		if(idPage>1){
-			request.setAttribute("lastPage", idPage-1);
+			request.setAttribute(ATTR_LAST_PAGE, idPage-1);
 		}else{
-			request.setAttribute("lastPage", -1);
+			request.setAttribute(ATTR_LAST_PAGE, -1);
 		}
 
-		request.setAttribute("page", page);
-		request.setAttribute("numero", page.getNumero()+1);
+		request.setAttribute(ATTR_PAGE, page);
+		request.setAttribute(ATTR_NUM, page.getNumero()+1);
 		/* Redirection */
 		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
 	}

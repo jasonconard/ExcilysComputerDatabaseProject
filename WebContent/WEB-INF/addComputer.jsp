@@ -19,7 +19,7 @@
 			<div class="clearfix">
 				<label for="introduced">Introduced date:</label>
 				<div class="input">
-					<input 	type="date" class="form-control date-form" name="introducedDate" value="${introduced}"
+					<input 	type="date" class="form-control date-form" name="introduced" value="${introduced}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>
@@ -30,7 +30,7 @@
 			<div class="clearfix">
 				<label for="discontinued">Discontinued date:</label>
 				<div class="input">
-					<input 	type="date" class="form-control date-form" name="discontinuedDate" value="${discontinued}"
+					<input 	type="date" class="form-control date-form" name="discontinued" value="${discontinued}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>
