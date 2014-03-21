@@ -9,7 +9,7 @@
 			<div class="clearfix">
 				<label for="name">Computer name:</label>
 				<div class="input">
-					<input type="text" class="form-control text-form" name="name" width="20"
+					<input type="text" class="form-control text-form" name="name" width="20" value="${name}"
 						   data-validation="length" data-validation-length="1-255" data-validation-optional="false"
 						   data-validation-error-msg="The user name has to be a value between 1-255 characters"/>
 					<span class="help-inline">Required</span>
@@ -19,7 +19,7 @@
 			<div class="clearfix">
 				<label for="introduced">Introduced date:</label>
 				<div class="input">
-					<input 	type="date" class="form-control date-form" name="introducedDate"
+					<input 	type="date" class="form-control date-form" name="introducedDate" value="${introduced}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>
@@ -30,7 +30,7 @@
 			<div class="clearfix">
 				<label for="discontinued">Discontinued date:</label>
 				<div class="input">
-					<input 	type="date" class="form-control date-form" name="discontinuedDate"
+					<input 	type="date" class="form-control date-form" name="discontinuedDate" value="${discontinued}"
 							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
 							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
 					/>
@@ -44,7 +44,12 @@
 					<select name="company" class="form-control select-form">
 						<option value="0">--</option>
 						<c:forEach var="entry" items="${allCompany}">
-							<option value="${entry.id}">${entry.name}</option>
+							<c:if test="${companyId == entry.id}">
+								<option value="${entry.id}" selected="selected">${entry.name}</option>
+							</c:if>
+							<c:if test="${companyId != entry.id}">
+								<option value="${entry.id}">${entry.name}</option>
+							</c:if>
 						</c:forEach>
 					</select>
 				</div>

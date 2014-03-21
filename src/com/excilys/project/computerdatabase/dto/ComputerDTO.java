@@ -3,11 +3,11 @@ package com.excilys.project.computerdatabase.dto;
 import com.excilys.project.computerdatabase.domain.Company;
 
 public class ComputerDTO {
-	private final long id;
-	private final String name;
-	private final String introduced;
-	private final String discontinued;
-	private final Company company;
+	private long id;
+	private String name;
+	private String introduced;
+	private String discontinued;
+	private Company company;
 
 	public ComputerDTO(ComputerDTOBuilder computerBuilder) {
 		this.id = computerBuilder.id;
@@ -37,6 +37,26 @@ public class ComputerDTO {
 		return company;
 	}
 	
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setIntroduced(String introduced) {
+		this.introduced = introduced;
+	}
+
+	public void setDiscontinued(String discontinued) {
+		this.discontinued = discontinued;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
 	@Override
 	public String toString(){
 		return "(id: "+id+", name: "+name+", "

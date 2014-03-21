@@ -38,11 +38,41 @@ public class EditComputer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idString = request.getParameter("computerId");
 		
+		String name = request.getParameter("name");
+		String introducedDateString =  request.getParameter("introducedDate");
+		String discontinuedDateString =  request.getParameter("discontinuedDate");
+		String companyIdString =  request.getParameter("company");
+		
+		if(idString == null){
+			idString = request.getParameter("idComputer");
+		}
 		if(idString != null && idString.length()>0){
 			long id = Long.parseLong(idString);
 			Computer computer = computerServices.getComputer(id);
-			if(computer!=null){
-				request.setAttribute("computer",computer);
+			ComputerDTO cdto = ComputerMapper.objectToDto(computer);
+			
+			if(name!=null){
+				cdto.setName(name);
+			}
+			
+			if(introducedDateString!=null){
+				cdto.setIntroduced(introducedDateString);
+			}
+			
+			if(discontinuedDateString!=null){
+				cdto.setDiscontinued(discontinuedDateString);
+			}
+			
+			if(companyIdString!=null){
+				long companyId = Long.parseLong(companyIdString);
+				if(companyId > 0){
+					Company company = companyServices.getCompany(companyId); 
+					cdto.setCompany(company);
+				}
+			}
+			
+			if(cdto!=null){
+				request.setAttribute("computer",cdto);
 			}
 		}
 		

@@ -19,7 +19,8 @@ public class CompanyDAO {
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		List<Company> alc = new ArrayList<Company>();
 
-		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
+		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table)
+				.append(" ORDER BY name");
 		
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;

@@ -40,6 +40,24 @@ public class AddComputer extends HttpServlet {
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
+		
+		String name = request.getParameter("name");
+		String introduced = request.getParameter("introducedDate");
+		String discontinued = request.getParameter("discontinuedDate");
+		String companyIdString =  request.getParameter("company");
+		if(name != null){
+			request.setAttribute("name", name);
+		}
+		if(introduced != null){
+			request.setAttribute("introduced", introduced);
+		}
+		if(discontinued != null){
+			request.setAttribute("discontinued", discontinued);
+		}
+		if(companyIdString != null){
+			request.setAttribute("companyId", companyIdString);
+		}
+		
 		request.getRequestDispatcher("WEB-INF/addComputer.jsp").forward(request, response);
 	}
 

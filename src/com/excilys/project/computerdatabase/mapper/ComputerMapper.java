@@ -1,5 +1,8 @@
 package com.excilys.project.computerdatabase.mapper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.domain.Computer.ComputerBuilder;
@@ -10,11 +13,11 @@ public class ComputerMapper {
 
 		java.util.Date introduced = null;
 		if(cdto.getIntroduced().length()>0){
-			UsefulFunctions.stringToDate(cdto.getIntroduced());;
+			introduced = UsefulFunctions.stringToDate(cdto.getIntroduced());
 		}
 		java.util.Date discontinued = null;
 		if(cdto.getDiscontinued().length()>0){
-			UsefulFunctions.stringToDate(cdto.getDiscontinued());
+			discontinued = UsefulFunctions.stringToDate(cdto.getDiscontinued());
 		}
 		
 		Computer c = new ComputerBuilder(cdto.getId(), cdto.getName())
@@ -24,5 +27,27 @@ public class ComputerMapper {
 						.build();
 		
 		return c;
+	}
+	
+	public static ComputerDTO objectToDto(Computer c){
+		String introduced = "";
+		if(c.getIntroduced()!=null){
+			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+			introduced = df.format(c.getIntroduced());
+		}
+
+		String discontinued = "";
+		if(c.getDiscontinued()!=null){
+			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+			discontinued = df.format(c.getDiscontinued());
+		}
+		
+		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(c.getId(),c.getName())
+		.introduced(introduced)
+		.discontinued(discontinued)
+		.company(c.getCompany())
+		.build();
+		
+		return cdto;
 	}
 }
