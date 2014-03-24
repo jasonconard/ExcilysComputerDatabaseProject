@@ -14,6 +14,9 @@
 			Computer</a>
 	</div>
 	<br />
+	<c:if test="${message != null}">
+		<p class="alert alert-success">${message} <br/></p>
+	</c:if>
 	<table class="computers table table-striped table-bordered">
 		<db:header/>
 		<tbody>

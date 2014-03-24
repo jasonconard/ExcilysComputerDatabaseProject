@@ -3,11 +3,11 @@ package com.excilys.project.computerdatabase.domain;
 import java.util.Date;
 
 public class Computer {
-	private final long id;
-	private final String name;
-	private final Date introduced;
-	private final Date discontinued;
-	private final Company company;
+	private long id;
+	private String name;
+	private Date introduced;
+	private Date discontinued;
+	private Company company;
 
 	public Computer(ComputerBuilder computerBuilder) {
 		this.id = computerBuilder.id;
@@ -37,6 +37,26 @@ public class Computer {
 		return company;
 	}
 	
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setIntroduced(Date introduced) {
+		this.introduced = introduced;
+	}
+
+	public void setDiscontinued(Date discontinued) {
+		this.discontinued = discontinued;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
 	@Override
 	public String toString(){
 		return "(id: "+id+", name: "+name+", "

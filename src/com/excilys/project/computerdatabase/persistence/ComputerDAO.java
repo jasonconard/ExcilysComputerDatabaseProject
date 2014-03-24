@@ -141,14 +141,18 @@ public class ComputerDAO {
 		return computer;
 	}
 
-	public void insert(Computer computer) throws SQLException{
+	public int insert(Computer computer) throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		int id = 0;
 		
 		StringBuilder query = new StringBuilder("INSERT INTO ")
 		.append(table).append(" VALUES(?,?,?,?,?)");
 
 		PreparedStatement preparedStatement = null;
-
+		
+		preparedStatement = connection.prepareStatement("START TRANSACTION");
+		preparedStatement.executeUpdate();
+		
 		preparedStatement = connection.prepareStatement(query.toString());
 
 		preparedStatement.setLong  (1, computer.getId()  );
@@ -173,9 +177,18 @@ public class ComputerDAO {
 		}
 
 		preparedStatement.executeUpdate();
-
-		closeAll(null,preparedStatement);
-
+		
+		preparedStatement = connection.prepareStatement("SELECT LAST_INSERT_ID() AS idComputer");
+		ResultSet rs = preparedStatement.executeQuery();
+		if(rs.next()){
+			id = rs.getInt("idComputer");
+		}
+		
+		preparedStatement = connection.prepareStatement("COMMIT");
+		preparedStatement.executeUpdate();
+		
+		closeAll(rs,preparedStatement);
+		return id;
 	}
 
 	public void delete(long id) throws SQLException {

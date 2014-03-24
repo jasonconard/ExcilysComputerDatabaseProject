@@ -85,18 +85,20 @@ public class ComputerServices {
 		return computer;
 	}
 	
-	public void insert(Computer computer){
+	public int insert(Computer computer){
 		String message = "Computer insert";
+		int id = 0;
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 			ConnectionManager.INSTANCE.startTransaction();
-			computerDAO.insert(computer);
+			id = computerDAO.insert(computer);
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
 			ConnectionManager.INSTANCE.rollback(message);
 		}finally{
 			ConnectionManager.INSTANCE.closeConnection();
 		}
+		return id;
 	}
 	
 	public void update(Computer computer){

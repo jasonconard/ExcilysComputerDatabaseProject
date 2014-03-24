@@ -61,11 +61,7 @@
 			or <a href="DashBoard" class="btn btn-default">Cancel</a>
 		</div>
 	</form>
-	
 	<br/>
-	<c:if test="${message != null}">
-		<p class="alert alert-success">${message} <br/> Do you want to return into the main <a href="DashBoard">page</a>?</p>
-	</c:if>
 	<c:if test="${error != null}">
 		<p class="alert alert-danger">${error} <br/> Do you want to return into the main <a href="DashBoard">page</a>?</p>
 	</c:if>

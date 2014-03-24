@@ -71,7 +71,7 @@ public class LogsDAO {
 	public void insert(String description, String type) throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		StringBuilder query = new StringBuilder("INSERT INTO ")
-		.append(table).append(" VALUES(0,?,?,now())");
+		.append(table).append(" VALUES(0,?,?,LOCALTIME())");
 		
 
 		PreparedStatement preparedStatement = null;

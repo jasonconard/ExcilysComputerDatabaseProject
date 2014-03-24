@@ -72,50 +72,43 @@ public class AddComputer extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/* Parameters retrieving */
+		// Searching for all companies		
+		List<Company> allCompany = null;
+		allCompany = companyServices.getAllCompanies();
+		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
+
+		// Parameters searching
 		String name = request.getParameter(ATTR_NAME);
 		String introducedDateString =  request.getParameter(ATTR_INTR);
 		String discontinuedDateString =  request.getParameter(ATTR_DISC);
 		String companyIdString =  request.getParameter(ATTR_COMPA);
-		
-		Company company = null;
-		
+
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		company = companyServices.getCompany(companyId);
+		Company company = companyServices.getCompany(companyId);
+
+		long id = 0;
 		
-		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(0, name)
+		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
 		.introduced(introducedDateString)
 		.discontinued(discontinuedDateString)
 		.company(company)
 		.build();
-		
+
 		String error = ComputerValidator.validate(cdto);
+		
 		
 		/* Validation case */
 		if(error.length()==0){
-			Computer computer = ComputerMapper.dtoToObject(cdto);
-			computerServices.insert(computer);
-			String message = "Computer Added";
-			request.setAttribute("message", message);
-		}
-		
-		/* Error case */
-		if(error.length()>0){
+			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
+			StringBuilder message = new StringBuilder();
+			id = computerServices.insert(neoComputer);
+			message.append("Computer added");
+			response.sendRedirect("DashBoard?message=add&computerIdMessage="+id);
+		}else{
 			request.setAttribute("error", error);
+			request.setAttribute("computerId", ""+id);
+			doGet(request, response);
 		}
-		
-		/* Loading AddComputer page */
-		doGet(request,response);
-		
-		/*List<Company> allCompanies = null;
-		allCompanies = companyDao.selectAllCompany();
-		request.setAttribute("allCompany", allCompanies);
-		*/
-		//request.getRequestDispatcher("AddComputer").forward(request, response);
-		//response.sendRedirect("AddComputer");
-		
-		
 	}
-
 }

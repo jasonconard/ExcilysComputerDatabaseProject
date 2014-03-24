@@ -22,36 +22,36 @@ import com.excilys.project.computerdatabase.validator.ComputerValidator;
  */
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
 	CompanyServices companyServices = CompanyServices.getInstance();
 	ComputerServices computerServices = ComputerServices.getInstance();
-	
+
 	private static final String ATTR_ALL_COMPANY = "allCompany";
 	private static final String ATTR_NAME = "name";
-	private static final String ATTR_INTRD = "introduced";
-	private static final String ATTR_DISCD = "discontinued";
+	private static final String ATTR_INTR = "introduced";
+	private static final String ATTR_DISC = "discontinued";
 	private static final String ATTR_COMPA = "company";
 	private static final String ATTR_COMPU = "computer";
 	private static final String ATTR_COMPU_ID = "computerId";
-	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditComputer() {
-        super();
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public EditComputer() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idString = request.getParameter(ATTR_COMPU_ID);
-		
+
 		String name = request.getParameter(ATTR_NAME);
-		String introducedDateString =  request.getParameter(ATTR_INTRD);
-		String discontinuedDateString =  request.getParameter(ATTR_DISCD);
+		String introducedDateString =  request.getParameter(ATTR_INTR);
+		String discontinuedDateString =  request.getParameter(ATTR_DISC);
 		String companyIdString =  request.getParameter(ATTR_COMPA);
-		
+
 		if(idString == null){
 			idString = request.getParameter(ATTR_COMPU_ID);
 		}
@@ -59,19 +59,19 @@ public class EditComputer extends HttpServlet {
 			long id = Long.parseLong(idString);
 			Computer computer = computerServices.getComputer(id);
 			ComputerDTO cdto = ComputerMapper.objectToDto(computer);
-			
+
 			if(name!=null){
 				cdto.setName(name);
 			}
-			
+
 			if(introducedDateString!=null){
 				cdto.setIntroduced(introducedDateString);
 			}
-			
+
 			if(discontinuedDateString!=null){
 				cdto.setDiscontinued(discontinuedDateString);
 			}
-			
+
 			if(companyIdString!=null){
 				long companyId = Long.parseLong(companyIdString);
 				if(companyId > 0){
@@ -79,12 +79,12 @@ public class EditComputer extends HttpServlet {
 					cdto.setCompany(company);
 				}
 			}
-			
+
 			if(cdto!=null){
 				request.setAttribute(ATTR_COMPU,cdto);
 			}
 		}
-		
+
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
@@ -99,52 +99,43 @@ public class EditComputer extends HttpServlet {
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
-		
+
 		// Parameters searching
 		String idString = request.getParameter(ATTR_COMPU_ID);
 		String name = request.getParameter(ATTR_NAME);
-		String introducedDateString =  request.getParameter(ATTR_INTRD);
-		String discontinuedDateString =  request.getParameter(ATTR_DISCD);
+		String introducedDateString =  request.getParameter(ATTR_INTR);
+		String discontinuedDateString =  request.getParameter(ATTR_DISC);
 		String companyIdString =  request.getParameter(ATTR_COMPA);
-				
+
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
 		Company company = companyServices.getCompany(companyId);
-		
-		long id = Long.parseLong(idString);
+
+		long id = 0;
+		id = Integer.parseInt(idString);
 		
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
 		.introduced(introducedDateString)
 		.discontinued(discontinuedDateString)
 		.company(company)
 		.build();
-			
+
 		String error = ComputerValidator.validate(cdto);
-		
+
+
 		/* Validation case */
 		if(error.length()==0){
 			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
+			StringBuilder message = new StringBuilder();
 			computerServices.update(neoComputer);
-			String message = "Computer modified";
-			request.setAttribute("message", message);
-		}
-		
-		/* Error case */
-		if(error.length()>0){
+			message.append("Computer modified");
+			response.sendRedirect("DashBoard?message=update&computerIdMessage="+id);
+		}else{
 			request.setAttribute("error", error);
+			request.setAttribute("computerId", ""+id);
+			doGet(request, response);
 		}
-		
-		doGet(request,response);
-		/*if(idString != null && idString.length()>0){
-			long idRetrieve = Long.parseLong(idString);
-			Computer computer = computerDao.retrieveByComputerId(idRetrieve);
-			if(computer!=null){
-				request.setAttribute("computer",computer);
-			}
-		}
-		*/
-		//response.sendRedirect("EditComputer");
-		//request.getRequestDispatcher("EditComputer").forward(request, response);
+
 	}
 
 }
