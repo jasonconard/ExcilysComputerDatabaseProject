@@ -1,20 +1,20 @@
 package com.excilys.project.computerdatabase.dto;
 
-import com.excilys.project.computerdatabase.domain.Company;
-
 public class ComputerDTO {
 	private long id;
 	private String name;
 	private String introduced;
 	private String discontinued;
-	private Company company;
+	private long companyId;
+	private String companyName;
 
 	public ComputerDTO(ComputerDTOBuilder computerBuilder) {
 		this.id = computerBuilder.id;
         this.name = computerBuilder.name;
         this.introduced = computerBuilder.introduced;
         this.discontinued = computerBuilder.discontinued;
-        this.company = computerBuilder.company;
+        this.companyId = computerBuilder.companyId;
+        this.companyName = computerBuilder.companyName;
 	}
 
 	public long getId() {
@@ -33,10 +33,14 @@ public class ComputerDTO {
 		return discontinued;
 	}
 	
-	public Company getCompany() {
-		return company;
+	public long getCompanyId() {
+		return companyId;
 	}
-	
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -53,21 +57,29 @@ public class ComputerDTO {
 		this.discontinued = discontinued;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
 	}
 
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	
 	@Override
-	public String toString(){
-		return "(id: "+id+", name: "+name+", "
-				+ "introduced: "+introduced+", discontinued: "+discontinued+")";
+	public String toString() {
+		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced="
+				+ introduced + ", discontinued=" + discontinued
+				+ ", companyId=" + companyId + ", companyName=" + companyName
+				+ "]";
 	}
 
 	@Override
 	public int hashCode() {
 		return (int) id%4;
 	}
-
+	
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -77,10 +89,12 @@ public class ComputerDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		ComputerDTO other = (ComputerDTO) obj;
-		if (company == null) {
-			if (other.company != null)
+		if (companyId != other.companyId)
+			return false;
+		if (companyName == null) {
+			if (other.companyName != null)
 				return false;
-		} else if (!company.equals(other.company))
+		} else if (!companyName.equals(other.companyName))
 			return false;
 		if (discontinued == null) {
 			if (other.discontinued != null)
@@ -101,13 +115,16 @@ public class ComputerDTO {
 			return false;
 		return true;
 	}
-	
+
+
+
 	public static class ComputerDTOBuilder {
 		private final long id;
 		private final String name;
 		private String introduced;
 		private String discontinued;
-		private Company company = null;
+		private long companyId;
+		private String companyName;
         
         public ComputerDTOBuilder(long id, String name) {
             this.id = id;
@@ -124,11 +141,16 @@ public class ComputerDTO {
             return this;
         }
  
-        public ComputerDTOBuilder company(Company company) {
-            this.company = company;
+        public ComputerDTOBuilder companyId(long companyId) {
+            this.companyId = companyId;
             return this;
         }
- 
+
+        public ComputerDTOBuilder companyName(String companyName) {
+            this.companyName = companyName;
+            return this;
+        }
+        
         public ComputerDTO build() {
             return new ComputerDTO(this);
         }

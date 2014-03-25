@@ -18,7 +18,6 @@ public class DashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	ComputerServices computerServices = ComputerServices.getInstance();
-
 	CompanyServices companyServices = CompanyServices.getInstance();
 
 	private static final String ATTR_COMPA            = "company";
@@ -50,9 +49,11 @@ public class DashBoard extends HttpServlet {
 	}
 
 	/**
+	 * @throws IOException 
+	 * @throws ServletException 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{		
 
 		/* From ADD and EDIT Computer Servlet */
 		String idAttString = request.getParameter(ATTR_COMPU_ID_MESSAGE);
@@ -146,11 +147,5 @@ public class DashBoard extends HttpServlet {
 
 		/* Redirection */
 		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
 }

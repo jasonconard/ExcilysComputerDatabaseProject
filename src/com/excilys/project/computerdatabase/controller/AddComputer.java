@@ -27,11 +27,12 @@ public class AddComputer extends HttpServlet {
 	ComputerServices computerServices = ComputerServices.getInstance();
 	
 	private static final String ATTR_ALL_COMPANY = "allCompany";
-	private static final String ATTR_NAME = "name";
-	private static final String ATTR_INTR = "introduced";
-	private static final String ATTR_DISC = "discontinued";
-	private static final String ATTR_COMPA = "company";
 	private static final String ATTR_COMPA_ID = "companyId";
+	private static final String NAME = "name";
+	private static final String INTRODUCED = "introduced";
+	private static final String DISCONTINUED = "discontinued";
+	private static final String PARAM_COMPA = "company";
+	
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -48,18 +49,18 @@ public class AddComputer extends HttpServlet {
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
 		
-		String name = request.getParameter(ATTR_NAME);
-		String introduced = request.getParameter(ATTR_INTR);
-		String discontinued = request.getParameter(ATTR_DISC);
-		String companyIdString =  request.getParameter(ATTR_COMPA);
+		String name = request.getParameter(NAME);
+		String introduced = request.getParameter(INTRODUCED);
+		String discontinued = request.getParameter(DISCONTINUED);
+		String companyIdString =  request.getParameter(PARAM_COMPA);
 		if(name != null){
-			request.setAttribute(ATTR_NAME, name);
+			request.setAttribute(NAME, name);
 		}
 		if(introduced != null){
-			request.setAttribute(ATTR_INTR, introduced);
+			request.setAttribute(INTRODUCED, introduced);
 		}
 		if(discontinued != null){
-			request.setAttribute(ATTR_DISC, discontinued);
+			request.setAttribute(DISCONTINUED, discontinued);
 		}
 		if(companyIdString != null){
 			request.setAttribute(ATTR_COMPA_ID, companyIdString);
@@ -72,16 +73,12 @@ public class AddComputer extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Searching for all companies		
-		List<Company> allCompany = null;
-		allCompany = companyServices.getAllCompanies();
-		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
 
 		// Parameters searching
-		String name = request.getParameter(ATTR_NAME);
-		String introducedDateString =  request.getParameter(ATTR_INTR);
-		String discontinuedDateString =  request.getParameter(ATTR_DISC);
-		String companyIdString =  request.getParameter(ATTR_COMPA);
+		String name = request.getParameter(NAME);
+		String introducedDateString =  request.getParameter(INTRODUCED);
+		String discontinuedDateString =  request.getParameter(DISCONTINUED);
+		String companyIdString =  request.getParameter(PARAM_COMPA);
 
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
@@ -89,10 +86,16 @@ public class AddComputer extends HttpServlet {
 
 		long id = 0;
 		
+		String companyName = null;
+		if(company!=null){
+			companyName = company.getName();
+		}
+		
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
 		.introduced(introducedDateString)
 		.discontinued(discontinuedDateString)
-		.company(company)
+		.companyId(companyId)
+		.companyName(companyName)
 		.build();
 
 		String error = ComputerValidator.validate(cdto);
@@ -103,8 +106,15 @@ public class AddComputer extends HttpServlet {
 			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
 			StringBuilder message = new StringBuilder();
 			id = computerServices.insert(neoComputer);
-			message.append("Computer added");
-			response.sendRedirect("DashBoard?message=add&computerIdMessage="+id);
+			if(id >= 0){
+				message.append("Computer added");
+				response.sendRedirect("DashBoard?message=add&computerIdMessage="+id);
+			}else{
+				request.setAttribute("error", "Database error, please contact the support.");
+				request.setAttribute("computerId", ""+id);
+				doGet(request, response);
+			}
+			
 		}else{
 			request.setAttribute("error", error);
 			request.setAttribute("computerId", ""+id);

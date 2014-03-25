@@ -4,11 +4,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
+import com.excilys.project.computerdatabase.domain.Company.CompanyBuilder;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.domain.Computer.ComputerBuilder;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
 
 public class ComputerMapper {
+	
 	public static Computer dtoToObject(ComputerDTO cdto){
 
 		java.util.Date introduced = null;
@@ -19,11 +21,14 @@ public class ComputerMapper {
 		if(cdto.getDiscontinued().length()>0){
 			discontinued = UsefulFunctions.stringToDate(cdto.getDiscontinued());
 		}
-		
 		Computer c = new ComputerBuilder(cdto.getId(), cdto.getName())
 						.introduced(introduced)
 						.discontinued(discontinued)
-						.company(cdto.getCompany())
+						.company( 
+								new CompanyBuilder(cdto.getCompanyId())
+								.name(cdto.getCompanyName())
+								.build()
+						)
 						.build();
 		
 		return c;
@@ -45,7 +50,8 @@ public class ComputerMapper {
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(c.getId(),c.getName())
 		.introduced(introduced)
 		.discontinued(discontinued)
-		.company(c.getCompany())
+		.companyId(c.getCompany().getId())
+		.companyName(c.getCompany().getName())
 		.build();
 		
 		return cdto;

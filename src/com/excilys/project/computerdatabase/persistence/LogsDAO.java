@@ -20,7 +20,10 @@ public class LogsDAO {
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		List<Logs> logs = new ArrayList<Logs>();
 
-		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
+		StringBuilder query = new StringBuilder();
+		
+		query.append("SELECT * FROM ")
+		     .append(table);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
@@ -46,8 +49,9 @@ public class LogsDAO {
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Logs log = null;
 
-		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ")
-		.append(idLog);
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT ca.* FROM company AS ca WHERE ca.id = ")
+		     .append(idLog);
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
@@ -70,8 +74,10 @@ public class LogsDAO {
 
 	public void insert(String description, String type) throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
-		StringBuilder query = new StringBuilder("INSERT INTO ")
-		.append(table).append(" VALUES(0,?,?,LOCALTIME())");
+		StringBuilder query = new StringBuilder();
+		query.append("INSERT INTO ")
+		     .append(table)
+		     .append(" VALUES(0,?,?,LOCALTIME())");
 		
 
 		PreparedStatement preparedStatement = null;

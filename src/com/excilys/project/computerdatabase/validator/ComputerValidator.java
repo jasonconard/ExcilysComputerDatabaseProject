@@ -22,7 +22,7 @@ public class ComputerValidator {
 			datesHaveNoError = false;
 		}
 		
-		if(datesHaveNoError && neoComputer.getIntroduced().length() == 10 && neoComputer.getIntroduced().length() == 10){
+		if(datesHaveNoError && neoComputer.getIntroduced().length() == 10 && neoComputer.getDiscontinued().length() == 10){
 			if(!dateLaterThan(neoComputer.getDiscontinued(), neoComputer.getIntroduced())){
 				error.append("Discontinued have to be later than introduced date");
 			}
@@ -32,7 +32,6 @@ public class ComputerValidator {
 	}
 	
 	private static boolean dateLaterThan(String discontinued, String introduced) {
-		
 		boolean dateLater = false;
 		
 		String yearDisString  = discontinued.substring(0,4);
@@ -65,49 +64,20 @@ public class ComputerValidator {
 	}
 
 	public static boolean testDate(String date){
-		boolean testDate = false;
-		if(date.length()==10){
-			String yearString = date.substring(0,4);
-			String monthString = date.substring(5,7);
-			String dayString = date.substring(8,10);
-			
-			int year = Integer.parseInt(yearString);
-			int month = Integer.parseInt(monthString);
-			int day = Integer.parseInt(dayString);
-			
-			if(year>=1000 && year<=9999){
-				if(month>0 && month<=12){
-					if(day>0){
-						if(month==1 && day<= 31){
-							testDate = true;
-						}else if(month==2 && ((year%4) == 0 && day <= 29) || ((year%4) != 0 && day <= 28)){
-							testDate = true;
-						}else if(month==3 && day<= 31){
-							testDate = true;
-						}else if(month==4 && day<= 30){
-							testDate = true;
-						}else if(month==5 && day<= 31){
-							testDate = true;
-						}else if(month==6 && day<= 30){
-							testDate = true;
-						}else if(month==7 && day<= 31){
-							testDate = true;
-						}else if(month==8 && day<= 31){
-							testDate = true;
-						}else if(month==9 && day<= 30){
-							testDate = true;
-						}else if(month==10 && day<= 31){
-							testDate = true;
-						}else if(month==11 && day<= 30){
-							testDate = true;
-						}else if(month==12 && day<= 31){
-							testDate = true;
-						}
-					}
-				}
-			}
-		}
-		return testDate;
+		
+		StringBuilder regexp = new StringBuilder();
+		regexp.append("^");
+			regexp.append("(19|20)\\d\\d[- /.]"); //Years
+			regexp.append("(");
+				regexp.append("(0[13578]|1[02])[- /.](0[1-9]|[12][0-9]|3[01])"); //Month with 31 days
+				regexp.append("|");
+				regexp.append("(0[469]|11])[- /.](0[1-9]|[12][0-9]|30)"); //Month with 30 days
+				regexp.append("|");
+				regexp.append("(02)[- /.](0[1-9]|[12][0-9])"); //February case (no leap year management)
+			regexp.append(")");
+		regexp.append("$");
+		
+		return date.matches(regexp.toString());
 	}
 
 	

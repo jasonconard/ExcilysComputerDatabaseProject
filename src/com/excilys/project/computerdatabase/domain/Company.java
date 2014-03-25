@@ -2,15 +2,9 @@ package com.excilys.project.computerdatabase.domain;
 
 
 public class Company {
-	private final long id;
-	private final String name;
+	private long id;
+	private String name;
 	
-	/*public Company(long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}*/
-
 	public Company(CompanyBuilder companyBuilder) {
 		this.id = companyBuilder.id;
         this.name = companyBuilder.name;
@@ -23,7 +17,15 @@ public class Company {
 	public String getName() {
 		return name;
 	}
-	
+		
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString(){
 		return "(id: "+id+", name: "+name+")";
@@ -55,7 +57,7 @@ public class Company {
 	
 	public static class CompanyBuilder {
         private final long id;
-        private  String name;
+        private String name;
         
         public CompanyBuilder(long id) {
             this.id = id;

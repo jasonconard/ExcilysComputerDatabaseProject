@@ -11,7 +11,7 @@ create table logs ( id bigint not null auto_increment, description varchar(255),
 
 alter table computer add constraint fk_computer_company_1 foreign key (company_id) references company (id) on delete restrict on update restrict;
 create index ix_computer_company_1 on computer (company_id);
-create index ix_computer_company_1 on computer (id);
+create index ix_logs on logs (id);
 
 --#-----------------------------------
 --#USER RIGHTS MANAGEMENT

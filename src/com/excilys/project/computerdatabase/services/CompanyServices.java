@@ -18,7 +18,6 @@ public class CompanyServices {
 		List<Company> companies = null;
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			companies = companyDAO.retrieveAll();
 			
@@ -42,7 +41,6 @@ public class CompanyServices {
 
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			company = companyDAO.retrieveByCompanyId(idCompany);
 
@@ -64,7 +62,6 @@ public class CompanyServices {
 		String message = "Company insert";
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			companyDAO.insert(company);
 

@@ -3,7 +3,6 @@ package com.excilys.project.computerdatabase.services;
 import java.sql.SQLException;
 
 import com.excilys.project.computerdatabase.common.Page;
-import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
@@ -18,10 +17,9 @@ public class ComputerServices {
 		String message = "Computers searching";
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
-			pc.setListElement(computerDAO.retrieveAllWithCompanyNameByWrapper(pc));
-			pc.setNumber(computerDAO.computerNumberByFilter(pc.getFilter()));
+			pc.setListElement(computerDAO.retrieveAllByWrapper(pc));
+			pc.setNumber(computerDAO.numberByFilter(pc.getFilter()));
 			
 			if(pc.getListElement()!=null){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -37,37 +35,12 @@ public class ComputerServices {
 		return pc;
 	}
 	
-	public Company getCompany(long computerId){
-		String message = "Companies searching with computerId("+computerId+")";
-		Company company = null;
-		
-		try{
-			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
-
-			company = computerDAO.retrieveCompanyByComputerId(computerId);
-
-			if(company!=null){	  
-				ConnectionManager.INSTANCE.commit(message);
-			}else{
-				ConnectionManager.INSTANCE.rollback(message+" (company does not exists)");
-			}
-		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(message);
-		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
-		}
-		
-		return company;
-	}
-	
 	public Computer getComputer(long computerId){
 		String message = "Computer searching with computerId("+computerId+")";
 		Computer computer = null;
 		
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			computer = computerDAO.retrieveByComputerId(computerId);
 
@@ -87,11 +60,12 @@ public class ComputerServices {
 	
 	public int insert(Computer computer){
 		String message = "Computer insert";
-		int id = 0;
+		int id = -1;
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
+			
 			id = computerDAO.insert(computer);
+			
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
 			ConnectionManager.INSTANCE.rollback(message);
@@ -105,8 +79,9 @@ public class ComputerServices {
 		String message = "Computer update";
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
+			
 			computerDAO.update(computer);
+			
 			ConnectionManager.INSTANCE.commit(message);		
 		}catch(SQLException sqle){
 			ConnectionManager.INSTANCE.rollback(message);
@@ -119,8 +94,9 @@ public class ComputerServices {
 		String message = "Computer removal";
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
+			
 			computerDAO.delete(computerId);
+			
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
 			ConnectionManager.INSTANCE.rollback(message);
@@ -136,8 +112,8 @@ public class ComputerServices {
 		
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
-			computerNumber = computerDAO.computerNumberByFilter(filter);
+
+			computerNumber = computerDAO.numberByFilter(filter);
 
 			if(computerNumber>=0){	  
 				ConnectionManager.INSTANCE.commit(message);

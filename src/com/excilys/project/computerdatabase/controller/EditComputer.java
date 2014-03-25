@@ -53,9 +53,11 @@ public class EditComputer extends HttpServlet {
 		String companyIdString =  request.getParameter(ATTR_COMPA);
 
 		if(idString == null){
+			
 			idString = request.getParameter(ATTR_COMPU_ID);
-		}
-		if(idString != null && idString.length()>0){
+			
+		}else if(idString.length()>0){
+			
 			long id = Long.parseLong(idString);
 			Computer computer = computerServices.getComputer(id);
 			ComputerDTO cdto = ComputerMapper.objectToDto(computer);
@@ -76,7 +78,8 @@ public class EditComputer extends HttpServlet {
 				long companyId = Long.parseLong(companyIdString);
 				if(companyId > 0){
 					Company company = companyServices.getCompany(companyId); 
-					cdto.setCompany(company);
+					cdto.setCompanyId(company.getId());
+					cdto.setCompanyName(company.getName());
 				}
 			}
 
@@ -95,11 +98,6 @@ public class EditComputer extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Searching for all companies		
-		List<Company> allCompany = null;
-		allCompany = companyServices.getAllCompanies();
-		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
-
 		// Parameters searching
 		String idString = request.getParameter(ATTR_COMPU_ID);
 		String name = request.getParameter(ATTR_NAME);
@@ -117,7 +115,8 @@ public class EditComputer extends HttpServlet {
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
 		.introduced(introducedDateString)
 		.discontinued(discontinuedDateString)
-		.company(company)
+		.companyId(company.getId())
+		.companyName(company.getName())
 		.build();
 
 		String error = ComputerValidator.validate(cdto);

@@ -2,6 +2,9 @@ package com.excilys.project.computerdatabase.persistence;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.project.computerdatabase.services.LogsServices;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
@@ -15,17 +18,16 @@ public enum ConnectionManager {
 	
 	public BoneCP connectionPool = null;
 	public ThreadLocal<Connection> tlc = null;
-	public ThreadLocal<Boolean> tlb = null;
 	private LogsServices logsServices = LogsServices.getInstance();
+	Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
 	ConnectionManager(){
 		tlc = new ThreadLocal<Connection>();
-		tlb = new ThreadLocal<Boolean>();
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("JDBC Driver loading error.");
 		}
 		
 		try {
@@ -38,7 +40,7 @@ public enum ConnectionManager {
 			config.setPartitionCount(1);
 			connectionPool = new BoneCP(config);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("BoneCP config error.");
 		}
 	} 
 	
@@ -48,10 +50,14 @@ public enum ConnectionManager {
 			try {
 				tlc.set(connectionPool.getConnection());
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Connection Pool connection retrieving error.");
 			}
 		}
-		
+		try {
+			tlc.get().setAutoCommit(false);
+		} catch (SQLException e) {
+			logger.error("Set Auto commit to false error.");
+		}
 		return tlc.get();
 	}
 	
@@ -61,21 +67,11 @@ public enum ConnectionManager {
 				tlc.get().close();
 				tlc.remove();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Connection closing error.");
 			}
 		}
 	}
-	
-	public void startTransaction(){
-		if(tlc.get() != null){
-			try {
-				tlc.get().setAutoCommit(false);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
+
 	public void rollback(String message){
 		if(tlc.get() != null){
 			try {
@@ -84,7 +80,7 @@ public enum ConnectionManager {
 					logsServices.insert(message+" failed", "Error");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Connection rollback error.");
 			}
 		}
 	}
@@ -98,7 +94,7 @@ public enum ConnectionManager {
 					logsServices.insert(message+" successful", "Complete");
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Connection commit error.");
 			}
 		}
 	}

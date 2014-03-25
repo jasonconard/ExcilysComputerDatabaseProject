@@ -17,7 +17,6 @@ public class LogsServices {
 		List<Logs> logs = null;
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 			
 			logs = logsDAO.retrieveAll();
 			
@@ -41,7 +40,6 @@ public class LogsServices {
 
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			log = logsDAO.retrieveByLogId(idLog);
 
@@ -63,7 +61,6 @@ public class LogsServices {
 	public void insert(String description, String type){
 		try{
 			ConnectionManager.INSTANCE.getConnection();
-			ConnectionManager.INSTANCE.startTransaction();
 
 			logsDAO.insert(description, type);
 

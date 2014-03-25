@@ -43,12 +43,15 @@ public class CompanyDAO {
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
 		Company company = null;
 
-		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ").append(idCompany);
+		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
 
 		ResultSet results = null;
 		PreparedStatement preparedStatement = null;
 
 		preparedStatement = connection.prepareStatement(query.toString());
+		
+		preparedStatement.setLong(1, idCompany);
+		
 		results = preparedStatement.executeQuery();
 
 		if(results.next()){
