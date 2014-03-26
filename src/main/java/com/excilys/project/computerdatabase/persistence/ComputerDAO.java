@@ -170,9 +170,6 @@ public class ComputerDAO {
 		}else{
 			preparedStatement.setNull(5, Types.BIGINT);
 		}
-		
-		System.out.println(computer);
-		System.out.println(computer.getCompany());
 		preparedStatement.executeUpdate();
 		
 		
