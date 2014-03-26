@@ -1,6 +1,7 @@
 <jsp:include page="include/header.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="db" tagdir="/WEB-INF/tags/dashboard" %>
+<%@ taglib prefix="cm" tagdir="/WEB-INF/tags/common" %>
 
 <section id="main">
 	<h1 id="homeTitle">${page.number} Computers found</h1>
@@ -28,11 +29,18 @@
 					<td>${entry.discontinued}</td>
 					<td>${entry.company.name}</td>
 					<td>
-						<a href="EditComputer?computerId=${entry.id}"><span class="glyphicon glyphicon-pencil"></span></a> 
-						<a href="DashBoard?computerId=${entry.id}&delete=delete&page=${lastPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}"
-						onclick="return confirm('Are you sure to delete?');">
-							<span class="glyphicon glyphicon-trash"></span>
-						</a>
+						<cm:url servlet="EditComputer" 
+								computerId="${entry.id}"
+								icon="glyphicon glyphicon-pencil"/>
+						<cm:url servlet="DashBoard" 
+								computerId="${entry.id}"
+								delete="delete"
+								pageNo="${lastPage}"
+								search="${page.filter}"
+								order="${page.column}"
+								dir="${page.direction}"
+								icon="glyphicon glyphicon-trash"
+								myOnClick="return confirm('Are you sure to delete?');"/>
 					</td>
 
 				</tr>

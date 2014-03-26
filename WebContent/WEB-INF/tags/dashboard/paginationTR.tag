@@ -1,15 +1,22 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="cm" tagdir="/WEB-INF/tags/common" %>
 
 <tr>
 	<td colspan="4" style="vertical-align:middle;">
 			<c:if test="${lastPage!=-1}">
-				<a href="DashBoard?page=1&search=${page.filter}&order=${page.column}&dir=${page.direction}">
-					<span class="glyphicon glyphicon-fast-backward"></span>
-				</a>
-				<a href="DashBoard?page=${lastPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
-					<span class="glyphicon glyphicon-backward"></span>
-				</a>
+				<cm:url servlet="DashBoard" 
+								pageNo="1"
+								search="${page.filter}"
+								order="${page.column}"
+								dir="${page.direction}"
+								icon="glyphicon glyphicon-fast-backward"/>
+				<cm:url servlet="DashBoard" 
+								pageNo="${lastPage}"
+								search="${page.filter}"
+								order="${page.column}"
+								dir="${page.direction}"
+								icon="glyphicon glyphicon-backward"/>
 			</c:if>
 			<c:if test="${lastPage==-1}">
 				<span class="unclickable glyphicon glyphicon-fast-backward"></span>
@@ -17,12 +24,18 @@
 			</c:if>
 			Page(${numero}/${nbPage}) 
 			<c:if test="${nextPage!=-1}">
-				<a href="DashBoard?page=${nextPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
-					<span class="glyphicon glyphicon-forward"></span>
-				</a>
-				<a href="DashBoard?page=${nbPage}&search=${page.filter}&order=${page.column}&dir=${page.direction}">
-					<span class="glyphicon glyphicon-fast-forward"></span>
-				</a>
+				<cm:url servlet="DashBoard" 
+								pageNo="${nextPage}"
+								search="${page.filter}"
+								order="${page.column}"
+								dir="${page.direction}"
+								icon="glyphicon glyphicon-forward"/>
+				<cm:url servlet="DashBoard" 
+								pageNo="${nbPage}"
+								search="${page.filter}"
+								order="${page.column}"
+								dir="${page.direction}"
+								icon="glyphicon glyphicon-fast-forward"/>
 			</c:if>
 			<c:if test="${nextPage==-1}">
 				<span class="unclickable glyphicon glyphicon-forward"></span>

@@ -45,10 +45,10 @@
 					<select name="company" class="form-control select-form">
 						<option value="0">--</option>
 						<c:forEach var="entry" items="${allCompany}">
-							<c:if test="${computer.company.id == entry.id}">
+							<c:if test="${computer.companyId == entry.id}">
 								<option value="${entry.id}" selected="selected">${entry.name}</option>
 							</c:if>
-							<c:if test="${computer.company.id != entry.id}">
+							<c:if test="${computer.companyId != entry.id}">
 								<option value="${entry.id}">${entry.name}</option>
 							</c:if>
 						</c:forEach>

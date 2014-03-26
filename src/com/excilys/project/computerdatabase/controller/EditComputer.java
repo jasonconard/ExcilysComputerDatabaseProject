@@ -26,14 +26,6 @@ public class EditComputer extends HttpServlet {
 	CompanyServices companyServices = CompanyServices.getInstance();
 	ComputerServices computerServices = ComputerServices.getInstance();
 
-	private static final String ATTR_ALL_COMPANY = "allCompany";
-	private static final String ATTR_NAME = "name";
-	private static final String ATTR_INTR = "introduced";
-	private static final String ATTR_DISC = "discontinued";
-	private static final String ATTR_COMPA = "company";
-	private static final String ATTR_COMPU = "computer";
-	private static final String ATTR_COMPU_ID = "computerId";
-
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -45,16 +37,16 @@ public class EditComputer extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idString = request.getParameter(ATTR_COMPU_ID);
+		String idString = request.getParameter("computerId");
 
-		String name = request.getParameter(ATTR_NAME);
-		String introducedDateString =  request.getParameter(ATTR_INTR);
-		String discontinuedDateString =  request.getParameter(ATTR_DISC);
-		String companyIdString =  request.getParameter(ATTR_COMPA);
+		String name = request.getParameter("name");
+		String introducedDateString =  request.getParameter("introduced");
+		String discontinuedDateString =  request.getParameter("discontinued");
+		String companyIdString =  request.getParameter("company");
 
 		if(idString == null){
 			
-			idString = request.getParameter(ATTR_COMPU_ID);
+			idString = request.getParameter("computerId");
 			
 		}else if(idString.length()>0){
 			
@@ -84,13 +76,13 @@ public class EditComputer extends HttpServlet {
 			}
 
 			if(cdto!=null){
-				request.setAttribute(ATTR_COMPU,cdto);
+				request.setAttribute("computer",cdto);
 			}
 		}
 
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
-		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
+		request.setAttribute("allCompany", allCompany);
 		request.getRequestDispatcher("WEB-INF/editComputer.jsp").forward(request, response);
 	}
 
@@ -99,24 +91,30 @@ public class EditComputer extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Parameters searching
-		String idString = request.getParameter(ATTR_COMPU_ID);
-		String name = request.getParameter(ATTR_NAME);
-		String introducedDateString =  request.getParameter(ATTR_INTR);
-		String discontinuedDateString =  request.getParameter(ATTR_DISC);
-		String companyIdString =  request.getParameter(ATTR_COMPA);
+		String idString = request.getParameter("computerId");
+		String name = request.getParameter("name");
+		String introducedDateString =  request.getParameter("introduced");
+		String discontinuedDateString =  request.getParameter("discontinued");
+		String companyIdString =  request.getParameter("company");
 
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
+		
 		Company company = companyServices.getCompany(companyId);
 
 		long id = 0;
 		id = Integer.parseInt(idString);
+
+		String companyName = null;
+		if(company != null){
+			companyName = company.getName();
+		}
 		
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
 		.introduced(introducedDateString)
 		.discontinued(discontinuedDateString)
-		.companyId(company.getId())
-		.companyName(company.getName())
+		.companyId(companyId)
+		.companyName(companyName)
 		.build();
 
 		String error = ComputerValidator.validate(cdto);

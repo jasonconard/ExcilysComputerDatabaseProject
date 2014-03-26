@@ -24,15 +24,7 @@ public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	CompanyServices companyServices = CompanyServices.getInstance();
-	ComputerServices computerServices = ComputerServices.getInstance();
-	
-	private static final String ATTR_ALL_COMPANY = "allCompany";
-	private static final String ATTR_COMPA_ID = "companyId";
-	private static final String NAME = "name";
-	private static final String INTRODUCED = "introduced";
-	private static final String DISCONTINUED = "discontinued";
-	private static final String PARAM_COMPA = "company";
-	
+	ComputerServices computerServices = ComputerServices.getInstance();	
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -47,23 +39,23 @@ public class AddComputer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
-		request.setAttribute(ATTR_ALL_COMPANY, allCompany);
+		request.setAttribute("allCompany", allCompany);
 		
-		String name = request.getParameter(NAME);
-		String introduced = request.getParameter(INTRODUCED);
-		String discontinued = request.getParameter(DISCONTINUED);
-		String companyIdString =  request.getParameter(PARAM_COMPA);
+		String name = request.getParameter("name");
+		String introduced = request.getParameter("introduced");
+		String discontinued = request.getParameter("discontinued");
+		String companyIdString =  request.getParameter("company");
 		if(name != null){
-			request.setAttribute(NAME, name);
+			request.setAttribute("name", name);
 		}
 		if(introduced != null){
-			request.setAttribute(INTRODUCED, introduced);
+			request.setAttribute("introduced", introduced);
 		}
 		if(discontinued != null){
-			request.setAttribute(DISCONTINUED, discontinued);
+			request.setAttribute("discontinued", discontinued);
 		}
 		if(companyIdString != null){
-			request.setAttribute(ATTR_COMPA_ID, companyIdString);
+			request.setAttribute("companyId", companyIdString);
 		}
 		
 		request.getRequestDispatcher("WEB-INF/addComputer.jsp").forward(request, response);
@@ -75,10 +67,10 @@ public class AddComputer extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// Parameters searching
-		String name = request.getParameter(NAME);
-		String introducedDateString =  request.getParameter(INTRODUCED);
-		String discontinuedDateString =  request.getParameter(DISCONTINUED);
-		String companyIdString =  request.getParameter(PARAM_COMPA);
+		String name = request.getParameter("name");
+		String introducedDateString =  request.getParameter("introduced");
+		String discontinuedDateString =  request.getParameter("discontinued");
+		String companyIdString =  request.getParameter("company");
 
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);

@@ -25,12 +25,12 @@ public class ComputerDAO {
 
 		String like = "";
 		if( pc.getFilter() != null ){
-			like +=pc.getFilter();
+			like += pc.getFilter();
 		}
 
 		String order = "";
 		if( pc.getColumn() != null ){
-			order +=pc.getColumn();
+			order += pc.getColumn();
 		}
 
 		String direction = "";
@@ -54,7 +54,9 @@ public class ComputerDAO {
 			     .append("%'");
 		}
 		
-		query.append("ORDER BY ? ")
+		query.append("ORDER BY ")
+			 .append(order)
+			 .append(" ")
 		     .append(direction)
 		     .append(" LIMIT ?, ?");
 
@@ -63,9 +65,8 @@ public class ComputerDAO {
 
 		preparedStatement = connection.prepareStatement(query.toString());
 		
-		preparedStatement.setString(1, order);
-		preparedStatement.setInt   (2, idBegin);
-		preparedStatement.setInt   (3, nbLines);
+		preparedStatement.setInt   (1, idBegin);
+		preparedStatement.setInt   (2, nbLines);
 		
 		results = preparedStatement.executeQuery();
 		
