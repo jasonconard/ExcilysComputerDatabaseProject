@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
+import org.joda.time.LocalDate;
+
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
@@ -79,10 +81,19 @@ public class ComputerDAO {
 			long companyId = results.getLong("company_id");
 			String companyName = results.getString("company_name");
 			
+			LocalDate introducedLD = null;
+			if(introduced != null){
+				introducedLD = LocalDate.fromDateFields(introduced);
+			}
+			LocalDate discontinuedLD = null;
+			if(discontinued != null){
+				discontinuedLD = LocalDate.fromDateFields(discontinued);
+			}
+			
 			alc.add(
 				new Computer.ComputerBuilder(id, name)
-					.introduced(introduced)
-					.discontinued(discontinued)
+					.introduced(introducedLD)
+					.discontinued(discontinuedLD)
 					.company(
 						new Company.CompanyBuilder(companyId)
 							.name(companyName)
@@ -121,9 +132,20 @@ public class ComputerDAO {
 			Date discontinued = results.getDate("discontinued");
 			long companyId = results.getLong("company_id");
 			String companyName = results.getString("name2");
+			
+			LocalDate introducedLD = null;
+			if(introduced != null){
+				introducedLD = LocalDate.fromDateFields(introduced);
+			}
+			LocalDate discontinuedLD = null;
+			if(discontinued != null){
+				discontinuedLD = LocalDate.fromDateFields(discontinued);
+			}
+			
+			
 			computer = new Computer.ComputerBuilder(id, name)
-			.introduced(introduced)
-			.discontinued(discontinued)
+			.introduced(introducedLD)
+			.discontinued(discontinuedLD)
 			.company(
 					new Company.CompanyBuilder(companyId)
 					.name(companyName)
@@ -131,7 +153,6 @@ public class ComputerDAO {
 					)
 					.build();
 		}
-		
 		closeAll(results, preparedStatement);
 
 		return computer;
@@ -152,15 +173,14 @@ public class ComputerDAO {
 
 		preparedStatement.setLong  (1, 0);
 		preparedStatement.setString(2, computer.getName());
-
 		if(computer.getIntroduced() != null){
-			preparedStatement.setDate(3,  new java.sql.Date(computer.getIntroduced().getTime()));
+			preparedStatement.setDate(3, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
 		}else{
 			preparedStatement.setNull(3, Types.TIMESTAMP);
 		}
 
 		if(computer.getDiscontinued() != null){
-			preparedStatement.setDate(4, new java.sql.Date(computer.getDiscontinued().getTime()));
+			preparedStatement.setDate(4, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
 		}else{
 			preparedStatement.setNull(4, Types.TIMESTAMP);
 		}
@@ -215,13 +235,13 @@ public class ComputerDAO {
 		preparedStatement.setString(1, c.getName());
 
 		if(c.getIntroduced()!=null){
-			preparedStatement.setDate(2,  new java.sql.Date(c.getIntroduced().getTime()));
+			preparedStatement.setDate(2, new java.sql.Date(c.getIntroduced().toDate().getTime()));
 		}else{
 			preparedStatement.setNull(2, Types.TIMESTAMP);
 		}
 
 		if(c.getDiscontinued()!=null){
-			preparedStatement.setDate(3, new java.sql.Date(c.getDiscontinued().getTime()));
+			preparedStatement.setDate(3, new java.sql.Date(c.getDiscontinued().toDate().getTime()));
 		}else{
 			preparedStatement.setNull(3, Types.TIMESTAMP);
 		}

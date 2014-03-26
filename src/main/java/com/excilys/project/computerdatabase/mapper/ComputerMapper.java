@@ -1,26 +1,33 @@
 package com.excilys.project.computerdatabase.mapper;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import com.excilys.project.computerdatabase.common.UsefulFunctions;
-import com.excilys.project.computerdatabase.domain.Company.CompanyBuilder;
-import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.domain.Computer.ComputerBuilder;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
+
+import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.domain.Company.CompanyBuilder;
+import com.excilys.project.computerdatabase.domain.Computer.ComputerBuilder;
+
 
 public class ComputerMapper {
 	
 	public static Computer dtoToObject(ComputerDTO cdto){
 
-		java.util.Date introduced = null;
+		DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+		
+		LocalDate introduced = null;
+		LocalDate discontinued = null;
+		
 		if(cdto.getIntroduced().length()>0){
-			introduced = UsefulFunctions.stringToDate(cdto.getIntroduced());
+			introduced = dtf.parseLocalDate(cdto.getIntroduced());
 		}
-		java.util.Date discontinued = null;
+		
 		if(cdto.getDiscontinued().length()>0){
-			discontinued = UsefulFunctions.stringToDate(cdto.getDiscontinued());
+			discontinued = dtf.parseLocalDate(cdto.getDiscontinued());
 		}
+		
 		Computer c = new ComputerBuilder(cdto.getId(), cdto.getName())
 						.introduced(introduced)
 						.discontinued(discontinued)
@@ -35,16 +42,17 @@ public class ComputerMapper {
 	}
 	
 	public static ComputerDTO objectToDto(Computer c){
+		
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+		
 		String introduced = "";
 		if(c.getIntroduced()!=null){
-			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-			introduced = df.format(c.getIntroduced());
+			introduced = formatter.print(c.getIntroduced());
 		}
 
 		String discontinued = "";
 		if(c.getDiscontinued()!=null){
-			DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-			discontinued = df.format(c.getDiscontinued());
+			discontinued = formatter.print(c.getDiscontinued());
 		}
 		
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(c.getId(),c.getName())
