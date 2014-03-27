@@ -15,11 +15,10 @@ import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 
-public class ComputerDAO {
-
+public enum ComputerDAO {
+	INSTANCE;
+	
 	private static final String table = "computer";
-
-	public static ComputerDAO instance = null;
 
 	public List<Computer> retrieveAllByWrapper(Page<Computer> pc) throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
@@ -295,13 +294,6 @@ public class ComputerDAO {
 			ps.close();
 		}
 		
-	}
-
-	synchronized public static ComputerDAO getInstance(){
-		if(instance == null){
-			instance = new ComputerDAO();
-		}
-		return instance;
 	}
 
 }

@@ -7,19 +7,16 @@ import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 
-public class ComputerServices {
-	
-	public static ComputerServices instance = null;
-	
-	private ComputerDAO computerDAO = ComputerDAO.getInstance();
+public enum ComputerServices {
+	INSTANCE;
 	
 	public Page<Computer> getAllComputers(Page<Computer> pc){
 		String message = "Computers searching";
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			pc.setListElement(computerDAO.retrieveAllByWrapper(pc));
-			pc.setNumber(computerDAO.numberByFilter(pc.getFilter()));
+			pc.setListElement(ComputerDAO.INSTANCE.retrieveAllByWrapper(pc));
+			pc.setNumber(ComputerDAO.INSTANCE.numberByFilter(pc.getFilter()));
 			
 			if(pc.getListElement()!=null){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -42,7 +39,7 @@ public class ComputerServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			computer = computerDAO.retrieveByComputerId(computerId);
+			computer = ComputerDAO.INSTANCE.retrieveByComputerId(computerId);
 
 			if(computer!=null){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -64,7 +61,7 @@ public class ComputerServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 			
-			id = computerDAO.insert(computer);
+			id = ComputerDAO.INSTANCE.insert(computer);
 			
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
@@ -80,7 +77,7 @@ public class ComputerServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 			
-			computerDAO.update(computer);
+			ComputerDAO.INSTANCE.update(computer);
 			
 			ConnectionManager.INSTANCE.commit(message);		
 		}catch(SQLException sqle){
@@ -95,7 +92,7 @@ public class ComputerServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 			
-			computerDAO.delete(computerId);
+			ComputerDAO.INSTANCE.delete(computerId);
 			
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
@@ -113,7 +110,7 @@ public class ComputerServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			computerNumber = computerDAO.numberByFilter(filter);
+			computerNumber = ComputerDAO.INSTANCE.numberByFilter(filter);
 
 			if(computerNumber>=0){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -127,12 +124,5 @@ public class ComputerServices {
 		}
 		
 		return computerNumber;
-	}
-	
-	synchronized public static ComputerServices getInstance(){
-		if(instance == null){
-			instance = new ComputerServices();
-		}
-		return instance;
 	}
 }

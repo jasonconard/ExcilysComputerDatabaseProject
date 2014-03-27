@@ -23,9 +23,6 @@ import com.excilys.project.computerdatabase.validator.ComputerValidator;
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	CompanyServices companyServices = CompanyServices.getInstance();
-	ComputerServices computerServices = ComputerServices.getInstance();
-
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -51,7 +48,7 @@ public class EditComputer extends HttpServlet {
 		}else if(idString.length()>0){
 			
 			long id = Long.parseLong(idString);
-			Computer computer = computerServices.getComputer(id);
+			Computer computer = ComputerServices.INSTANCE.getComputer(id);
 			ComputerDTO cdto = ComputerMapper.objectToDto(computer);
 
 			if(name!=null){
@@ -69,7 +66,7 @@ public class EditComputer extends HttpServlet {
 			if(companyIdString!=null){
 				long companyId = Long.parseLong(companyIdString);
 				if(companyId > 0){
-					Company company = companyServices.getCompany(companyId); 
+					Company company = CompanyServices.INSTANCE.getCompany(companyId); 
 					cdto.setCompanyId(company.getId());
 					cdto.setCompanyName(company.getName());
 				}
@@ -81,7 +78,7 @@ public class EditComputer extends HttpServlet {
 		}
 
 		List<Company> allCompany = null;
-		allCompany = companyServices.getAllCompanies();
+		allCompany = CompanyServices.INSTANCE.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		request.getRequestDispatcher("WEB-INF/editComputer.jsp").forward(request, response);
 	}
@@ -100,7 +97,7 @@ public class EditComputer extends HttpServlet {
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
 		
-		Company company = companyServices.getCompany(companyId);
+		Company company = CompanyServices.INSTANCE.getCompany(companyId);
 
 		long id = 0;
 		id = Integer.parseInt(idString);
@@ -124,7 +121,7 @@ public class EditComputer extends HttpServlet {
 		if(error.length()==0){
 			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
 			StringBuilder message = new StringBuilder();
-			computerServices.update(neoComputer);
+			ComputerServices.INSTANCE.update(neoComputer);
 			message.append("Computer modified");
 			response.sendRedirect("DashBoard?message=update&computerIdMessage="+id);
 		}else{

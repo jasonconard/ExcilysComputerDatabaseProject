@@ -18,7 +18,6 @@ public enum ConnectionManager {
 	
 	public BoneCP connectionPool = null;
 	public ThreadLocal<Connection> tlc = null;
-	private LogsServices logsServices = LogsServices.getInstance();
 	Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
 	ConnectionManager(){
@@ -77,7 +76,7 @@ public enum ConnectionManager {
 			try {
 				tlc.get().rollback();
 				if(message!=null){
-					logsServices.insert(message+" failed", "Error");
+					LogsServices.INSTANCE.insert(message+" failed", "Error");
 				}
 			} catch (SQLException e) {
 				logger.error("Connection rollback error.");
@@ -91,7 +90,7 @@ public enum ConnectionManager {
 				tlc.get().commit();
 				tlc.get().setAutoCommit(true);
 				if(message!=null){
-					logsServices.insert(message+" successful", "Complete");
+					LogsServices.INSTANCE.insert(message+" successful", "Complete");
 				}
 			} catch (SQLException e) {
 				logger.error("Connection commit error.");

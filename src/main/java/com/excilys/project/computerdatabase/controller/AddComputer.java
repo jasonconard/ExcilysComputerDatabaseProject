@@ -22,9 +22,6 @@ import com.excilys.project.computerdatabase.validator.ComputerValidator;
  */
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-	CompanyServices companyServices = CompanyServices.getInstance();
-	ComputerServices computerServices = ComputerServices.getInstance();	
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -38,7 +35,7 @@ public class AddComputer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Company> allCompany = null;
-		allCompany = companyServices.getAllCompanies();
+		allCompany = CompanyServices.INSTANCE.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		
 		String name = request.getParameter("name");
@@ -74,7 +71,7 @@ public class AddComputer extends HttpServlet {
 
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		Company company = companyServices.getCompany(companyId);
+		Company company = CompanyServices.INSTANCE.getCompany(companyId);
 
 		long id = 0;
 		
@@ -97,7 +94,7 @@ public class AddComputer extends HttpServlet {
 		if(error.length()==0){
 			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
 			StringBuilder message = new StringBuilder();
-			id = computerServices.insert(neoComputer);
+			id = ComputerServices.INSTANCE.insert(neoComputer);
 			if(id >= 0){
 				message.append("Computer added");
 				response.sendRedirect("DashBoard?message=add&computerIdMessage="+id);

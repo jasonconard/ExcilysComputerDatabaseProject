@@ -7,18 +7,15 @@ import com.excilys.project.computerdatabase.domain.Logs;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 import com.excilys.project.computerdatabase.persistence.LogsDAO;
 
-public class LogsServices {
-
-	public static LogsServices instance = null;
-
-	private LogsDAO logsDAO = LogsDAO.getInstance();
+public enum LogsServices {
+	INSTANCE;
 
 	public List<Logs> getAllLogs(){
 		List<Logs> logs = null;
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 			
-			logs = logsDAO.retrieveAll();
+			logs = LogsDAO.INSTANCE.retrieveAll();
 			
 			if(logs!=null){	  
 				ConnectionManager.INSTANCE.commit(null);
@@ -41,7 +38,7 @@ public class LogsServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			log = logsDAO.retrieveByLogId(idLog);
+			log = LogsDAO.INSTANCE.retrieveByLogId(idLog);
 
 			if(log!=null){	  
 				ConnectionManager.INSTANCE.commit(null);
@@ -62,7 +59,7 @@ public class LogsServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			logsDAO.insert(description, type);
+			LogsDAO.INSTANCE.insert(description, type);
 
 			ConnectionManager.INSTANCE.commit(null);
 
@@ -74,10 +71,4 @@ public class LogsServices {
 		}
 	}
 
-	synchronized public static LogsServices getInstance(){
-		if(instance == null){
-			instance = new LogsServices();
-		}
-		return instance;
-	}
 }

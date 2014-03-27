@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.services.CompanyServices;
 import com.excilys.project.computerdatabase.services.ComputerServices;
 
 /**
@@ -16,9 +15,6 @@ import com.excilys.project.computerdatabase.services.ComputerServices;
  */
 public class DashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	ComputerServices computerServices = ComputerServices.getInstance();
-	CompanyServices companyServices = CompanyServices.getInstance();
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -38,7 +34,7 @@ public class DashBoard extends HttpServlet {
 		String idAttString = request.getParameter("computerIdMessage");
 		Computer lastEdit = null;
 		if(idAttString!=null){
-			lastEdit = computerServices.getComputer(Long.parseLong(idAttString));
+			lastEdit = ComputerServices.INSTANCE.getComputer(Long.parseLong(idAttString));
 		}
 		
 		String message = request.getParameter("message");
@@ -57,7 +53,7 @@ public class DashBoard extends HttpServlet {
 
 		if(idString != null && delete!=null && delete.equals("delete")){
 			long id = Long.parseLong(idString);
-			computerServices.delete(id);
+			ComputerServices.INSTANCE.delete(id);
 		}
 
 
@@ -104,7 +100,7 @@ public class DashBoard extends HttpServlet {
 		page.setDirection(dir);
 		page.setFilter(search);
 
-		page = computerServices.getAllComputers(page);
+		page = ComputerServices.INSTANCE.getAllComputers(page);
 
 		int nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
 

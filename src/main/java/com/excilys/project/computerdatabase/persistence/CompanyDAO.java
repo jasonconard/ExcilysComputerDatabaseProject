@@ -9,11 +9,10 @@ import java.util.ArrayList;
 
 import com.excilys.project.computerdatabase.domain.Company;
 
-public class CompanyDAO {
-
+public enum CompanyDAO {
+	INSTANCE;
+	
 	private static final String table = "company";
-
-	public static CompanyDAO instance = null;
 
 	public List<Company> retrieveAll() throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
@@ -88,13 +87,6 @@ public class CompanyDAO {
 		if(ps!=null){
 			ps.close();
 		}
-	}
-
-	synchronized public static CompanyDAO getInstance(){
-		if(instance == null){
-			instance = new CompanyDAO();
-		}
-		return instance;
 	}
 
 }

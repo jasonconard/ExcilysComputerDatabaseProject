@@ -10,11 +10,10 @@ import java.util.ArrayList;
 
 import com.excilys.project.computerdatabase.domain.Logs;
 
-public class LogsDAO {
-
+public enum LogsDAO {
+	INSTANCE;
+	
 	private static final String table = "logs";
-
-	public static LogsDAO instance = null;
 
 	public List<Logs> retrieveAll() throws SQLException{
 		Connection connection = ConnectionManager.INSTANCE.getConnection();
@@ -101,12 +100,4 @@ public class LogsDAO {
 			ps.close();
 		}
 	}
-
-	synchronized public static LogsDAO getInstance(){
-		if(instance == null){
-			instance = new LogsDAO();
-		}
-		return instance;
-	}
-
 }

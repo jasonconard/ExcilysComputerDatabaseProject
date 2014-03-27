@@ -7,11 +7,8 @@ import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.persistence.CompanyDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 
-public class CompanyServices {
-
-	public static CompanyServices instance = null;
-
-	private CompanyDAO companyDAO = CompanyDAO.getInstance();
+public enum CompanyServices {
+	INSTANCE;
 
 	public List<Company> getAllCompanies(){
 		String message = "Companies searching";
@@ -19,7 +16,7 @@ public class CompanyServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			companies = companyDAO.retrieveAll();
+			companies = CompanyDAO.INSTANCE.retrieveAll();
 			
 			if(companies!=null){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -42,7 +39,7 @@ public class CompanyServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			company = companyDAO.retrieveByCompanyId(idCompany);
+			company = CompanyDAO.INSTANCE.retrieveByCompanyId(idCompany);
 
 			if(company!=null || idCompany == 0){	  
 				ConnectionManager.INSTANCE.commit(message);
@@ -63,7 +60,7 @@ public class CompanyServices {
 		try{
 			ConnectionManager.INSTANCE.getConnection();
 
-			companyDAO.insert(company);
+			CompanyDAO.INSTANCE.insert(company);
 
 			ConnectionManager.INSTANCE.commit(message);
 		}catch(SQLException sqle){
@@ -71,12 +68,5 @@ public class CompanyServices {
 		}finally{
 			ConnectionManager.INSTANCE.closeConnection();
 		}
-	}
-
-	synchronized public static CompanyServices getInstance(){
-		if(instance == null){
-			instance = new CompanyServices();
-		}
-		return instance;
 	}
 }
