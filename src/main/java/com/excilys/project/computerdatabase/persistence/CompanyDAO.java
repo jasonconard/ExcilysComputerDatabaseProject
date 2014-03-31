@@ -7,15 +7,32 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.project.computerdatabase.domain.Company;
 
-public enum CompanyDAO {
-	INSTANCE;
+@Repository
+public class CompanyDAO {
+	
+	public static CompanyDAO instance = null;
+	synchronized public static CompanyDAO getInstance(){
+		if(instance == null){
+			instance = new CompanyDAO();
+		}
+		return instance;
+	}
+	
+	@Autowired
+	ConnectionManager connectionManager;
+	public void setConnectionManager(ConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+	}
 	
 	private static final String table = "company";
 
 	public List<Company> retrieveAll() throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		List<Company> alc = new ArrayList<Company>();
 
 		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table)
@@ -39,7 +56,7 @@ public enum CompanyDAO {
 	}
 
 	public Company retrieveByCompanyId(long idCompany) throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		Company company = null;
 
 		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
@@ -64,7 +81,7 @@ public enum CompanyDAO {
 	}
 
 	public void insert(Company c) throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		
 		StringBuilder query = new StringBuilder("INSERT INTO ").append(table).append(" VALUES(?,?)");
 

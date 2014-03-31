@@ -3,30 +3,53 @@ package com.excilys.project.computerdatabase.services;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.project.computerdatabase.domain.Logs;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 import com.excilys.project.computerdatabase.persistence.LogsDAO;
 
-public enum LogsServices {
-	INSTANCE;
+@Service
+public class LogsServices {
+	
+	public static LogsServices instance = null;
+	synchronized public static LogsServices getInstance(){
+		if(instance == null){
+			instance = new LogsServices();
+		}
+		return instance;
+	}
+	
+	@Autowired
+	ConnectionManager connectionManager;
+	public void setConnectionManager(ConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+	}
+	
+	@Autowired
+	LogsDAO logsDAO;
+	public void setLogsDAO(LogsDAO logsDAO){
+		this.logsDAO = logsDAO;
+	}
 
 	public List<Logs> getAllLogs(){
 		List<Logs> logs = null;
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 			
-			logs = LogsDAO.INSTANCE.retrieveAll();
+			logs = logsDAO.retrieveAll();
 			
 			if(logs!=null){	  
-				ConnectionManager.INSTANCE.commit(null);
+				connectionManager.commit(null);
 			}else{
-				ConnectionManager.INSTANCE.rollback(null);
+				connectionManager.rollback(null);
 			}
 		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(null);
+			connectionManager.rollback(null);
 			sqle.printStackTrace();
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 
 		return logs;
@@ -36,20 +59,20 @@ public enum LogsServices {
 		Logs log = null;
 
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 
-			log = LogsDAO.INSTANCE.retrieveByLogId(idLog);
+			log = logsDAO.retrieveByLogId(idLog);
 
 			if(log!=null){	  
-				ConnectionManager.INSTANCE.commit(null);
+				connectionManager.commit(null);
 			}else{
-				ConnectionManager.INSTANCE.rollback(null);
+				connectionManager.rollback(null);
 			}
 		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(null);
+			connectionManager.rollback(null);
 			sqle.printStackTrace();
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 
 		return log;
@@ -57,17 +80,17 @@ public enum LogsServices {
 
 	public void insert(String description, String type){
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 
-			LogsDAO.INSTANCE.insert(description, type);
+			logsDAO.insert(description, type);
 
-			ConnectionManager.INSTANCE.commit(null);
+			connectionManager.commit(null);
 
 		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(null);
+			connectionManager.rollback(null);
 			sqle.printStackTrace();
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 	}
 

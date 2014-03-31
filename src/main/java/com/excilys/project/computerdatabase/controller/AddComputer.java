@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
@@ -23,6 +26,18 @@ import com.excilys.project.computerdatabase.validator.ComputerValidator;
 public class AddComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	@Autowired
+	ComputerServices computerServices;
+
+	@Autowired
+	CompanyServices companyServices;
+	
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, getServletContext());
+	}
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -35,7 +50,7 @@ public class AddComputer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Company> allCompany = null;
-		allCompany = CompanyServices.INSTANCE.getAllCompanies();
+		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
 		
 		String name = request.getParameter("name");
@@ -71,7 +86,7 @@ public class AddComputer extends HttpServlet {
 
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-		Company company = CompanyServices.INSTANCE.getCompany(companyId);
+		Company company = companyServices.getCompany(companyId);
 
 		long id = 0;
 		
@@ -94,7 +109,7 @@ public class AddComputer extends HttpServlet {
 		if(error.length()==0){
 			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
 			StringBuilder message = new StringBuilder();
-			id = ComputerServices.INSTANCE.insert(neoComputer);
+			id = computerServices.insert(neoComputer);
 			if(id >= 0){
 				message.append("Computer added");
 				response.sendRedirect("DashBoard?message=add&computerIdMessage="+id);

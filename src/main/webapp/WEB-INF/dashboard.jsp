@@ -18,6 +18,9 @@
 	<c:if test="${message != null}">
 		<p class="alert alert-success">${message} <br/></p>
 	</c:if>
+	<c:if test="${error != null}">
+		<p class="alert alert-danger">${error} <br/></p>
+	</c:if>
 	<table class="computers table table-striped table-bordered">
 		<db:header/>
 		<tbody>

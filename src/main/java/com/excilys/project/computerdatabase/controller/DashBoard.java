@@ -1,10 +1,14 @@
 package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
@@ -16,13 +20,24 @@ import com.excilys.project.computerdatabase.services.ComputerServices;
 public class DashBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
+	@Autowired
+	ComputerServices computerServices;
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, getServletContext());
+	}
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DashBoard() {
 		super();
 	}
-
+	
+	
+	
 	/**
 	 * @throws IOException 
 	 * @throws ServletException 
@@ -34,15 +49,21 @@ public class DashBoard extends HttpServlet {
 		String idAttString = request.getParameter("computerIdMessage");
 		Computer lastEdit = null;
 		if(idAttString!=null){
-			lastEdit = ComputerServices.INSTANCE.getComputer(Long.parseLong(idAttString));
+			try{
+				lastEdit = computerServices.getComputer(Long.parseLong(idAttString));
+			}catch(NumberFormatException e){
+			}
 		}
 		
 		String message = request.getParameter("message");
+		String computerIdMessage = request.getParameter("computerIdMessage");
 		if(message!=null){
 			if(message.equals("update")){
 				request.setAttribute("message", "Computer updated !");
 			}else if(message.equals("add")){
 				request.setAttribute("message", "Computer added !");
+			}else if(message.equals("unavailable")){
+				request.setAttribute("error", "Computer ("+computerIdMessage+") unavailable !");
 			}
 		}
 			
@@ -52,8 +73,12 @@ public class DashBoard extends HttpServlet {
 		String delete 	= request.getParameter("delete");
 
 		if(idString != null && delete!=null && delete.equals("delete")){
-			long id = Long.parseLong(idString);
-			ComputerServices.INSTANCE.delete(id);
+			try{
+				long id = Long.parseLong(idString);
+				computerServices.delete(id);
+			}catch(NumberFormatException e){}
+			
+			
 		}
 
 
@@ -62,12 +87,10 @@ public class DashBoard extends HttpServlet {
 
 		if(order == null || order.length()==0){
 			order = "cu.name";
-		}else if(order.equals("company")){
-			order = "ca.name";
 		}
 
 		String dir = request.getParameter("dir");
-		if(dir == null || dir.length()==0){
+		if(dir == null || (!dir.equals("ASC") && !dir.equals("DESC"))){
 			dir = "ASC";
 		}
 
@@ -88,8 +111,9 @@ public class DashBoard extends HttpServlet {
 
 		int idPage = 1;
 		if(idPageString != null && idPageString.length() != 0){
-			idPage = Integer.parseInt(idPageString);
-			if(idPage<1){
+			try{
+				idPage = Integer.parseInt(idPageString);
+			}catch(NumberFormatException e){
 				idPage = 1;
 			}
 		}		
@@ -100,7 +124,7 @@ public class DashBoard extends HttpServlet {
 		page.setDirection(dir);
 		page.setFilter(search);
 
-		page = ComputerServices.INSTANCE.getAllComputers(page);
+		page = computerServices.getAllComputers(page);
 
 		int nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
 

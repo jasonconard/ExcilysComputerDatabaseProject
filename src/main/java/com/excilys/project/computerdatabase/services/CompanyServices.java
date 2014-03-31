@@ -3,30 +3,53 @@ package com.excilys.project.computerdatabase.services;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.persistence.CompanyDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 
-public enum CompanyServices {
-	INSTANCE;
+@Service
+public class CompanyServices {
+	
+	public static CompanyServices instance = null;
+	synchronized public static CompanyServices getInstance(){
+		if(instance == null){
+			instance = new CompanyServices();
+		}
+		return instance;
+	}
+	
+	@Autowired
+	ConnectionManager connectionManager;
+	public void setConnectionManager(ConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+	}
+	
+	@Autowired
+	CompanyDAO companyDAO;
+	public void setCompanyDAO(CompanyDAO companyDAO){
+		this.companyDAO = companyDAO;
+	}
 
 	public List<Company> getAllCompanies(){
 		String message = "Companies searching";
 		List<Company> companies = null;
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 
-			companies = CompanyDAO.INSTANCE.retrieveAll();
+			companies = companyDAO.retrieveAll();
 			
 			if(companies!=null){	  
-				ConnectionManager.INSTANCE.commit(message);
+				connectionManager.commit(message);
 			}else{
-				ConnectionManager.INSTANCE.rollback(message+" (companies is null)");
+				connectionManager.rollback(message+" (companies is null)");
 			}
 		}catch(SQLException e){
-			ConnectionManager.INSTANCE.rollback(message);
+			connectionManager.rollback(message);
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 
 		return companies;
@@ -37,19 +60,19 @@ public enum CompanyServices {
 		Company company = null;
 
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 
-			company = CompanyDAO.INSTANCE.retrieveByCompanyId(idCompany);
+			company = companyDAO.retrieveByCompanyId(idCompany);
 
 			if(company!=null || idCompany == 0){	  
-				ConnectionManager.INSTANCE.commit(message);
+				connectionManager.commit(message);
 			}else{
-				ConnectionManager.INSTANCE.rollback(message+" (company is null)");
+				connectionManager.rollback(message+" (company is null)");
 			}
 		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(message);
+			connectionManager.rollback(message);
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 
 		return company;
@@ -58,15 +81,15 @@ public enum CompanyServices {
 	public void insert(Company company){
 		String message = "Company insert";
 		try{
-			ConnectionManager.INSTANCE.getConnection();
+			connectionManager.getConnection();
 
-			CompanyDAO.INSTANCE.insert(company);
+			companyDAO.insert(company);
 
-			ConnectionManager.INSTANCE.commit(message);
+			connectionManager.commit(message);
 		}catch(SQLException sqle){
-			ConnectionManager.INSTANCE.rollback(message);
+			connectionManager.rollback(message);
 		}finally{
-			ConnectionManager.INSTANCE.closeConnection();
+			connectionManager.closeConnection();
 		}
 	}
 }

@@ -8,15 +8,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.project.computerdatabase.domain.Logs;
 
-public enum LogsDAO {
-	INSTANCE;
+@Repository
+public class LogsDAO {
 	
 	private static final String table = "logs";
 
+	public static LogsDAO instance = null;
+	synchronized public static LogsDAO getInstance(){
+		if(instance == null){
+			instance = new LogsDAO();
+		}
+		return instance;
+	}
+	
+	@Autowired
+	ConnectionManager connectionManager;
+	public void setConnectionManager(ConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+	}
+
 	public List<Logs> retrieveAll() throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		List<Logs> logs = new ArrayList<Logs>();
 
 		StringBuilder query = new StringBuilder();
@@ -45,7 +62,7 @@ public enum LogsDAO {
 	}
 
 	public Logs retrieveByLogId(long idLog) throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		Logs log = null;
 
 		StringBuilder query = new StringBuilder();
@@ -72,7 +89,7 @@ public enum LogsDAO {
 	}
 
 	public void insert(String description, String type) throws SQLException{
-		Connection connection = ConnectionManager.INSTANCE.getConnection();
+		Connection connection = connectionManager.getConnection();
 		StringBuilder query = new StringBuilder();
 		query.append("INSERT INTO ")
 		     .append(table)

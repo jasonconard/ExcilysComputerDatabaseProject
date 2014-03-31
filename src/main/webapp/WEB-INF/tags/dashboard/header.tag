@@ -7,14 +7,14 @@
 		<c:if test="${page.column=='name' && page.direction=='DESC'}">
 			<th class="col2">Computer Name
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-								order="name" dir="ASC"
+								order="cu.name" dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
 		<c:if test="${!(page.column=='name' && page.direction=='DESC')}">
 			<th class="col2">Computer Name
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-						order="name" dir="DESC"
+						order="cu.name" dir="DESC"
 						icon="glyphicon glyphicon-arrow-down"/>
 			</th>
 		</c:if>
@@ -52,17 +52,17 @@
 		</c:if>
 		
 		
-		<c:if test="${page.column=='company' && page.direction=='DESC'}">
+		<c:if test="${page.column=='ca.name' && page.direction=='DESC'}">
 			<th class="col5">Company
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-								order="company"	dir="ASC"
+								order="ca.name"	dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
-		<c:if test="${!(page.column=='company' && page.direction=='DESC')}">
+		<c:if test="${!(page.column=='ca.name' && page.direction=='DESC')}">
 			<th class="col5">Company
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-						order="company" dir="DESC"
+						order="ca.name" dir="DESC"
 						icon="glyphicon glyphicon-arrow-down"/>
 			</th>
 		</c:if>
