@@ -4,14 +4,14 @@
 
 <thead>
 	<tr>
-		<c:if test="${page.column=='name' && page.direction=='DESC'}">
+		<c:if test="${page.column=='cu.name' && page.direction=='DESC'}">
 			<th class="col2">Computer Name
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
 								order="cu.name" dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
-		<c:if test="${!(page.column=='name' && page.direction=='DESC')}">
+		<c:if test="${!(page.column=='cu.name' && page.direction=='DESC')}">
 			<th class="col2">Computer Name
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
 						order="cu.name" dir="DESC"

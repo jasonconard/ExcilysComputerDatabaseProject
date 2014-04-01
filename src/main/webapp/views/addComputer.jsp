@@ -1,16 +1,16 @@
 <jsp:include page="include/header.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <section id="main">
 
 	<h1>Add Computer</h1>
-	<form action="AddComputer" class="form-inline" id="addComputerForm"
-		method="POST">
+	<form:form action="AddComputer" class="form-inline" id="addComputerForm" method="POST" modelAttribute="dto">
 		<fieldset>
 			<div class="clearfix">
 				<label for="name">Computer name:</label>
 				<div class="input">
-					<input type="text" class="form-control text-form" name="name"
+					<form:input type="text" class="form-control text-form" path="name" name="name"
 						width="20" value="${name}" data-validation="length"
 						data-validation-length="1-255" data-validation-optional="false"
 						data-validation-error-msg="The user name has to be a value between 1-255 characters" />
@@ -21,7 +21,7 @@
 			<div class="clearfix">
 				<label for="introduced">Introduced date:</label>
 				<div class="input">
-					<input type="date" class="form-control date-form" name="introduced"
+					<form:input type="date" class="form-control date-form" name="introduced" path="introduced"
 						value="${introduced}" data-validation="date"
 						data-validation-format="yyyy-mm-dd"
 						data-validation-optional="true"
@@ -33,7 +33,7 @@
 			<div class="clearfix">
 				<label for="discontinued">Discontinued date:</label>
 				<div class="input">
-					<input type="date" class="form-control date-form"
+					<form:input type="date" class="form-control date-form" path="discontinued"
 						name="discontinued" value="${discontinued}" data-validation="date"
 						data-validation-format="yyyy-mm-dd"
 						data-validation-optional="true"
@@ -64,18 +64,13 @@
 			<input type="submit" value="Add" class="btn btn-primary"> or
 			<a href="DashBoard" class="btn btn-default">Cancel</a>
 		</div>
-	</form>
-	<br />
-	<c:if test="${errorsSize > 0}">
-		<div class="alert alert-danger">
-		<ul>
-			<c:forEach var="entry" items="${errors}">
-				<li>${entry}</li>
-			</c:forEach>
-		</ul>
-		<br /> Do you want to return into the main <a href="DashBoard">page</a>?
-		</div>
-	</c:if>
+		<hr/>
+		<c:if test="${error}">
+			<div class="alert alert-danger">
+				<form:errors path="*"/>
+			</div>
+		</c:if>
+	</form:form>
 </section>
 
 <script src="js/jquery.form-validator.min.js"></script>

@@ -8,6 +8,21 @@ public class ComputerDTO {
 	private long companyId;
 	private String companyName;
 
+	public ComputerDTO(){}
+	
+		public ComputerDTO(long id, String name, String introduced,
+			String discontinued, long companyId, String companyName) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.introduced = introduced;
+		this.discontinued = discontinued;
+		this.companyId = companyId;
+		this.companyName = companyName;
+	}
+
+
+
 	public ComputerDTO(ComputerDTOBuilder computerBuilder) {
 		this.id = computerBuilder.id;
         this.name = computerBuilder.name;

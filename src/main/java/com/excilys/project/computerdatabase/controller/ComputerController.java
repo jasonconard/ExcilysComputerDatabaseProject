@@ -1,20 +1,22 @@
 package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Company;
@@ -43,25 +45,16 @@ public class ComputerController{
 		this.companyServices = companyServices;
 	}
 	
-	public static final Map<String,String> errors = new HashMap<String,String>();	
-	public static boolean firstTime = true;
-
-	public ComputerController() {
-		if(firstTime){
-			errors.put("computerNameError"              , "A computer must have a name.");
-			errors.put("introducedFormatError"          , "Introduced date format not correct.");
-			errors.put("discontinuedFormatError"        , "Discontinued date format not correct.");
-			errors.put("discontinuedLaterThanIntroduced", "Discontinued have to be later than introduced date");
-			errors.put("databaseError"                  , "Database error, please contact the support.");
-			firstTime = false;
-		}
+	@InitBinder
+	public void initBinderAll(WebDataBinder binder) {
+		binder.addValidators(new ComputerValidator());
 	}
-
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(){
 		return "redirect:DashBoard";
 	}
-	
+
 	@RequestMapping(value = "DashBoard", method = RequestMethod.GET)
 	public String listComputer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
@@ -165,16 +158,23 @@ public class ComputerController{
 	}
 
 	@RequestMapping(value = "AddComputer", method = RequestMethod.GET)
-	public String showAddComputer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	public String showAddComputer(
+			Model model,
+			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
+			BindingResult result,
+			HttpServletRequest request, 
+			HttpServletResponse response
+			) throws ServletException, IOException{
+		
 		List<Company> allCompany = null;
 		allCompany = companyServices.getAllCompanies();
 		request.setAttribute("allCompany", allCompany);
-		
+
 		String name = request.getParameter("name");
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
 		String companyIdString =  request.getParameter("company");
-		
+
 		if(name != null){
 			request.setAttribute("name", name);
 		}
@@ -188,28 +188,23 @@ public class ComputerController{
 			request.setAttribute("companyId", companyIdString);
 		}
 		
-		List<String> errorDisplaying = new ArrayList<String>();
-		for (String key : errors.keySet()) {
-			String value = errors.get(key);
-			String param = request.getParameter(key);
-			if(param != null && param.equals("true")){
-				errorDisplaying.add(value);
-			}
-		}
-		request.setAttribute("errors", errorDisplaying);
-		request.setAttribute("errorsSize", errorDisplaying.size());
+		request.setAttribute("error", result.hasErrors());
+		
 		return "addComputer";
 	}
-	
+
 	@RequestMapping(value = "AddComputer", method = RequestMethod.POST)
-	public String postAddComputer(HttpServletRequest request, HttpServletResponse response, Model model) throws ServletException, IOException{
-		// Parameters searching
-		String name = request.getParameter("name");
-		String introducedDateString =  request.getParameter("introduced");
-		String discontinuedDateString =  request.getParameter("discontinued");
-		String companyIdString =  request.getParameter("company");
+	public String postAddComputer(	
+			Model model,
+			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
+			BindingResult result,
+			HttpServletRequest request, 
+			HttpServletResponse response 
+			) throws ServletException, IOException{
 		
+
 		/* Company searching by ID */
+		String companyIdString =  request.getParameter("company");
 		long companyId = Long.parseLong(companyIdString);
 		Company company = companyServices.getCompany(companyId);
 
@@ -220,43 +215,37 @@ public class ComputerController{
 			companyName = company.getName();
 		}
 
-		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
-		.introduced(introducedDateString)
-		.discontinued(discontinuedDateString)
-		.companyId(companyId)
-		.companyName(companyName)
-		.build();
-
-		Map<String,Boolean> error = ComputerValidator.validate(cdto);
-
+		computerDTO.setCompanyId(companyId);
+		computerDTO.setCompanyName(companyName);
+		
 		/* Validation case */
-		if(error.size()==0){
-			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
-			StringBuilder message = new StringBuilder();
+		if(!result.hasErrors()){
+			Computer neoComputer = ComputerMapper.dtoToObject(computerDTO);
 			id = computerServices.insert(neoComputer);
 			if(id >= 0){
-				message.append("Computer added");
 				model.addAttribute("message", "add");
 				model.addAttribute("computerIdMessage",id);
 				return "redirect:DashBoard";
-			}else{
-				error.put("databaseError", true);
 			}
-
 		}
 		
-		model.addAttribute("name", name);
-		model.addAttribute("introduced", introducedDateString);
-		model.addAttribute("discontinued", discontinuedDateString);
+		model.addAttribute("name", computerDTO.getName());
+		model.addAttribute("introduced", computerDTO.getIntroduced());
+		model.addAttribute("discontinued", computerDTO.getDiscontinued());
 		model.addAttribute("company", companyIdString);
-		model.addAllAttributes(error);
 		return "redirect:AddComputer";
 	}
 
 	@RequestMapping(value = "EditComputer", method = RequestMethod.GET)
-	public String showEditComputer(HttpServletRequest request, HttpServletResponse response, Model model) throws ServletException, IOException{
+	public String showEditComputer(
+			Model model,
+			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
+			BindingResult result,
+			HttpServletRequest request, 
+			HttpServletResponse response
+			) throws ServletException, IOException{
+		
 		String idString = request.getParameter("computerId");
-
 		String name = request.getParameter("name");
 		String introducedDateString =  request.getParameter("introduced");
 		String discontinuedDateString =  request.getParameter("discontinued");
@@ -279,104 +268,87 @@ public class ComputerController{
 			Computer computer = computerServices.getComputer(id);
 
 			if(computer != null){
-				ComputerDTO cdto = ComputerMapper.objectToDto(computer);
-
-				if(name!=null){
-					cdto.setName(name);
-				}
-
-				if(introducedDateString!=null){
-					cdto.setIntroduced(introducedDateString);
-				}
-
-				if(discontinuedDateString!=null){
-					cdto.setDiscontinued(discontinuedDateString);
-				}
-
-				if(companyIdString!=null){
+				computerDTO = ComputerMapper.objectToDto(computer);
+				if(name != null){	computerDTO.setName(name);	}
+				if(introducedDateString != null){ computerDTO.setIntroduced(introducedDateString); 	}
+				if(discontinuedDateString != null){ 	computerDTO.setDiscontinued(discontinuedDateString); }
+				if(companyIdString != null){
 					try{
 						long companyId = Long.parseLong(companyIdString);
 						if(companyId > 0){
 							Company company = companyServices.getCompany(companyId); 
-							cdto.setCompanyId(company.getId());
-							cdto.setCompanyName(company.getName());
+							computerDTO.setCompanyId(company.getId());
+							computerDTO.setCompanyName(company.getName());
 						}
-					}catch(NumberFormatException e){
-					}
-
+					}catch(NumberFormatException e){}
 				}
 
-				if(cdto!=null){
-					request.setAttribute("computer",cdto);
+				if(computerDTO != null){
+					request.setAttribute("computer",computerDTO);
 				}
 
 				List<Company> allCompany = null;
 				allCompany = companyServices.getAllCompanies();
 				request.setAttribute("allCompany", allCompany);
+				
 			}else{
+				
 				model.addAttribute("message","unavailable");
 				model.addAttribute("computerIdMessage",idString);
 				return "redirect:DashBoard";
+				
 			}
 
 		}
+		
+		request.setAttribute("error", result.hasErrors());
 		return "editComputer";
 	}
 
 	@RequestMapping(value = "EditComputer", method = RequestMethod.POST)
-	public String postEditComputer(HttpServletRequest request, HttpServletResponse response, Model model) throws ServletException, IOException{
+	public String postEditComputer(
+			Model model,
+			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
+			BindingResult result,
+			HttpServletRequest request, 
+			HttpServletResponse response
+			) throws ServletException, IOException{
+		
 		// Parameters searching
 		String idString = request.getParameter("computerId");
 		String name = request.getParameter("name");
 		String introducedDateString =  request.getParameter("introduced");
 		String discontinuedDateString =  request.getParameter("discontinued");
 		String companyIdString =  request.getParameter("company");
-		
+
 		/* Company searching by ID */
 		long companyId = Long.parseLong(companyIdString);
-
 		Company company = companyServices.getCompany(companyId);
-
+		
 		long id = 0;
 		id = Integer.parseInt(idString);
-
 		String companyName = null;
 		if(company != null){
 			companyName = company.getName();
 		}
-
-		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(id, name)
-		.introduced(introducedDateString)
-		.discontinued(discontinuedDateString)
-		.companyId(companyId)
-		.companyName(companyName)
-		.build();
-
-		Map<String,Boolean> error = ComputerValidator.validate(cdto);
-
+		computerDTO.setCompanyName(companyName);
+		computerDTO.setCompanyId(companyId);
 
 		/* Validation case */
-		if(error.size()==0){
-			Computer neoComputer = ComputerMapper.dtoToObject(cdto);
-			StringBuilder message = new StringBuilder();
+		if(!result.hasErrors()){
+			Computer neoComputer = ComputerMapper.dtoToObject(computerDTO);
 			computerServices.update(neoComputer);
-			message.append("Computer modified");
 			model.addAttribute("message", "update");
 			model.addAttribute("computerIdMessage", id);
 			return "redirect:DashBoard";
 		}
-		
+
 		/* Error case */
 		model.addAttribute("name", name);
 		model.addAttribute("introduced", introducedDateString);
 		model.addAttribute("discontinued", discontinuedDateString);
 		model.addAttribute("company", companyIdString);
-		model.addAllAttributes(error);
-		
-//		for (String key : error.keySet()) {
-//			Boolean value = error.get(key);
-//			model.addAttribute(key, value);
-//		}
+
 		return "redirect:AddComputer";
 	}
 }
