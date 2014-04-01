@@ -1,34 +1,41 @@
 package com.excilys.project.computerdatabase.validator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
 
 public class ComputerValidator {
 
-	public static String validate(ComputerDTO neoComputer) {
-		StringBuilder error = new StringBuilder("");
+	public static Map<String, Boolean> validate(ComputerDTO neoComputer) {
+		Map<String,Boolean> error = new HashMap<String,Boolean>();
 		
 		if(neoComputer.getName().trim().length() == 0){
-			error.append("A computer must have a name.<br/>");
+			error.put("computerNameError", true);
+			//error.append("A computer must have a name.");
 		}
 		
 		Boolean datesHaveNoError = true;
 		if(neoComputer.getIntroduced().length() > 0 && !testDate(neoComputer.getIntroduced())){
-			error.append("Introduced date format not correct.<br/>");
+			error.put("introducedFormatError", true);
+			//error.append("Introduced date format not correct.");
 			datesHaveNoError = false;
 		}
 		
 		if(neoComputer.getDiscontinued().length() > 0 && !testDate(neoComputer.getDiscontinued())){
-			error.append("Discontinued date format not correct.<br/>");
+			error.put("discontinuedFormatError", true);
+			//error.append("Discontinued date format not correct.");
 			datesHaveNoError = false;
 		}
 		
 		if(datesHaveNoError && neoComputer.getIntroduced().length() == 10 && neoComputer.getDiscontinued().length() == 10){
 			if(!dateLaterThan(neoComputer.getDiscontinued(), neoComputer.getIntroduced())){
-				error.append("Discontinued have to be later than introduced date");
+				error.put("discontinuedLaterThanIntroduced", true);
+				//error.append("Discontinued have to be later than introduced date");
 			}
 		}
 				
-		return error.toString();
+		return error;
 	}
 	
 	private static boolean dateLaterThan(String discontinued, String introduced) {

@@ -61,6 +61,5 @@ public class Page<E> {
 	public void setListElement(List<E> listElement) {
 		this.listElement = listElement;
 	}
-
 	
 }
