@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 
@@ -33,15 +34,15 @@ public class ComputerServices {
 		this.computerDAO = computerDAO;
 	}
 	
-	public Page<Computer> getAllComputers(Page<Computer> pc){
+	public Page<ComputerDTO> getAllComputers(Page<ComputerDTO> page){
 		String message = "Computers searching";
 		try{
 			connectionManager.getConnection();
 
-			pc.setListElement(computerDAO.retrieveAllByWrapper(pc));
-			pc.setNumber(computerDAO.numberByFilter(pc.getFilter()));
+			page.setListElement(computerDAO.retrieveAllByWrapper(page));
+			page.setNumber(computerDAO.numberByFilter(page.getFilter()));
 			
-			if(pc.getListElement()!=null){	  
+			if(page.getListElement()!=null){	  
 				connectionManager.commit(message);
 			}else{
 				connectionManager.rollback(message+" (computers is null)");
@@ -52,7 +53,7 @@ public class ComputerServices {
 			connectionManager.closeConnection();
 		}
 		
-		return pc;
+		return page;
 	}
 	
 	public Computer getComputer(long computerId){

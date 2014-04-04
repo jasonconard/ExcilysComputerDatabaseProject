@@ -2,6 +2,7 @@ package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import com.excilys.project.computerdatabase.common.Page;
+import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
@@ -45,6 +48,21 @@ public class ComputerController{
 		this.companyServices = companyServices;
 	}
 	
+	@Autowired
+	ComputerMapper computerMapper;
+	public void setComputerMapper(ComputerMapper computerMapper){
+		this.computerMapper = computerMapper;
+	}
+	
+	@Autowired
+	private ResourceBundleMessageSource messageSource;	
+	public ResourceBundleMessageSource getMessageSource() {
+		return messageSource;
+	}
+	public void setMessageSource(ResourceBundleMessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+	
 	@InitBinder
 	public void initBinderAll(WebDataBinder binder) {
 		binder.addValidators(new ComputerValidator());
@@ -57,26 +75,21 @@ public class ComputerController{
 
 	@RequestMapping(value = "DashBoard", method = RequestMethod.GET)
 	public String listComputer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-
 		/* From ADD and EDIT Computer Servlet */
 		String idAttString = request.getParameter("computerIdMessage");
 		Computer lastEdit = null;
-		if(idAttString!=null){
-			try{
-				lastEdit = computerServices.getComputer(Long.parseLong(idAttString));
-			}catch(NumberFormatException e){
-			}
-		}
+		
+		lastEdit = computerServices.getComputer(UsefulFunctions.stringToLong(idAttString, 0));
 
 		String message = request.getParameter("message");
 		String computerIdMessage = request.getParameter("computerIdMessage");
 		if(message!=null){
 			if(message.equals("update")){
-				request.setAttribute("message", "Computer updated !");
+				request.setAttribute("message", messageSource.getMessage("controller.dashboard.updated", null, response.getLocale()));
 			}else if(message.equals("add")){
-				request.setAttribute("message", "Computer added !");
+				request.setAttribute("message", messageSource.getMessage("controller.dashboard.added", null, response.getLocale()));
 			}else if(message.equals("unavailable")){
-				request.setAttribute("error", "Computer ("+computerIdMessage+") unavailable !");
+				request.setAttribute("error", messageSource.getMessage("controller.dashboard.unavailable", null, response.getLocale())+computerIdMessage+".");
 			}
 		}
 
@@ -85,10 +98,11 @@ public class ComputerController{
 		String delete 	= request.getParameter("delete");
 
 		if(idString != null && delete!=null && delete.equals("delete")){
-			try{
+			if(UsefulFunctions.isANumber(idString)){
 				long id = Long.parseLong(idString);
 				computerServices.delete(id);
-			}catch(NumberFormatException e){}
+				return "dashboard";
+			}
 		}
 
 		/* Order By managment */
@@ -127,7 +141,7 @@ public class ComputerController{
 			}
 		}		
 
-		Page<Computer> page = new Page<Computer>();
+		Page<ComputerDTO> page = new Page<ComputerDTO>();
 		page.setNumero(idPage-1);
 		page.setColumn(order);
 		page.setDirection(dir);
@@ -155,85 +169,6 @@ public class ComputerController{
 
 		/* Redirection */
 		return "dashboard";
-	}
-
-	@RequestMapping(value = "AddComputer", method = RequestMethod.GET)
-	public String showAddComputer(
-			Model model,
-			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
-			BindingResult result,
-			HttpServletRequest request, 
-			HttpServletResponse response
-			) throws ServletException, IOException{
-		
-		List<Company> allCompany = null;
-		allCompany = companyServices.getAllCompanies();
-		request.setAttribute("allCompany", allCompany);
-
-		String name = request.getParameter("name");
-		String introduced = request.getParameter("introduced");
-		String discontinued = request.getParameter("discontinued");
-		String companyIdString =  request.getParameter("company");
-
-		if(name != null){
-			request.setAttribute("name", name);
-		}
-		if(introduced != null){
-			request.setAttribute("introduced", introduced);
-		}
-		if(discontinued != null){
-			request.setAttribute("discontinued", discontinued);
-		}
-		if(companyIdString != null){
-			request.setAttribute("companyId", companyIdString);
-		}
-		
-		request.setAttribute("error", result.hasErrors());
-		
-		return "addComputer";
-	}
-
-	@RequestMapping(value = "AddComputer", method = RequestMethod.POST)
-	public String postAddComputer(	
-			Model model,
-			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
-			BindingResult result,
-			HttpServletRequest request, 
-			HttpServletResponse response 
-			) throws ServletException, IOException{
-		
-
-		/* Company searching by ID */
-		String companyIdString =  request.getParameter("company");
-		long companyId = Long.parseLong(companyIdString);
-		Company company = companyServices.getCompany(companyId);
-
-		long id = 0;
-
-		String companyName = null;
-		if(company!=null){
-			companyName = company.getName();
-		}
-
-		computerDTO.setCompanyId(companyId);
-		computerDTO.setCompanyName(companyName);
-		
-		/* Validation case */
-		if(!result.hasErrors()){
-			Computer neoComputer = ComputerMapper.dtoToObject(computerDTO);
-			id = computerServices.insert(neoComputer);
-			if(id >= 0){
-				model.addAttribute("message", "add");
-				model.addAttribute("computerIdMessage",id);
-				return "redirect:DashBoard";
-			}
-		}
-		
-		model.addAttribute("name", computerDTO.getName());
-		model.addAttribute("introduced", computerDTO.getIntroduced());
-		model.addAttribute("discontinued", computerDTO.getDiscontinued());
-		model.addAttribute("company", companyIdString);
-		return "redirect:AddComputer";
 	}
 
 	@RequestMapping(value = "EditComputer", method = RequestMethod.GET)
@@ -268,7 +203,7 @@ public class ComputerController{
 			Computer computer = computerServices.getComputer(id);
 
 			if(computer != null){
-				computerDTO = ComputerMapper.objectToDto(computer);
+				computerDTO = computerMapper.objectToDto(computer);
 				if(name != null){	computerDTO.setName(name);	}
 				if(introducedDateString != null){ computerDTO.setIntroduced(introducedDateString); 	}
 				if(discontinuedDateString != null){ 	computerDTO.setDiscontinued(discontinuedDateString); }
@@ -322,11 +257,11 @@ public class ComputerController{
 		String companyIdString =  request.getParameter("company");
 
 		/* Company searching by ID */
-		long companyId = Long.parseLong(companyIdString);
+		long companyId = UsefulFunctions.stringToLong(companyIdString, 0);
 		Company company = companyServices.getCompany(companyId);
 		
-		long id = 0;
-		id = Integer.parseInt(idString);
+		long id = UsefulFunctions.stringToLong(idString, 0);
+
 		String companyName = null;
 		if(company != null){
 			companyName = company.getName();
@@ -336,7 +271,7 @@ public class ComputerController{
 
 		/* Validation case */
 		if(!result.hasErrors()){
-			Computer neoComputer = ComputerMapper.dtoToObject(computerDTO);
+			Computer neoComputer = computerMapper.dtoToObject(computerDTO);
 			computerServices.update(neoComputer);
 			model.addAttribute("message", "update");
 			model.addAttribute("computerIdMessage", id);
@@ -351,4 +286,12 @@ public class ComputerController{
 
 		return "redirect:AddComputer";
 	}
+
+	@RequestMapping(value = "/**", method = RequestMethod.GET)
+	public String error404(HttpServletRequest request, HttpServletResponse response){
+		String language = request.getParameter("language");
+		if(language!=null)response.setLocale(new Locale(language));
+		return "404";
+	}
+
 }

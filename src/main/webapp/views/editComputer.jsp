@@ -1,47 +1,53 @@
 <jsp:include page="include/header.jsp" />
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <section id="main">
 
-	<h1>Edit Computer</h1>
-	<form:form action="EditComputer" class="form-inline" method="POST" id="editComputerForm" modelAttribute="dto">
-		<input type="hidden" name="computerId" value="${computer.id}"/>
+	<h1><spring:message code="view.editComputer.title" text="Edit Computer" /></h1>
+	<form:form action="EditComputer" class="form-inline" id="editComputerForm" method="POST" modelAttribute="dto">
 		<fieldset>
 			<div class="clearfix">
-				<label for="name">Computer name:</label>
+				<label for="name"><spring:message code="view.addComputer.computerName" text="Computer name" /> :</label>
 				<div class="input">
-					<form:input type="text" class="form-control text-form" name="name" path="name" width="20" value="${computer.name}"
-						   data-validation="length" data-validation-length="1-255" data-validation-optional="false"
-						   data-validation-error-msg="The user name has to be a value between 1-255 characters"/>
-					<span class="help-inline">Required</span>
+					<spring:message code="view.addComputer.validationName" var="validationNameMessage"/>
+					<form:input type="text" class="form-control text-form" path="name" name="name"
+						width="20" value="${computer.name}" data-validation="length"
+						data-validation-length="1-255" data-validation-optional="false"
+						data-validation-error-msg="${validationNameMessage}" />
+					<span class="help-inline"><spring:message code="view.addComputer.required" text="Required" /></span>
 				</div>
 			</div>
-			<br/>
+			<br />
 			<div class="clearfix">
-				<label for="introduced">Introduced date:</label>
+				<label for="introduced"><spring:message code="view.addComputer.introduced" text="Introduced Date" /> :</label>
 				<div class="input">
-					<form:input type="date" class="form-control date-form" name="introduced" path="introduced" value="${computer.introduced}"
-							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
-							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
-					/>
-					<span class="help-inline">YYYY-MM-DD</span>
+					<spring:message code="view.addComputer.validationDate" var="validationDate"/>
+					<spring:message code="view.addComputer.dateFormat" var="dateFormat"/>
+					<form:input type="date" class="form-control date-form" name="introduced" path="introduced"
+						value="${computer.introduced}" data-validation="date"
+						data-validation-format="${dateFormat}"
+						data-validation-optional="true"
+						data-validation-error-msg="${validationDate}" />
+					<span class="help-inline">${dateFormat}</span>
 				</div>
 			</div>
-			<br/>
+			<br />
 			<div class="clearfix">
-				<label for="discontinued">Discontinued date:</label>
+				<label for="discontinued"><spring:message code="view.addComputer.discontinued" text="Discontinued Date" /> :</label>
 				<div class="input">
-					<form:input type="date" class="form-control date-form" name="discontinued" path="discontinued" value="${computer.discontinued}"
-							data-validation="date" data-validation-format="yyyy-mm-dd" data-validation-optional="true"
-							data-validation-error-msg="You have to write a correct date in the format YYYY-MM-dd (if you have a recent browser, it could maybe use your nationality format, no problem)"
-					/>
-					<span class="help-inline">YYYY-MM-DD</span>
+					<form:input type="date" class="form-control date-form" path="discontinued"
+						name="discontinued" value="${computer.discontinued}" data-validation="date"
+						data-validation-format="${dateFormat}"
+						data-validation-optional="true"
+						data-validation-error-msg="${validationDate}" />
+					<span class="help-inline">${dateFormat}</span>
 				</div>
 			</div>
-			<br/>
+			<br />
 			<div class="clearfix">
-				<label for="company">Company Name:</label>
+				<label for="company"><spring:message code="view.addComputer.companyName" text="Company Name" /> :</label>
 				<div class="input">
 					<select name="company" class="form-control select-form">
 						<option value="0">--</option>
@@ -56,22 +62,29 @@
 					</select>
 				</div>
 			</div>
-			<br/>
+			<br />
 		</fieldset>
 		<div class="actions">
-			<input type="submit" value="Edit" class="btn btn-primary">
-			or <a href="DashBoard" class="btn btn-default">Cancel</a>
+			<input type="submit" value="Add" class="btn btn-primary"> <spring:message code="view.addComputer.or" text="or" />
+			<a href="DashBoard" class="btn btn-default"><spring:message code="view.addComputer.cancel" text="Cancel" /></a>
 		</div>
+		<hr/>
+		<c:if test="${error}">
+			<div class="panel panel-danger">
+				<div class="panel-heading">
+					<spring:message code="view.addComputer.errorsReport" text="Error(s) reporting" /> :
+				</div>
+				<div class="panel-body">
+					<form:errors path="*"/>
+				</div>
+			</div>
+		</c:if>
 	</form:form>
-	<br/>
-	<c:if test="${error}">
-		<div class="alert alert-danger">
-			<form:errors path="*"/>
-		</div>
-	</c:if>
 </section>
 
 <script src="js/jquery.form-validator.min.js"></script>
-<script> $.validate(); </script>
+<script>
+	$.validate();
+</script>
 
 <jsp:include page="include/footer.jsp" />

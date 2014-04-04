@@ -1,7 +1,7 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cm" tagdir="/WEB-INF/tags/common" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <tr>
 	<td colspan="4" style="vertical-align:middle;">
 			<c:if test="${lastPage!=-1}">
@@ -42,10 +42,11 @@
 				<span class="unclickable glyphicon glyphicon-fast-forward"></span>
 			</c:if>
 	</td>
-	<td>	
+	<td>
+		<spring:message code="view.dashboard.tag.paginationTR.goto" var="goTo"/>
 		<form action="" class="form-inline" method="GET">
 			<input type="number" id="searchbox" name="page" value="${numero}" placeholder="n°" min="1" max="${nbPage}"/> / ${nbPage} &nbsp;&nbsp;
-			<input type="submit" id="pagesubmit" value="Go to page" class="btn btn-primary btn-xs"/>
+			<input type="submit" id="pagesubmit" value="${goTo}" class="btn btn-primary btn-xs"/>
 			<input type="hidden" id="hiddenSearch" name="search" value="${page.filter}"/>
 			<input type="hidden" id="hiddenOrder" name="order" value="${page.column}"/>
 			<input type="hidden" id="hiddenDir" name="dir" value="${page.direction}"/>

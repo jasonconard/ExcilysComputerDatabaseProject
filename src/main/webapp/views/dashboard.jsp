@@ -2,17 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="db" tagdir="/WEB-INF/tags/dashboard" %>
 <%@ taglib prefix="cm" tagdir="/WEB-INF/tags/common" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <section id="main">
-	<h1 id="homeTitle">${page.number} Computers found</h1>
+	<h1 id="homeTitle">${page.number} <spring:message code="view.dashboard.computerFound" text="Computer(s) Found" /></h1>
 	<div id="actions">
 		<form action="" method="GET">
+			<spring:message code="view.dashboard.filterByName" var="filterByName" />
 			<input type="search" id="searchbox" name="search" value="${page.filter}"
-				placeholder="Search name"> <input type="submit"
-				id="searchsubmit" value="Filter by name" class="btn btn-primary">
+				placeholder="Search name"> <input type="submit"	id="searchsubmit" value="${filterByName}" class="btn btn-primary">
 		</form>
-		<a class="btn btn-success" id="add" href="AddComputer">Add
-			Computer</a>
+		<a class="btn btn-success" id="add" href="AddComputer"><spring:message code="view.dashboard.addComputer" text="Add computer" /></a>
 	</div>
 	<br />
 	<c:if test="${message != null}">
@@ -30,11 +30,12 @@
 					<td>${entry.name}</td>
 					<td>${entry.introduced}</td>
 					<td>${entry.discontinued}</td>
-					<td>${entry.company.name}</td>
+					<td>${entry.companyName}</td>
 					<td>
 						<cm:url servlet="EditComputer" 
 								computerId="${entry.id}"
 								icon="glyphicon glyphicon-pencil"/>
+						<spring:message code="view.dashboard.delete" var="deleteMessage"/>
 						<cm:url servlet="DashBoard" 
 								computerId="${entry.id}"
 								delete="delete"
@@ -43,7 +44,7 @@
 								order="${page.column}"
 								dir="${page.direction}"
 								icon="glyphicon glyphicon-trash"
-								myOnClick="return confirm('Are you sure to delete?');"/>
+								myOnClick="return confirm('${deleteMessage}');"/>
 					</td>
 
 				</tr>

@@ -19,7 +19,7 @@ a{
 	background-color: #1DFF00;
 }
 
-body{
+body, html{
 	color: red;
 	background-color: #FFF500;
 }

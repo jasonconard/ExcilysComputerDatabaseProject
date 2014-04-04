@@ -95,3 +95,10 @@ table.computers .header a {
 #colHeader3{
 	width:25%;
 }
+
+.beautifulImg{
+	border:1px solid black;
+	-webkit-box-shadow: 4px 4px 4px rgba(23, 0, 0, 0.73);
+	-moz-box-shadow:    4px 4px 4px rgba(23, 0, 0, 0.73);
+	box-shadow:         4px 4px 4px rgba(23, 0, 0, 0.73);
+}

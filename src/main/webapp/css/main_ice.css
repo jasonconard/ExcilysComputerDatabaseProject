@@ -15,7 +15,7 @@ a{
 	background-color: white;
 }
 
-body {
+body, html{
 	color: #000000;
 	background-color: #98E9E6;
 }

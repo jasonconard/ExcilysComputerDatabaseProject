@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.dto.ComputerDTO;
+import com.excilys.project.computerdatabase.mapper.ComputerMapper;
 
 @Repository
 public class ComputerDAO {
@@ -34,11 +36,17 @@ public class ComputerDAO {
 		this.connectionManager = connectionManager;
 	}
 	
+	@Autowired
+	ComputerMapper computerMapper;
+	public void setComputerMapper(ComputerMapper computerMapper){
+		this.computerMapper = computerMapper;
+	}
+	
 	private static final String table = "computer";
 
-	public List<Computer> retrieveAllByWrapper(Page<Computer> pc) throws SQLException{
+	public List<ComputerDTO> retrieveAllByWrapper(Page<ComputerDTO> pc) throws SQLException{
 		Connection connection = connectionManager.getConnection();
-		List<Computer> alc = new ArrayList<Computer>();
+		List<ComputerDTO> alc = new ArrayList<ComputerDTO>();
 
 		String like = "";
 		if( pc.getFilter() != null ){
@@ -113,17 +121,19 @@ public class ComputerDAO {
 				discontinuedLD = LocalDate.fromDateFields(discontinued);
 			}
 			
-			alc.add(
-				new Computer.ComputerBuilder(id, name)
-					.introduced(introducedLD)
-					.discontinued(discontinuedLD)
-					.company(
-						new Company.CompanyBuilder(companyId)
-							.name(companyName)
-							.build()
-						)
+			Computer computer = new Computer.ComputerBuilder(id, name)
+			.introduced(introducedLD)
+			.discontinued(discontinuedLD)
+			.company(
+				new Company.CompanyBuilder(companyId)
+					.name(companyName)
 					.build()
-			);
+				)
+			.build();
+			
+			ComputerDTO cdto = computerMapper.objectToDto(computer);
+			
+			alc.add(cdto);
 		}
 		
 		closeAll(results,preparedStatement);

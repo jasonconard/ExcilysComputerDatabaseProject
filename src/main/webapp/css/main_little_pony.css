@@ -14,7 +14,7 @@
 	text-shadow: -2px -2px -2px rgba(0, 0, 0, 0.40);
 }
 
-body{
+body, html{
 	background-color: rgb(250, 179, 179);
 }
 
