@@ -42,7 +42,7 @@
 					</td>
 					<td id="colHeader3">
 						<div id="webSiteIcon"></div>
-						<a href="?language=en_EN">English</a>|<a href="?language=fr_FR">Français</a>
+						<a href="?language=en_EN"><img class="beautifulImg" src="img/flag_english.png"/></a>|<a href="?language=fr_FR"><img class="beautifulImg" src="img/flag_france.png"/></a>
 					</td>
 				</tr>
 			</table>

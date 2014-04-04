@@ -41,22 +41,15 @@
     	<servlet-name>default</servlet-name>
     	<url-pattern>/fonts/*</url-pattern>
 	</servlet-mapping>
- 
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
-	</context-param>
 	
-	<context-param>
-		<param-name>javax.servlet.jsp.jstl.sql.dataSource</param-name>
-		<param-value>jdbc/data</param-value>
-	</context-param>
-	
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/404.jsp</location>
-	</error-page>
-	
-	
-	
+	 <!-- Error Pages -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/ErrorPage404</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/ErrorPage500</location>
+    </error-page>
 </web-app>

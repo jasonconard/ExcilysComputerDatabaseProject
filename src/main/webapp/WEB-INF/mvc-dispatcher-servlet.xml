@@ -1,49 +1,58 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<mvc:annotation-driven/>
+	<mvc:annotation-driven />
 
 	<!-- ANNOTATIONS BEANS CREATION -->
-	<context:component-scan base-package="com.excilys.project.computerdatabase.persistence" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.persistence" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.services" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.controller" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.validator" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.controller" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.validator" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.mapper" />
-	
-	
+
+
 	<!-- ANNOTATIONS FOR AOP -->
 	<aop:aspectj-autoproxy />
- 
- 	<!-- INTERNATIONALISATION -->
- 	<bean id="localeResolver"
+
+	<!-- INTERNATIONALISATION -->
+	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en_EN" />
 	</bean>
- 
- 	<bean id="localeChangeInterceptor"
+
+	<bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="language" />
 	</bean>
- 
- 	<mvc:interceptors>
- 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" p:paramName="language"/>
- 	</mvc:interceptors>
- 
+
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+			p:paramName="language" />
+	</mvc:interceptors>
+
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="computerDatabase" />
 	</bean>
- 
- 	<!-- MAPPING JSP FILE -->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+<!-- 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
+<!-- 	<property name="exceptionMappings"> -->
+<!-- 		<map> -->
+<!-- 			<entry key="DataAccessException" value="data-error"/> -->
+<!-- 		</map> -->
+<!-- 		</property> -->
+<!-- 	<property name="defaultErrorView" value="general-error" /> -->
+<!-- 	</bean> -->
+
+	<!-- MAPPING JSP FILE -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/views/</value>
 		</property>
@@ -51,5 +60,6 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	
+
+
 </beans>

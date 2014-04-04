@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
-
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Company;
@@ -78,7 +77,6 @@ public class ComputerController{
 		/* From ADD and EDIT Computer Servlet */
 		String idAttString = request.getParameter("computerIdMessage");
 		Computer lastEdit = null;
-		
 		lastEdit = computerServices.getComputer(UsefulFunctions.stringToLong(idAttString, 0));
 
 		String message = request.getParameter("message");
@@ -287,11 +285,17 @@ public class ComputerController{
 		return "redirect:AddComputer";
 	}
 
-	@RequestMapping(value = "/**", method = RequestMethod.GET)
+	@RequestMapping(value = "ErrorPage404", method = RequestMethod.GET)
 	public String error404(HttpServletRequest request, HttpServletResponse response){
 		String language = request.getParameter("language");
-		if(language!=null)response.setLocale(new Locale(language));
+		if( language != null )response.setLocale(new Locale(language));
 		return "404";
 	}
-
+	
+	@RequestMapping(value = "ErrorPage500", method = RequestMethod.GET)
+	public String error500(HttpServletRequest request, HttpServletResponse response){
+		String language = request.getParameter("language");
+		if( language != null )response.setLocale(new Locale(language));
+		return "500";
+	}
 }
