@@ -139,7 +139,7 @@ public class ComputerDAO {
 			}
 			
 			closeAll(results,preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}
 			
 		return alc;
@@ -194,7 +194,7 @@ public class ComputerDAO {
 						.build();
 			}
 			closeAll(results, preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}
 			
 		return computer;
@@ -244,7 +244,7 @@ public class ComputerDAO {
 			}
 			
 			closeAll(rs,preparedStatement);
-		
+			connection.close();
 		}catch (SQLException e) {}
 		
 		return id;
@@ -268,7 +268,7 @@ public class ComputerDAO {
 			preparedStatement.executeUpdate();
 	
 			closeAll(null,preparedStatement);
-		
+			connection.close();
 		}catch (SQLException e) {}
 	}
 
@@ -309,6 +309,7 @@ public class ComputerDAO {
 			preparedStatement.setLong(5, c.getId());
 			preparedStatement.executeUpdate();
 			closeAll(results, preparedStatement);
+			connection.close();
 		}catch (SQLException e) {}
 	}
 
@@ -339,7 +340,7 @@ public class ComputerDAO {
 			}
 	
 			closeAll(results,preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}
 		
 		return count;

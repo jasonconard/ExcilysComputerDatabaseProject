@@ -9,8 +9,9 @@
 	<div id="actions">
 		<form action="" method="GET">
 			<spring:message code="view.dashboard.filterByName" var="filterByName" />
+			<spring:message code="view.dahsboard.searchName" var="searchName" />
 			<input type="search" id="searchbox" name="search" value="${page.filter}"
-				placeholder="Search name"> <input type="submit"	id="searchsubmit" value="${filterByName}" class="btn btn-primary">
+				placeholder="${searchName}"> <input type="submit"	id="searchsubmit" value="${filterByName}" class="btn btn-primary">
 		</form>
 		<a class="btn btn-success" id="add" href="AddComputer"><spring:message code="view.dashboard.addComputer" text="Add computer" /></a>
 	</div>

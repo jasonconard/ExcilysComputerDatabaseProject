@@ -53,7 +53,7 @@ public class CompanyDAO {
 			}
 	
 			closeAll(results,preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}	
 		
 		return alc;
@@ -83,7 +83,7 @@ public class CompanyDAO {
 				company = new Company.CompanyBuilder(id).name(name).build();
 			}
 			closeAll(results,preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}
 		
 		return company;
@@ -106,7 +106,7 @@ public class CompanyDAO {
 	
 			preparedStatement.executeUpdate();
 			closeAll(null,preparedStatement);
-		
+			connection.close();
 		}catch (SQLException e) {}
 	}
 

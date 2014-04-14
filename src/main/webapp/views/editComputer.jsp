@@ -66,7 +66,8 @@
 			<br />
 		</fieldset>
 		<div class="actions">
-			<input type="submit" value="Add" class="btn btn-primary"> <spring:message code="view.addComputer.or" text="or" />
+			<spring:message code="view.editComputer.edit" var="edit" />
+			<input type="submit" value="${edit}" class="btn btn-primary"> <spring:message code="view.addComputer.or" text="or" />
 			<a href="DashBoard" class="btn btn-default"><spring:message code="view.addComputer.cancel" text="Cancel" /></a>
 		</div>
 		<hr/>

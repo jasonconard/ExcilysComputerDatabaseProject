@@ -57,7 +57,7 @@ public class LogsDAO {
 			}
 	
 			closeAll(results,preparedStatement);
-
+			connection.close();
 		}catch (SQLException e) {}
 		
 		return logs;
@@ -90,7 +90,7 @@ public class LogsDAO {
 			}
 	
 			closeAll(results,preparedStatement);
-		
+			connection.close();
 		}catch (SQLException e) {}
 		
 		return log;
@@ -116,7 +116,7 @@ public class LogsDAO {
 			preparedStatement.executeUpdate();
 	
 			closeAll(null,preparedStatement);
-		
+			connection.close();
 		}catch (SQLException e) {}
 	}
 
