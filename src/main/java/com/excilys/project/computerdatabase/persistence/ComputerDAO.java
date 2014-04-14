@@ -18,6 +18,7 @@ import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
+import com.jolbox.bonecp.BoneCPDataSource;
 
 @Repository
 public class ComputerDAO {
@@ -31,291 +32,316 @@ public class ComputerDAO {
 	}
 	
 	@Autowired
-	ConnectionManager connectionManager;
-	public void setConnectionManager(ConnectionManager connectionManager){
-		this.connectionManager = connectionManager;
-	}
-	
-	@Autowired
 	ComputerMapper computerMapper;
 	public void setComputerMapper(ComputerMapper computerMapper){
 		this.computerMapper = computerMapper;
 	}
 	
+	@Autowired
+	BoneCPDataSource ds;
+	
 	private static final String table = "computer";
 
-	public List<ComputerDTO> retrieveAllByWrapper(Page<ComputerDTO> pc) throws SQLException{
-		Connection connection = connectionManager.getConnection();
+	public List<ComputerDTO> retrieveAllByWrapper(Page<ComputerDTO> pc){
+		
 		List<ComputerDTO> alc = new ArrayList<ComputerDTO>();
 
-		String like = "";
-		if( pc.getFilter() != null ){
-			like += pc.getFilter();
-		}
-
-		String order = "";
-		if( pc.getColumn() != null ){
-			order += pc.getColumn();
-		}
-
-		String direction = "";
-		if( pc.getDirection() != null ){
-			direction += pc.getDirection();
-		}
+		try{
 		
-		if(!direction.equals("ASC") && !direction.equals("DESC")){
-			direction = "ASC";
-		}
-
-		int idBegin = pc.getNumero() * Page.NBLINEPERPAGES; 
-		int nbLines = Page.NBLINEPERPAGES; 
-
-		StringBuilder query = new StringBuilder();
-		
-		query.append("SELECT cu.*, ca.name AS company_name FROM computer AS cu ")
-		     .append("LEFT OUTER JOIN company AS ca ON cu.company_id = ca.id ");
-		
-		if(like.length()>0){
-			query.append("WHERE cu.name LIKE ? OR ca.name LIKE ? ");
-		}
-		
-		query.append("ORDER BY ")
-			 .append(order)
-			 .append(" ")
-		     .append(direction)
-		     .append(" LIMIT ?, ?");
-		
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-
-		preparedStatement = connection.prepareStatement(query.toString());
-		
-		if(like.length()>0){
-			preparedStatement.setString(1, "%"+like+"%");
-			preparedStatement.setString(2, "%"+like+"%");
-			preparedStatement.setInt   (3, idBegin);
-			preparedStatement.setInt   (4, nbLines);
-		}else{
-			preparedStatement.setInt   (1, idBegin);
-			preparedStatement.setInt   (2, nbLines);
-		}
-		
-		
-		results = preparedStatement.executeQuery();
-		
-		while(results.next()){
-			long id = results.getLong("id");
-			String name = results.getString("name");
-			Date introduced = results.getDate("introduced");
-			Date discontinued = results.getDate("discontinued");
+			Connection connection = ds.getConnection();
 			
-			long companyId = results.getLong("company_id");
-			String companyName = results.getString("company_name");
-			
-			LocalDate introducedLD = null;
-			if(introduced != null){
-				introducedLD = LocalDate.fromDateFields(introduced);
+			String like = "";
+			if( pc.getFilter() != null ){
+				like += pc.getFilter();
 			}
-			LocalDate discontinuedLD = null;
-			if(discontinued != null){
-				discontinuedLD = LocalDate.fromDateFields(discontinued);
+	
+			String order = "";
+			if( pc.getColumn() != null ){
+				order += pc.getColumn();
+			}
+	
+			String direction = "";
+			if( pc.getDirection() != null ){
+				direction += pc.getDirection();
 			}
 			
-			Computer computer = new Computer.ComputerBuilder(id, name)
-			.introduced(introducedLD)
-			.discontinued(discontinuedLD)
-			.company(
-				new Company.CompanyBuilder(companyId)
-					.name(companyName)
-					.build()
-				)
-			.build();
+			if(!direction.equals("ASC") && !direction.equals("DESC")){
+				direction = "ASC";
+			}
+	
+			int idBegin = pc.getNumero() * Page.NBLINEPERPAGES; 
+			int nbLines = Page.NBLINEPERPAGES; 
+	
+			StringBuilder query = new StringBuilder();
 			
-			ComputerDTO cdto = computerMapper.objectToDto(computer);
+			query.append("SELECT cu.*, ca.name AS company_name FROM computer AS cu ")
+			     .append("LEFT OUTER JOIN company AS ca ON cu.company_id = ca.id ");
 			
-			alc.add(cdto);
-		}
-		
-		closeAll(results,preparedStatement);
+			if(like.length()>0){
+				query.append("WHERE cu.name LIKE ? OR ca.name LIKE ? ");
+			}
+			
+			query.append("ORDER BY ")
+				 .append(order)
+				 .append(" ")
+			     .append(direction)
+			     .append(" LIMIT ?, ?");
+			
+			ResultSet results = null;
+			PreparedStatement preparedStatement = null;
+	
+			preparedStatement = connection.prepareStatement(query.toString());
+			
+			if(like.length()>0){
+				preparedStatement.setString(1, "%"+like+"%");
+				preparedStatement.setString(2, "%"+like+"%");
+				preparedStatement.setInt   (3, idBegin);
+				preparedStatement.setInt   (4, nbLines);
+			}else{
+				preparedStatement.setInt   (1, idBegin);
+				preparedStatement.setInt   (2, nbLines);
+			}
+			
+			
+			results = preparedStatement.executeQuery();
+			
+			while(results.next()){
+				long id = results.getLong("id");
+				String name = results.getString("name");
+				Date introduced = results.getDate("introduced");
+				Date discontinued = results.getDate("discontinued");
+				
+				long companyId = results.getLong("company_id");
+				String companyName = results.getString("company_name");
+				
+				LocalDate introducedLD = null;
+				if(introduced != null){
+					introducedLD = LocalDate.fromDateFields(introduced);
+				}
+				LocalDate discontinuedLD = null;
+				if(discontinued != null){
+					discontinuedLD = LocalDate.fromDateFields(discontinued);
+				}
+				
+				Computer computer = new Computer.ComputerBuilder(id, name)
+				.introduced(introducedLD)
+				.discontinued(discontinuedLD)
+				.company(
+					new Company.CompanyBuilder(companyId)
+						.name(companyName)
+						.build()
+					)
+				.build();
+				
+				ComputerDTO cdto = computerMapper.objectToDto(computer);
+				
+				alc.add(cdto);
+			}
+			
+			closeAll(results,preparedStatement);
 
+		}catch (SQLException e) {}
+			
 		return alc;
 	}
 	
-	public Computer retrieveByComputerId(long idComputer) throws SQLException {
-		Connection connection = connectionManager.getConnection();
+	public Computer retrieveByComputerId(long idComputer){
 		Computer computer = null;
 
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT cu.*, ca.name AS name2 FROM company AS ca ")
-		     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
-		     .append("WHERE cu.id = ?");
+		try{
 		
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-
-		preparedStatement = connection.prepareStatement(query.toString());
-		preparedStatement.setLong(1, idComputer);
-		
-		results = preparedStatement.executeQuery();
-		
-		if(results.next()){
-			long id = results.getLong("id");
-			String name = results.getString("name");
-			Date introduced = results.getDate("introduced");
-			Date discontinued = results.getDate("discontinued");
-			long companyId = results.getLong("company_id");
-			String companyName = results.getString("name2");
+			Connection connection = ds.getConnection();
 			
-			LocalDate introducedLD = null;
-			if(introduced != null){
-				introducedLD = LocalDate.fromDateFields(introduced);
+			StringBuilder query = new StringBuilder();
+			query.append("SELECT cu.*, ca.name AS name2 FROM company AS ca ")
+			     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
+			     .append("WHERE cu.id = ?");
+			
+			ResultSet results = null;
+			PreparedStatement preparedStatement = null;
+	
+			preparedStatement = connection.prepareStatement(query.toString());
+			preparedStatement.setLong(1, idComputer);
+			
+			results = preparedStatement.executeQuery();
+			
+			if(results.next()){
+				long id = results.getLong("id");
+				String name = results.getString("name");
+				Date introduced = results.getDate("introduced");
+				Date discontinued = results.getDate("discontinued");
+				long companyId = results.getLong("company_id");
+				String companyName = results.getString("name2");
+				
+				LocalDate introducedLD = null;
+				if(introduced != null){
+					introducedLD = LocalDate.fromDateFields(introduced);
+				}
+				LocalDate discontinuedLD = null;
+				if(discontinued != null){
+					discontinuedLD = LocalDate.fromDateFields(discontinued);
+				}
+				
+				
+				computer = new Computer.ComputerBuilder(id, name)
+				.introduced(introducedLD)
+				.discontinued(discontinuedLD)
+				.company(
+						new Company.CompanyBuilder(companyId)
+						.name(companyName)
+						.build()
+						)
+						.build();
 			}
-			LocalDate discontinuedLD = null;
-			if(discontinued != null){
-				discontinuedLD = LocalDate.fromDateFields(discontinued);
-			}
-			
-			
-			computer = new Computer.ComputerBuilder(id, name)
-			.introduced(introducedLD)
-			.discontinued(discontinuedLD)
-			.company(
-					new Company.CompanyBuilder(companyId)
-					.name(companyName)
-					.build()
-					)
-					.build();
-		}
-		closeAll(results, preparedStatement);
+			closeAll(results, preparedStatement);
 
+		}catch (SQLException e) {}
+			
 		return computer;
 	}
 
-	public int insert(Computer computer) throws SQLException{
-		Connection connection = connectionManager.getConnection();
+	public int insert(Computer computer){
 		int id = 0;
 		
-		StringBuilder query = new StringBuilder();
-		query.append("INSERT INTO ")
-		     .append(table)
-		     .append(" VALUES(?,?,?,?,?)");
+		try{
+			
+			Connection connection = ds.getConnection();
 		
-		PreparedStatement preparedStatement = null;
+			StringBuilder query = new StringBuilder();
+			query.append("INSERT INTO ")
+			     .append(table)
+			     .append(" VALUES(?,?,?,?,?)");
+			
+			PreparedStatement preparedStatement = null;
+			
+			preparedStatement = connection.prepareStatement(query.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
+	
+			preparedStatement.setLong  (1, 0);
+			preparedStatement.setString(2, computer.getName());
+			if(computer.getIntroduced() != null){
+				preparedStatement.setDate(3, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
+			}else{
+				preparedStatement.setNull(3, Types.TIMESTAMP);
+			}
+	
+			if(computer.getDiscontinued() != null){
+				preparedStatement.setDate(4, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
+			}else{
+				preparedStatement.setNull(4, Types.TIMESTAMP);
+			}
+	
+			if(computer.getCompany() != null){
+				preparedStatement.setLong(5, computer.getCompany().getId());
+			}else{
+				preparedStatement.setNull(5, Types.BIGINT);
+			}
+			preparedStatement.executeUpdate();
+			
+			
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+			if(rs.next()){
+				id = rs.getInt(1);
+			}
+			
+			closeAll(rs,preparedStatement);
 		
-		preparedStatement = connection.prepareStatement(query.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
-
-		preparedStatement.setLong  (1, 0);
-		preparedStatement.setString(2, computer.getName());
-		if(computer.getIntroduced() != null){
-			preparedStatement.setDate(3, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
-		}else{
-			preparedStatement.setNull(3, Types.TIMESTAMP);
-		}
-
-		if(computer.getDiscontinued() != null){
-			preparedStatement.setDate(4, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
-		}else{
-			preparedStatement.setNull(4, Types.TIMESTAMP);
-		}
-
-		if(computer.getCompany() != null){
-			preparedStatement.setLong(5, computer.getCompany().getId());
-		}else{
-			preparedStatement.setNull(5, Types.BIGINT);
-		}
-		preparedStatement.executeUpdate();
+		}catch (SQLException e) {}
 		
-		
-		ResultSet rs = preparedStatement.getGeneratedKeys();
-		if(rs.next()){
-			id = rs.getInt(1);
-		}
-		
-		closeAll(rs,preparedStatement);
 		return id;
 	}
 
-	public void delete(long id) throws SQLException {
-		Connection connection = connectionManager.getConnection();
-		StringBuilder query = new StringBuilder();
-		query.append("DELETE FROM ")
-		     .append(table)
-		     .append(" WHERE id = ?");
+	public void delete(long id){
+		try{
 		
-		PreparedStatement preparedStatement = null;
-
-		preparedStatement = connection.prepareStatement(query.toString());
-
-		preparedStatement.setLong(1, id);
-
-		preparedStatement.executeUpdate();
-
-		closeAll(null,preparedStatement);
+			Connection connection = ds.getConnection();
+			StringBuilder query = new StringBuilder();
+			query.append("DELETE FROM ")
+			     .append(table)
+			     .append(" WHERE id = ?");
+			
+			PreparedStatement preparedStatement = null;
+	
+			preparedStatement = connection.prepareStatement(query.toString());
+	
+			preparedStatement.setLong(1, id);
+	
+			preparedStatement.executeUpdate();
+	
+			closeAll(null,preparedStatement);
+		
+		}catch (SQLException e) {}
 	}
 
-	public void update(Computer c) throws SQLException {
-		Connection connection = connectionManager.getConnection();
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-
-		StringBuilder query = new StringBuilder();
-		query.append("UPDATE ")
-		     .append(table)
-		     .append(" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?");
-
-		preparedStatement = connection.prepareStatement(query.toString());
-
-		preparedStatement.setString(1, c.getName());
-
-		if(c.getIntroduced()!=null){
-			preparedStatement.setDate(2, new java.sql.Date(c.getIntroduced().toDate().getTime()));
-		}else{
-			preparedStatement.setNull(2, Types.TIMESTAMP);
-		}
-
-		if(c.getDiscontinued()!=null){
-			preparedStatement.setDate(3, new java.sql.Date(c.getDiscontinued().toDate().getTime()));
-		}else{
-			preparedStatement.setNull(3, Types.TIMESTAMP);
-		}
-
-		if(c.getCompany() != null){
-			preparedStatement.setLong(4, c.getCompany().getId());
-		}else{
-			preparedStatement.setNull(4, Types.BIGINT);
-		}
-
-		preparedStatement.setLong(5, c.getId());
-		preparedStatement.executeUpdate();
-
-		closeAll(results, preparedStatement);
+	public void update(Computer c){
+		try{
+			
+			Connection connection = ds.getConnection();
+			ResultSet results = null;
+			PreparedStatement preparedStatement = null;
+	
+			StringBuilder query = new StringBuilder();
+			query.append("UPDATE ")
+			     .append(table)
+			     .append(" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?");
+	
+			preparedStatement = connection.prepareStatement(query.toString());
+	
+			preparedStatement.setString(1, c.getName());
+	
+			if(c.getIntroduced()!=null){
+				preparedStatement.setDate(2, new java.sql.Date(c.getIntroduced().toDate().getTime()));
+			}else{
+				preparedStatement.setNull(2, Types.TIMESTAMP);
+			}
+	
+			if(c.getDiscontinued()!=null){
+				preparedStatement.setDate(3, new java.sql.Date(c.getDiscontinued().toDate().getTime()));
+			}else{
+				preparedStatement.setNull(3, Types.TIMESTAMP);
+			}
+	
+			if(c.getCompany() != null){
+				preparedStatement.setLong(4, c.getCompany().getId());
+			}else{
+				preparedStatement.setNull(4, Types.BIGINT);
+			}
+	
+			preparedStatement.setLong(5, c.getId());
+			preparedStatement.executeUpdate();
+			closeAll(results, preparedStatement);
+		}catch (SQLException e) {}
 	}
 
-	public int numberByFilter(String filter) throws SQLException {
-		Connection connection = connectionManager.getConnection();
+	public int numberByFilter(String filter){
 		int count = 0;
 
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT count(*) AS countComputer FROM company AS ca ")
-		     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
-		     .append("WHERE cu.name LIKE '%")
-		     .append(filter)
-		     .append("%' OR ca.name LIKE '%")
-		     .append(filter)
-		     .append("%'");
-
-		ResultSet results = null;
-		PreparedStatement preparedStatement = null;
-
-		preparedStatement = connection.prepareStatement(query.toString());
-		results = preparedStatement.executeQuery();
+		try{
 		
-		if(results.next()){
-			count = results.getInt("countComputer");
-		}
+			Connection connection = ds.getConnection();
+			
+			StringBuilder query = new StringBuilder();
+			query.append("SELECT count(*) AS countComputer FROM company AS ca ")
+			     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
+			     .append("WHERE cu.name LIKE '%")
+			     .append(filter)
+			     .append("%' OR ca.name LIKE '%")
+			     .append(filter)
+			     .append("%'");
+	
+			ResultSet results = null;
+			PreparedStatement preparedStatement = null;
+	
+			preparedStatement = connection.prepareStatement(query.toString());
+			results = preparedStatement.executeQuery();
+			
+			if(results.next()){
+				count = results.getInt("countComputer");
+			}
+	
+			closeAll(results,preparedStatement);
 
-		closeAll(results,preparedStatement);
-
+		}catch (SQLException e) {}
+		
 		return count;
 	}
 

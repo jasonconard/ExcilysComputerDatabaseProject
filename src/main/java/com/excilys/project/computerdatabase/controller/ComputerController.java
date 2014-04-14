@@ -1,27 +1,19 @@
 package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
-import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
@@ -168,134 +160,14 @@ public class ComputerController{
 		/* Redirection */
 		return "dashboard";
 	}
-
-	@RequestMapping(value = "EditComputer", method = RequestMethod.GET)
-	public String showEditComputer(
-			Model model,
-			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
-			BindingResult result,
-			HttpServletRequest request, 
-			HttpServletResponse response
-			) throws ServletException, IOException{
-		
-		String idString = request.getParameter("computerId");
-		String name = request.getParameter("name");
-		String introducedDateString =  request.getParameter("introduced");
-		String discontinuedDateString =  request.getParameter("discontinued");
-		String companyIdString =  request.getParameter("company");
-
-		if(idString == null){
-
-			idString = request.getParameter("computerId");
-
-		}else if(idString.length()>0){
-			long id = -1;
-			try{
-				id = Long.parseLong(idString);				
-			}catch(NumberFormatException e){
-				model.addAttribute("message","unavailable");
-				model.addAttribute("computerIdMessage",idString);
-				return "redirect:DashBoard";
-			}
-
-			Computer computer = computerServices.getComputer(id);
-
-			if(computer != null){
-				computerDTO = computerMapper.objectToDto(computer);
-				if(name != null){	computerDTO.setName(name);	}
-				if(introducedDateString != null){ computerDTO.setIntroduced(introducedDateString); 	}
-				if(discontinuedDateString != null){ 	computerDTO.setDiscontinued(discontinuedDateString); }
-				if(companyIdString != null){
-					try{
-						long companyId = Long.parseLong(companyIdString);
-						if(companyId > 0){
-							Company company = companyServices.getCompany(companyId); 
-							computerDTO.setCompanyId(company.getId());
-							computerDTO.setCompanyName(company.getName());
-						}
-					}catch(NumberFormatException e){}
-				}
-
-				if(computerDTO != null){
-					request.setAttribute("computer",computerDTO);
-				}
-
-				List<Company> allCompany = null;
-				allCompany = companyServices.getAllCompanies();
-				request.setAttribute("allCompany", allCompany);
-				
-			}else{
-				
-				model.addAttribute("message","unavailable");
-				model.addAttribute("computerIdMessage",idString);
-				return "redirect:DashBoard";
-				
-			}
-
-		}
-		
-		request.setAttribute("error", result.hasErrors());
-		return "editComputer";
-	}
-
-	@RequestMapping(value = "EditComputer", method = RequestMethod.POST)
-	public String postEditComputer(
-			Model model,
-			@ModelAttribute("dto") @Valid ComputerDTO computerDTO, 
-			BindingResult result,
-			HttpServletRequest request, 
-			HttpServletResponse response
-			) throws ServletException, IOException{
-		
-		// Parameters searching
-		String idString = request.getParameter("computerId");
-		String name = request.getParameter("name");
-		String introducedDateString =  request.getParameter("introduced");
-		String discontinuedDateString =  request.getParameter("discontinued");
-		String companyIdString =  request.getParameter("company");
-
-		/* Company searching by ID */
-		long companyId = UsefulFunctions.stringToLong(companyIdString, 0);
-		Company company = companyServices.getCompany(companyId);
-		
-		long id = UsefulFunctions.stringToLong(idString, 0);
-
-		String companyName = null;
-		if(company != null){
-			companyName = company.getName();
-		}
-		computerDTO.setCompanyName(companyName);
-		computerDTO.setCompanyId(companyId);
-
-		/* Validation case */
-		if(!result.hasErrors()){
-			Computer neoComputer = computerMapper.dtoToObject(computerDTO);
-			computerServices.update(neoComputer);
-			model.addAttribute("message", "update");
-			model.addAttribute("computerIdMessage", id);
-			return "redirect:DashBoard";
-		}
-
-		/* Error case */
-		model.addAttribute("name", name);
-		model.addAttribute("introduced", introducedDateString);
-		model.addAttribute("discontinued", discontinuedDateString);
-		model.addAttribute("company", companyIdString);
-
-		return "redirect:AddComputer";
-	}
-
+	
 	@RequestMapping(value = "ErrorPage404", method = RequestMethod.GET)
-	public String error404(HttpServletRequest request, HttpServletResponse response){
-		String language = request.getParameter("language");
-		if( language != null )response.setLocale(new Locale(language));
+	public String error404(){
 		return "404";
 	}
 	
 	@RequestMapping(value = "ErrorPage500", method = RequestMethod.GET)
-	public String error500(HttpServletRequest request, HttpServletResponse response){
-		String language = request.getParameter("language");
-		if( language != null )response.setLocale(new Locale(language));
+	public String error500(){
 		return "500";
 	}
 }

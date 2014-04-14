@@ -7,6 +7,7 @@
 
 	<h1><spring:message code="view.editComputer.title" text="Edit Computer" /></h1>
 	<form:form action="EditComputer" class="form-inline" id="editComputerForm" method="POST" modelAttribute="dto">
+		<form:input type="hidden" path="id" name="id" value="${computer.id}"/>
 		<fieldset>
 			<div class="clearfix">
 				<label for="name"><spring:message code="view.addComputer.computerName" text="Computer name" /> :</label>

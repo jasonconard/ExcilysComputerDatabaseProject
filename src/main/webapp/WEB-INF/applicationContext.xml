@@ -4,8 +4,10 @@
    	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<!-- ANNOTATIONS FOR IOC -->
@@ -22,7 +24,7 @@
 	<aop:aspectj-autoproxy />
 	
 	<!-- BoneCP configuration -->
-	<bean id="mainDataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+	<bean id="datasource" class="com.jolbox.bonecp.BoneCPDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
 		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull" />
@@ -37,5 +39,11 @@
 		<property name="statementsCacheSize" value="100" />
 		<property name="releaseHelperThreads" value="3" />
 	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
+	  <property name="dataSource" ref="datasource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
 			
 </beans>

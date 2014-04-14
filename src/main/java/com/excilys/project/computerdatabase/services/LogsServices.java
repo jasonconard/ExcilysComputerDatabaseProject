@@ -1,16 +1,16 @@
 package com.excilys.project.computerdatabase.services;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.project.computerdatabase.domain.Logs;
-import com.excilys.project.computerdatabase.persistence.ConnectionManager;
 import com.excilys.project.computerdatabase.persistence.LogsDAO;
 
 @Service
+@Transactional
 public class LogsServices {
 	
 	public static LogsServices instance = null;
@@ -22,76 +22,34 @@ public class LogsServices {
 	}
 	
 	@Autowired
-	ConnectionManager connectionManager;
-	public void setConnectionManager(ConnectionManager connectionManager){
-		this.connectionManager = connectionManager;
-	}
-	
-	@Autowired
 	LogsDAO logsDAO;
 	public void setLogsDAO(LogsDAO logsDAO){
 		this.logsDAO = logsDAO;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Logs> getAllLogs(){
 		List<Logs> logs = null;
-		try{
-			connectionManager.getConnection();
-			
-			logs = logsDAO.retrieveAll();
-			
-			if(logs!=null){	  
-				connectionManager.commit(null);
-			}else{
-				connectionManager.rollback(null);
-			}
-		}catch(SQLException sqle){
-			connectionManager.rollback(null);
-			sqle.printStackTrace();
-		}finally{
-			connectionManager.closeConnection();
-		}
-
+		
+		logs = logsDAO.retrieveAll();
+		
 		return logs;
 	}
 
+	@Transactional(readOnly = true)
 	public Logs getLog(long idLog){
 		Logs log = null;
 
-		try{
-			connectionManager.getConnection();
-
-			log = logsDAO.retrieveByLogId(idLog);
-
-			if(log!=null){	  
-				connectionManager.commit(null);
-			}else{
-				connectionManager.rollback(null);
-			}
-		}catch(SQLException sqle){
-			connectionManager.rollback(null);
-			sqle.printStackTrace();
-		}finally{
-			connectionManager.closeConnection();
-		}
+		log = logsDAO.retrieveByLogId(idLog);
 
 		return log;
 	}
 
+	@Transactional
 	public void insert(String description, String type){
-		try{
-			connectionManager.getConnection();
+		
+		logsDAO.insert(description, type);
 
-			logsDAO.insert(description, type);
-
-			connectionManager.commit(null);
-
-		}catch(SQLException sqle){
-			connectionManager.rollback(null);
-			sqle.printStackTrace();
-		}finally{
-			connectionManager.closeConnection();
-		}
 	}
 
 }
