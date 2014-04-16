@@ -24,7 +24,6 @@ public class CompanyDAO {
 		return instance;
 	}
 	
-	
 	@Autowired
 	BoneCPDataSource ds;
 	

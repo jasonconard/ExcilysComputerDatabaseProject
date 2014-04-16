@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.excilys.project</groupId>
 	<artifactId>ExcilysComputerDatabaseMaven</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ExcilysComputerDatabaseMaven Maven Webapp</name>
 	<url>http://maven.apache.org</url>
@@ -136,4 +136,11 @@
 
 		</plugins>
 	</build>
+	<modules>
+		<module>ExcilysComputerDatabaseMaven-core</module>
+		<module>ExcilysComputerDatabaseMaven-persistence</module>
+		<module>ExcilysComputerDatabaseMaven-service</module>
+		<module>ExcilysComputerDatabaseMaven-binding</module>
+		<module>ExcilysComputerDatabaseMaven-webapp</module>
+	</modules>
 </project>

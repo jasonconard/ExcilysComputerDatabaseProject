@@ -13,8 +13,7 @@ import com.excilys.project.computerdatabase.dto.ComputerDTO;
 public class ComputerValidator implements Validator {
 	
 	@Bean(name = "messageSource")
-	public ResourceBundleMessageSource messageSource()
-	{
+	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource bean = new ResourceBundleMessageSource();
 	    bean.setBasename("computerDatabase");
 	    return bean;

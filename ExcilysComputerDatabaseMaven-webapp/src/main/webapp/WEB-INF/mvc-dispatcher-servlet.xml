@@ -45,15 +45,6 @@
 		<property name="basename" value="computerDatabase" />
 	</bean>
 
-<!-- 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
-<!-- 	<property name="exceptionMappings"> -->
-<!-- 		<map> -->
-<!-- 			<entry key="DataAccessException" value="data-error"/> -->
-<!-- 		</map> -->
-<!-- 		</property> -->
-<!-- 	<property name="defaultErrorView" value="general-error" /> -->
-<!-- 	</bean> -->
-
 	<!-- MAPPING JSP FILE -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
