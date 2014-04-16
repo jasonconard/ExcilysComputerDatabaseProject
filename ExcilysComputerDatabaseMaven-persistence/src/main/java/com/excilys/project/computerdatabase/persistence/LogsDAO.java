@@ -1,17 +1,13 @@
 package com.excilys.project.computerdatabase.persistence;
 
-import java.sql.ResultSet;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.util.Date;
+import java.sql.Types;
 import java.util.List;
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.domain.Logs;
+import com.excilys.project.computerdatabase.rowmapper.LogsRowMapper;
 import com.jolbox.bonecp.BoneCPDataSource;
 
 @Repository
@@ -30,103 +26,36 @@ public class LogsDAO {
 	@Autowired
 	BoneCPDataSource ds;
 
+	@SuppressWarnings("unchecked")
 	public List<Logs> retrieveAll(){
-		List<Logs> logs = new ArrayList<Logs>();
 		
-		try {
-	
-			Connection connection = ds.getConnection();
-			
-			StringBuilder query = new StringBuilder();
-			
-			query.append("SELECT * FROM ")
-			     .append(table);
-	
-			ResultSet results = null;
-			PreparedStatement preparedStatement = null;
-	
-			preparedStatement = connection.prepareStatement(query.toString());
-			results = preparedStatement.executeQuery();
-	
-			while(results.next()){
-				long id = results.getLong("id");
-				String description = results.getString("description");
-				String type = results.getString("type");
-				Date dateLogs = results.getDate("date_logs");
-				logs.add(new Logs.LogsBuilder(id,description,type,dateLogs).build());
-			}
-	
-			closeAll(results,preparedStatement);
-			connection.close();
-		}catch (SQLException e) {}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
+		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
+				
+		List<Logs> listLogs = jdbcTemplate.query(query.toString(), new LogsRowMapper());
 		
-		return logs;
+		return listLogs;
+		
 	}
 
 	public Logs retrieveByLogId(long idLog) {
-		Logs log = null;
-
-		try{
 		
-			Connection connection = ds.getConnection();
-			
-			StringBuilder query = new StringBuilder();
-			query.append("SELECT ca.* FROM company AS ca WHERE ca.id = ")
-			     .append(idLog);
-	
-			ResultSet results = null;
-			PreparedStatement preparedStatement = null;
-	
-	
-			preparedStatement = connection.prepareStatement(query.toString());
-			results = preparedStatement.executeQuery();
-	
-			if(results.next()){
-				long id = results.getLong("id");
-				String description = results.getString("description");
-				String type = results.getString("type");
-				Date dateLogs = results.getDate("date_logs");
-				log =new Logs.LogsBuilder(id,description,type,dateLogs).build();
-			}
-	
-			closeAll(results,preparedStatement);
-			connection.close();
-		}catch (SQLException e) {}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
+		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
+		return (Logs) jdbcTemplate.queryForObject(query.toString(), new Object[] {idLog}, Logs.class);
 		
-		return log;
 	}
 
 	public void insert(String description, String type) {
-		try{
-		
-			Connection connection = ds.getConnection();
-			StringBuilder query = new StringBuilder();
-			query.append("INSERT INTO ")
-			     .append(table)
-			     .append(" VALUES(0,?,?,LOCALTIME())");
-			
-	
-			PreparedStatement preparedStatement = null;
-	
-			preparedStatement = connection.prepareStatement(query.toString());
-	
-			preparedStatement.setString(1, description);
-			preparedStatement.setString(2, type);
-	
-			preparedStatement.executeUpdate();
-	
-			closeAll(null,preparedStatement);
-			connection.close();
-		}catch (SQLException e) {}
-	}
+		StringBuilder query = new StringBuilder();
+		query.append("INSERT INTO ")
+	     .append(table)
+	     .append(" VALUES(0,?,?,LOCALTIME())");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);		
+		Object[] params = {description,type};
+		int[] types = {Types.VARCHAR, Types.VARCHAR};
 
-	private void closeAll(ResultSet rs, PreparedStatement ps) throws SQLException{
+		jdbcTemplate.update(query.toString(), params, types);
 
-		if(rs!=null){
-			rs.close();
-		}
-		if(ps!=null){
-			ps.close();
-		}
 	}
 }

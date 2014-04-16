@@ -23,7 +23,7 @@
 	<!-- ANNOTATIONS FOR AOP -->
 	<aop:aspectj-autoproxy />
 	
-	<!-- BoneCP configuration -->
+	<!-- TRANSACTIONS -->
 	<bean id="datasource" class="com.jolbox.bonecp.BoneCPDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />

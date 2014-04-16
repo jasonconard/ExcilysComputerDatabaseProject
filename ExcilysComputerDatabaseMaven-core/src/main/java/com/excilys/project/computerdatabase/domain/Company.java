@@ -5,6 +5,8 @@ public class Company {
 	private long id;
 	private String name;
 	
+	public Company(){}
+	
 	public Company(CompanyBuilder companyBuilder) {
 		this.id = companyBuilder.id;
         this.name = companyBuilder.name;

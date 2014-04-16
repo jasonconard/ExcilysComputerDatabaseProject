@@ -55,18 +55,15 @@ public class ComputerMapper {
 	
 	public ComputerDTO objectToDto(Computer c){
 		String pattern = messageSource.getMessage("view.addComputer.dateFormat", null, LocaleContextHolder.getLocale());
-		//DateTimeFormatter formatter = DateTimeFormat.forPattern(pattern);
 		
 		String introduced = "";
 		if(c.getIntroduced()!=null){
 			introduced = c.getIntroduced().toString(pattern);
-			//introduced = formatter.print(c.getIntroduced());
 		}
 
 		String discontinued = "";
 		if(c.getDiscontinued()!=null){
 			discontinued = c.getDiscontinued().toString(pattern);
-			//discontinued = formatter.print(c.getDiscontinued());
 		}
 		
 		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(c.getId(),c.getName())

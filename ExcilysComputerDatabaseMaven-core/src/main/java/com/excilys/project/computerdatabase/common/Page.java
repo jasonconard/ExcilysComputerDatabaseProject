@@ -7,9 +7,9 @@ public class Page<E> {
 		
 	private int numero;
 	private int number;
-	private String column;
-	private String direction;
-	private String filter;
+	private String column = "";
+	private String direction = "ASC";
+	private String filter = "";
 	private List<E> listElement;
 	
 	public Page() {}
