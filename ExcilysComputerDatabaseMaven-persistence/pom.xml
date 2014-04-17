@@ -8,6 +8,18 @@
   <artifactId>ExcilysComputerDatabaseMaven-persistence</artifactId>
   
   <dependencies>
+			<dependency>
+				<groupId>com.jolbox</groupId>
+				<artifactId>bonecp</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+			</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ExcilysComputerDatabaseMaven-core</artifactId>

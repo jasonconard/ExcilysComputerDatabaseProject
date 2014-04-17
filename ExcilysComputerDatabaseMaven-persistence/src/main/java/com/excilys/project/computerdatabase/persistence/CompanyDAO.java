@@ -34,10 +34,16 @@ public class CompanyDAO {
 		return jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper(Company.class));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Company retrieveByCompanyId(long idCompany){
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
-		return (Company) jdbcTemplate.queryForObject(query.toString(), new Object[] {idCompany}, Company.class);
+		List<Company> lc = jdbcTemplate.query(query.toString(), new Object[]{idCompany}, new BeanPropertyRowMapper(Company.class));
+		Company company = null;
+		if(lc.size()>0){
+			company = lc.get(0);
+		}
+		return company;
 	}
 
 	public void insert(Company c){

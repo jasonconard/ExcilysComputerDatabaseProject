@@ -6,4 +6,13 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>ExcilysComputerDatabaseMaven-core</artifactId>
+  
+  <dependencies>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+			</dependency>
+  
+  </dependencies>
+  
 </project>
