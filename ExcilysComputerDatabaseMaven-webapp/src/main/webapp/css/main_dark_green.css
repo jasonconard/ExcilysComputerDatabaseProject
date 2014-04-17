@@ -49,3 +49,7 @@ input{
 	background-image:url('../img/fukuponey.png');
 	background-repeat:no-repeat;
 }
+
+.myErrorText{
+	color : black;
+}

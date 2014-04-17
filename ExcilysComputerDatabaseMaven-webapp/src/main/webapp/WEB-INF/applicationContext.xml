@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
@@ -14,20 +12,24 @@
 	<context:annotation-config />
 
 	<!-- ANNOTATIONS BEANS CREATION -->
-	<context:component-scan base-package="com.excilys.project.computerdatabase.persistence" />
+	<context:component-scan
+		base-package="com.excilys.project.computerdatabase.persistence" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.services" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.controller" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.validator" />
+	<context:component-scan
+		base-package="com.excilys.project.computerdatabase.controller" />
+	<context:component-scan
+		base-package="com.excilys.project.computerdatabase.validator" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.mapper" />
 
 	<!-- ANNOTATIONS FOR AOP -->
 	<aop:aspectj-autoproxy />
-	
+
 	<!-- TRANSACTIONS -->
 	<bean id="datasource" class="com.jolbox.bonecp.BoneCPDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull" />
+		<property name="jdbcUrl"
+			value="jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull" />
 		<property name="username" value="jee-cdb" />
 		<property name="password" value="password" />
 		<property name="idleConnectionTestPeriod" value="60" />
@@ -39,11 +41,20 @@
 		<property name="statementsCacheSize" value="100" />
 		<property name="releaseHelperThreads" value="3" />
 	</bean>
-	
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
-	  <property name="dataSource" ref="datasource" />
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource" />
 	</bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager"/> 
-			
+	<bean id="namedParameterJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="datasource"/>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="datasource"/>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
 </beans>

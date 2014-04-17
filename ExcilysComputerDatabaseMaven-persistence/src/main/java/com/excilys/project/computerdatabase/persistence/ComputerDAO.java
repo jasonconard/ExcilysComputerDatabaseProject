@@ -2,13 +2,12 @@ package com.excilys.project.computerdatabase.persistence;
 
 import java.util.List;
 import java.sql.Types;
-import java.sql.ResultSet;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.common.Page;
@@ -17,8 +16,6 @@ import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
 import com.excilys.project.computerdatabase.rowmapper.ComputerDTORowMapper;
 import com.excilys.project.computerdatabase.rowmapper.ComputerRowMapper;
-
-import com.jolbox.bonecp.BoneCPDataSource;
 
 @Repository
 public class ComputerDAO {
@@ -38,7 +35,10 @@ public class ComputerDAO {
 	}
 	
 	@Autowired
-	BoneCPDataSource ds;
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;	
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;	
 	
 	private static final String table = "computer";
 
@@ -78,10 +78,7 @@ public class ComputerDAO {
 				obj[0] =  idBegin;
 				obj[1] =  nbLines;
 			}
-			
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
-			
-			
+
 			@SuppressWarnings("unchecked")
 			List<ComputerDTO> alc = jdbcTemplate.query(query.toString(), obj, new ComputerDTORowMapper());
 			
@@ -95,8 +92,6 @@ public class ComputerDAO {
 		     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
 		     .append("WHERE cu.id = ?");
 
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
-		
 		@SuppressWarnings("unchecked")
 		List<Computer> alc = jdbcTemplate.query(query.toString(), new Object[] { idComputer }, new ComputerRowMapper());
 		
@@ -107,54 +102,28 @@ public class ComputerDAO {
 		return computer;
 	}
 
-	public int insert(Computer computer){
-		int id = 0;
+	public long insert(Computer computer){
+
+		String query = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES(:name, :introduced, :discontinued, :company_id);";
 		
-		try{
-			
-			Connection connection = ds.getConnection();
+		KeyHolder keyHolder = new GeneratedKeyHolder();
 		
-			StringBuilder query = new StringBuilder();
-			query.append("INSERT INTO ")
-			     .append(table)
-			     .append(" VALUES(?,?,?,?,?)");
-			
-			PreparedStatement preparedStatement = null;
-			
-			preparedStatement = connection.prepareStatement(query.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
-	
-			preparedStatement.setLong  (1, 0);
-			preparedStatement.setString(2, computer.getName());
-			if(computer.getIntroduced() != null){
-				preparedStatement.setDate(3, new java.sql.Date(computer.getIntroduced().toDate().getTime()));
-			}else{
-				preparedStatement.setNull(3, Types.TIMESTAMP);
-			}
-	
-			if(computer.getDiscontinued() != null){
-				preparedStatement.setDate(4, new java.sql.Date(computer.getDiscontinued().toDate().getTime()));
-			}else{
-				preparedStatement.setNull(4, Types.TIMESTAMP);
-			}
-	
-			if(computer.getCompany() != null){
-				preparedStatement.setLong(5, computer.getCompany().getId());
-			}else{
-				preparedStatement.setNull(5, Types.BIGINT);
-			}
-			preparedStatement.executeUpdate();
-			
-			
-			ResultSet rs = preparedStatement.getGeneratedKeys();
-			if(rs.next()){
-				id = rs.getInt(1);
-			}
-			
-			closeAll(rs,preparedStatement);
-			connection.close();
-		}catch (SQLException e) {}
+		java.sql.Date introduced = null;
+		if(computer.getIntroduced()!=null) introduced =  new java.sql.Date(computer.getIntroduced().toDate().getTime());
 		
-		return id;
+		java.sql.Date discontinued = null;
+		if(computer.getDiscontinued()!=null) discontinued = new java.sql.Date(computer.getDiscontinued().toDate().getTime());
+		
+		long companyId = 0;
+		if(computer.getCompany()!=null) companyId = computer.getCompany().getId();
+		
+		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+		namedParameters.addValue("name", computer.getName());
+		namedParameters.addValue("introduced", introduced);
+		namedParameters.addValue("discontinued", discontinued);
+		namedParameters.addValue("company_id", companyId);
+		namedParameterJdbcTemplate.update(query, namedParameters, keyHolder, new String[]{"id"});
+		return keyHolder.getKey().longValue();
 	}
 
 	public void delete(long id){
@@ -163,7 +132,6 @@ public class ComputerDAO {
 			     .append(table)
 			     .append(" WHERE id = ?");
 			
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 			jdbcTemplate.update(query.toString(), new Object[]{ id });		
 	}
 
@@ -172,9 +140,7 @@ public class ComputerDAO {
 		query.append("UPDATE ")
 		     .append(table)
 		     .append(" SET name=?, introduced=?, discontinued=?, company_id=? WHERE id = ?");
-	 
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
-	 
+		
 		java.sql.Date introduced = null;
 		if(c.getIntroduced()!=null) introduced =  new java.sql.Date(c.getIntroduced().toDate().getTime());
 		
@@ -193,8 +159,6 @@ public class ComputerDAO {
 	public int numberByFilter(String filter){
 		int count = 0;
 
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
-		
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT count(*) AS countComputer FROM company AS ca ")
 	     .append("RIGHT OUTER JOIN computer AS cu ON cu.company_id = ca.id ")
@@ -203,17 +167,6 @@ public class ComputerDAO {
 		count = (Integer) jdbcTemplate.queryForObject(query.toString(), new Object[]{ '%'+filter+'%', '%'+filter+'%'}, Integer.class);
 		
 		return count;
-	}
-
-	private void closeAll(ResultSet rs,PreparedStatement ps) throws SQLException{
-
-		if(rs!=null){
-			rs.close();
-		}
-		if(ps!=null){
-			ps.close();
-		}
-		
 	}
 
 }

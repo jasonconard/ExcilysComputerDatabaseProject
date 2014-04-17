@@ -48,8 +48,8 @@ public class ComputerServices {
 	}
 	
 	@Transactional
-	public int insert(Computer computer){
-		int id = -1;			
+	public long insert(Computer computer){
+		long id = -1;			
 		
 		id = computerDAO.insert(computer);
 			

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.domain.Logs;
 import com.excilys.project.computerdatabase.rowmapper.LogsRowMapper;
-import com.jolbox.bonecp.BoneCPDataSource;
 
 @Repository
 public class LogsDAO {
@@ -24,37 +23,27 @@ public class LogsDAO {
 	}
 	
 	@Autowired
-	BoneCPDataSource ds;
+	JdbcTemplate jdbcTemplate;
 
 	@SuppressWarnings("unchecked")
 	public List<Logs> retrieveAll(){
-		
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table);
-				
-		List<Logs> listLogs = jdbcTemplate.query(query.toString(), new LogsRowMapper());
-		
-		return listLogs;
-		
+		return jdbcTemplate.query(query.toString(), new LogsRowMapper());
 	}
 
 	public Logs retrieveByLogId(long idLog) {
-		
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
 		return (Logs) jdbcTemplate.queryForObject(query.toString(), new Object[] {idLog}, Logs.class);
-		
 	}
 
 	public void insert(String description, String type) {
 		StringBuilder query = new StringBuilder();
 		query.append("INSERT INTO ")
 	     .append(table)
-	     .append(" VALUES(0,?,?,LOCALTIME())");
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);		
+	     .append(" VALUES(0,?,?,LOCALTIME())");	
 		Object[] params = {description,type};
 		int[] types = {Types.VARCHAR, Types.VARCHAR};
-
+		
 		jdbcTemplate.update(query.toString(), params, types);
 
 	}

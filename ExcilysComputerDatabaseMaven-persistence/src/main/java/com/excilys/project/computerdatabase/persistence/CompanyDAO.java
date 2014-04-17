@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.domain.Company;
-import com.jolbox.bonecp.BoneCPDataSource;
 
 @Repository
 public class CompanyDAO {
@@ -23,20 +22,18 @@ public class CompanyDAO {
 	}
 	
 	@Autowired
-	BoneCPDataSource ds;
+	JdbcTemplate jdbcTemplate;
 	
 	private static final String table = "company";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Company> retrieveAll(){
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 		StringBuilder query = new StringBuilder("SELECT * FROM ").append(table).append(" ORDER BY name");
 		return jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper(Company.class));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Company retrieveByCompanyId(long idCompany){
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);
 		StringBuilder query = new StringBuilder("SELECT ca.* FROM company AS ca WHERE ca.id = ?");
 		List<Company> lc = jdbcTemplate.query(query.toString(), new Object[]{idCompany}, new BeanPropertyRowMapper(Company.class));
 		Company company = null;
@@ -48,7 +45,6 @@ public class CompanyDAO {
 
 	public void insert(Company c){
 		StringBuilder query = new StringBuilder("INSERT INTO ").append(table).append(" VALUES(?,?)");	 
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(ds);		
 		Object[] params = {c.getId(), c.getName()};
 		int[] types = {Types.BIGINT, Types.VARCHAR};
 

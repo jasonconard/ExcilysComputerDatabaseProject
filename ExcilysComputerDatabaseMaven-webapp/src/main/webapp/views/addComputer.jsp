@@ -75,7 +75,9 @@
 					<spring:message code="view.addComputer.errorsReport" text="Error(s) reporting" /> :
 				</div>
 				<div class="panel-body">
-					<form:errors path="*"/>
+					<div class="myErrorText">
+						<form:errors path="*"/>
+					</div>
 				</div>
 			</div>
 		</c:if>
