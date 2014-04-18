@@ -9,8 +9,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import com.excilys.project.computerdatabase.dto.ComputerDTO;
+import com.excilys.project.computerdatabase.domain.Company;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.domain.Company.CompanyBuilder;
 import com.excilys.project.computerdatabase.domain.Computer.ComputerBuilder;
 
 @Component
@@ -25,7 +25,7 @@ public class ComputerMapper {
 		this.messageSource = messageSource;
 	}
 	
-	public Computer dtoToObject(ComputerDTO cdto){
+	public Computer dtoToObject(ComputerDTO cdto, Company company){
 		String pattern = messageSource.getMessage("view.addComputer.dateFormat", null, LocaleContextHolder.getLocale());
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(pattern);
 		
@@ -40,37 +40,40 @@ public class ComputerMapper {
 			discontinued = formatter.parseLocalDate(cdto.getDiscontinued());
 		}
 		
-		Computer c = new ComputerBuilder(cdto.getId(), cdto.getName())
+		Computer computer = new ComputerBuilder(cdto.getId(), cdto.getName())
 						.introduced(introduced)
 						.discontinued(discontinued)
-						.company( 
-								new CompanyBuilder(cdto.getCompanyId())
-								.name(cdto.getCompanyName())
-								.build()
-						)
+						.company(company)
 						.build();
 		
-		return c;
+		return computer;
 	}
 	
-	public ComputerDTO objectToDto(Computer c){
+	public ComputerDTO objectToDto(Computer computer){
 		String pattern = messageSource.getMessage("view.addComputer.dateFormat", null, LocaleContextHolder.getLocale());
 		
 		String introduced = "";
-		if(c.getIntroduced()!=null){
-			introduced = c.getIntroduced().toString(pattern);
+		if(computer.getIntroduced()!=null){
+			introduced = computer.getIntroduced().toString(pattern);
 		}
 
 		String discontinued = "";
-		if(c.getDiscontinued()!=null){
-			discontinued = c.getDiscontinued().toString(pattern);
+		if(computer.getDiscontinued()!=null){
+			discontinued = computer.getDiscontinued().toString(pattern);
 		}
 		
-		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(c.getId(),c.getName())
+		long companyId = 0;
+		String companyName = null;
+		if(computer.getCompany()!=null){
+			companyId = computer.getCompany().getId();
+			companyName = computer.getCompany().getName();
+		}
+		
+		ComputerDTO cdto = new ComputerDTO.ComputerDTOBuilder(computer.getId(),computer.getName())
 		.introduced(introduced)
 		.discontinued(discontinued)
-		.companyId(c.getCompany().getId())
-		.companyName(c.getCompany().getName())
+		.companyId(companyId)
+		.companyName(companyName)
 		.build();
 		
 		return cdto;

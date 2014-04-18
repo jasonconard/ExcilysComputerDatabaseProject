@@ -6,7 +6,7 @@ public class Page<E> {
 	public static final int NBLINEPERPAGES = 10;
 		
 	private int numero;
-	private int number;
+	private long number;
 	private String column = "";
 	private String direction = "ASC";
 	private String filter = "";
@@ -18,7 +18,7 @@ public class Page<E> {
 		return numero;
 	}				
 
-	public int getNumber() {
+	public long getNumber() {
 		return number;
 	}
 
@@ -42,7 +42,7 @@ public class Page<E> {
 		this.numero = numero;
 	}
 	
-	public void setNumber(int number) {
+	public void setNumber(long number) {
 		this.number = number;
 	}
 

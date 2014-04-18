@@ -2,11 +2,28 @@ package com.excilys.project.computerdatabase.domain;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+@Entity
+@Table(name="logs")
 public class Logs {
+	@Id @GeneratedValue
 	private final long id;
+	
+	@Column(name="description")
 	private final String description;
+	
+	@Column(name="type")
 	private final String type;
+	
+	@Column(name="date_logs")
+	@Temporal(TemporalType.DATE)
 	private final Date dateLogs;
 
 	public Logs(LogsBuilder logsBuilder) {

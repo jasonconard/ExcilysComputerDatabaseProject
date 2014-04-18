@@ -81,9 +81,16 @@ public class AddComputerController{
 		
 		ModelAndView mav = new ModelAndView();
 		
+		long companyId = UsefulFunctions.stringToLong(companyIdString, 0);
+		
+		Company company = null;
+		if(companyId != 0){
+			 company = companyServices.getCompany(companyId);
+		}
+		
 		/* Validation case */
 		if(!result.hasErrors()){
-			Computer neoComputer = computerMapper.dtoToObject(computerDTO);
+			Computer neoComputer = computerMapper.dtoToObject(computerDTO, company);
 			long id = computerServices.insert(neoComputer);
 			if(id >= 0){
 				mav.getModelMap().addAttribute("message", "add");

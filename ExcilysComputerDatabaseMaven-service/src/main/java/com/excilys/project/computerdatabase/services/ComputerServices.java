@@ -6,20 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.persistence.ComputerDAO;
 
 @Service
 @Transactional
 public class ComputerServices {
-	
-	public static ComputerServices instance = null;
-	synchronized public static ComputerServices getInstance(){
-		if(instance == null){
-			instance = new ComputerServices();
-		}
-		return instance;
-	}
 	
 	@Autowired
 	ComputerDAO computerDAO;
@@ -28,54 +19,34 @@ public class ComputerServices {
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<ComputerDTO> getAllComputers(Page<ComputerDTO> page){
-		
+	public Page<Computer> getAllComputers(Page<Computer> page){
 		page.setListElement(computerDAO.retrieveAllByWrapper(page));
 		page.setNumber(computerDAO.numberByFilter(page.getFilter()));
-			
 		return page;
 	}
 	
 	@Transactional(readOnly = true)
 	public Computer getComputer(long computerId){
-		
-		Computer computer = null;
-		
-		computer = computerDAO.retrieveByComputerId(computerId);
-
-		return computer;
-		
+		return computerDAO.retrieveByComputerId(computerId);
 	}
 	
 	@Transactional
 	public long insert(Computer computer){
-		long id = -1;			
-		
-		id = computerDAO.insert(computer);
-			
-		return id;
+		return computerDAO.insert(computer);
 	}
 	
 	@Transactional
-	public void update(Computer computer){
-			
+	public void update(Computer computer){	
 		computerDAO.update(computer);
-		
 	}
 	
 	@Transactional
 	public void delete(long computerId){
-
 		computerDAO.delete(computerId);
-		
 	}
 
 	@Transactional(readOnly = true)
-	public int getComputerNumber(String filter) {
-		int computerNumber = -1;
-		
-		computerNumber = computerDAO.numberByFilter(filter);
-
-		return computerNumber;
+	public long getComputerNumber(String filter) {
+		return computerDAO.numberByFilter(filter);
 	}
 }

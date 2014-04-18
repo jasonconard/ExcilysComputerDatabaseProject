@@ -30,21 +30,34 @@
 	</build>
 
 	<dependencies>
+		<!-- JUNIT -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- JSP -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<!-- <scope>provided</scope> -->
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>javax.servlet.jsp</groupId> -->
-		<!-- <artifactId>javax.servlet.jsp-api</artifactId> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
+		
+		<!-- HIBERNATE -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+		</dependency>
+		
+		<!-- TAGS -->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
@@ -53,10 +66,20 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+		
+		<!-- VALIDATION -->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 		</dependency>
+		
+		<!-- ASPECTJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+		
+		<!-- BROTHERS -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ExcilysComputerDatabaseMaven-core</artifactId>
@@ -71,10 +94,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ExcilysComputerDatabaseMaven-service</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
 		</dependency>
 	</dependencies>
 </project>

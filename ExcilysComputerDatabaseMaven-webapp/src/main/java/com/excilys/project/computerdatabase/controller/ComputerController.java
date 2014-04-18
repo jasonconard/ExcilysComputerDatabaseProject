@@ -15,15 +15,11 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Computer;
-import com.excilys.project.computerdatabase.dto.ComputerDTO;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
 import com.excilys.project.computerdatabase.services.CompanyServices;
 import com.excilys.project.computerdatabase.services.ComputerServices;
 import com.excilys.project.computerdatabase.validator.ComputerValidator;
 
-/**
- * Servlet implementation class DashBoard
- */
 @Controller
 public class ComputerController{
 
@@ -99,7 +95,7 @@ public class ComputerController{
 		String order = request.getParameter("order");
 
 		if(order == null || order.length()==0){
-			order = "cu.name";
+			order = "computer.name";
 		}
 
 		String dir = request.getParameter("dir");
@@ -131,7 +127,7 @@ public class ComputerController{
 			}
 		}		
 
-		Page<ComputerDTO> page = new Page<ComputerDTO>();
+		Page<Computer> page = new Page<Computer>();
 		page.setNumero(idPage-1);
 		page.setColumn(order);
 		page.setDirection(dir);
@@ -139,7 +135,7 @@ public class ComputerController{
 
 		page = computerServices.getAllComputers(page);
 
-		int nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
+		long nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
 
 		request.setAttribute("nbPage", nbPage);
 

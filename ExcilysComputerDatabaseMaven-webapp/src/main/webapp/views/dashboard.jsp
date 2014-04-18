@@ -31,7 +31,7 @@
 					<td>${entry.name}</td>
 					<td>${entry.introduced}</td>
 					<td>${entry.discontinued}</td>
-					<td>${entry.companyName}</td>
+					<td>${entry.company.name}</td>
 					<td>
 						<cm:url servlet="EditComputer" 
 								computerId="${entry.id}"

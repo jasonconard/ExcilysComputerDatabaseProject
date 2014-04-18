@@ -5,17 +5,17 @@
 
 <thead>
 	<tr>
-		<c:if test="${page.column=='cu.name' && page.direction=='DESC'}">
+		<c:if test="${page.column=='computer.name' && page.direction=='DESC'}">
 			<th class="col2"><spring:message code="view.dashboard.tag.header.computerName" text="Computer Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-								order="cu.name" dir="ASC"
+								order="computer.name" dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
-		<c:if test="${!(page.column=='cu.name' && page.direction=='DESC')}">
+		<c:if test="${!(page.column=='computer.name' && page.direction=='DESC')}">
 			<th class="col2"><spring:message code="view.dashboard.tag.header.computerName" text="Computer Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-						order="cu.name" dir="DESC"
+						order="computer.name" dir="DESC"
 						icon="glyphicon glyphicon-arrow-down"/>
 			</th>
 		</c:if>
@@ -53,17 +53,17 @@
 		</c:if>
 		
 		
-		<c:if test="${page.column=='ca.name' && page.direction=='DESC'}">
+		<c:if test="${page.column=='company.name' && page.direction=='DESC'}">
 			<th class="col5"><spring:message code="view.dashboard.tag.header.companyName" text="Company Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-								order="ca.name"	dir="ASC"
+								order="company.name"	dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
-		<c:if test="${!(page.column=='ca.name' && page.direction=='DESC')}">
+		<c:if test="${!(page.column=='company.name' && page.direction=='DESC')}">
 			<th class="col5"><spring:message code="view.dashboard.tag.header.companyName" text="Company Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-						order="ca.name" dir="DESC"
+						order="company.name" dir="DESC"
 						icon="glyphicon glyphicon-arrow-down"/>
 			</th>
 		</c:if>

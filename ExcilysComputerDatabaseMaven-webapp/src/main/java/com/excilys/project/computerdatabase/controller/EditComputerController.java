@@ -93,10 +93,16 @@ public class EditComputerController{
 		
 		ModelAndView mav = new ModelAndView();
 		
+		long companyId = UsefulFunctions.stringToLong(companyIdString, 0);
+		
+		Company company = null;
+		if(companyId != 0){
+			 company = companyServices.getCompany(companyId);
+		}
 		
 		/* Validation case */
 		if(!result.hasErrors()){
-			Computer neoComputer = computerMapper.dtoToObject(computerDTO);
+			Computer neoComputer = computerMapper.dtoToObject(computerDTO, company);
 			long id = UsefulFunctions.stringToLong(idString, 0);
 			if(id >= 0){
 				computerServices.update(neoComputer);
