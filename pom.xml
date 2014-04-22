@@ -9,23 +9,24 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<aspectj.version> 		1.6.1			</aspectj.version>
-		<junit.version> 		3.8.1			</junit.version>
-		<jstl.version> 			1.2				</jstl.version>
-		<jxservlet.version> 	3.0.1			</jxservlet.version>
-		<bonecp.version> 		0.8.0.RELEASE	</bonecp.version>
-		<bcpprovider.version> 	0.7.1.RELEASE	</bcpprovider.version>
-		<guava.version> 		r05				</guava.version>
-		<mysql.version> 		5.1.29			</mysql.version>
-		<slf4j.version> 		1.7.6			</slf4j.version>
-		<jodatime.version> 		2.3				</jodatime.version>
-		<jadira.core.version>	3.0.0.CR1		</jadira.core.version>
-		<jadira.jdtime.version> 2.0.1			</jadira.jdtime.version>
-		<spring.version> 		4.0.3.RELEASE	</spring.version>
-		<jxvalidation.version> 	1.1.0.Final		</jxvalidation.version>
-		<hib.validator.version> 5.0.1.Final		</hib.validator.version>
-		<hib.em.version> 		4.2.8.Final		</hib.em.version>
-		<hib.jpa.api.version> 	1.0.0.Final		</hib.jpa.api.version>
+		<aspectj.version> 1.6.1 </aspectj.version>
+		<junit.version> 3.8.1 </junit.version>
+		<jstl.version> 1.2 </jstl.version>
+		<jxservlet.version> 3.0.1 </jxservlet.version>
+		<bonecp.version> 0.8.0.RELEASE </bonecp.version>
+		<bcpprovider.version> 0.7.1.RELEASE	</bcpprovider.version>
+		<guava.version> r05 </guava.version>
+		<mysql.version> 5.1.29 </mysql.version>
+		<slf4j.version> 1.7.6 </slf4j.version>
+		<jodatime.version> 2.3 </jodatime.version>
+		<jadira.core.version> 3.0.0.CR1 </jadira.core.version>
+		<jadira.jdtime.version> 2.0.1 </jadira.jdtime.version>
+		<spring.version> 4.0.3.RELEASE </spring.version>
+		<jxvalidation.version> 1.1.0.Final </jxvalidation.version>
+		<hib.validator.version> 5.0.1.Final </hib.validator.version>
+		<hib.em.version> 4.2.8.Final </hib.em.version>
+		<hib.jpa.api.version> 1.0.0.Final </hib.jpa.api.version>
+		<querydsl.version> 3.3.2 </querydsl.version>
 	</properties>
 
 	<dependencyManagement>
@@ -175,6 +176,24 @@
 				<version>${hib.jpa.api.version}</version>
 			</dependency>
 
+			<!-- QUERY DSL -->
+			<dependency>
+				<groupId>com.mysema.querydsl</groupId>
+				<artifactId>querydsl-core</artifactId>
+				<version>${querydsl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.mysema.querydsl</groupId>
+				<artifactId>querydsl-apt</artifactId>
+				<version>${querydsl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.mysema.querydsl</groupId>
+				<artifactId>querydsl-jpa</artifactId>
+				<version>${querydsl.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -197,7 +216,22 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.0.9</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources</outputDirectory>
+							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<modules>

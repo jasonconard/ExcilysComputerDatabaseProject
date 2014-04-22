@@ -2,87 +2,89 @@ package com.excilys.project.computerdatabase.persistence;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.common.Page;
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.domain.QComputer;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
+import com.mysema.query.jpa.impl.JPAQuery;
 
 @Repository
 public class ComputerDAO {
-	
+
 	@Autowired
 	ComputerMapper computerMapper;
 	public void setComputerMapper(ComputerMapper computerMapper){
 		this.computerMapper = computerMapper;
 	}
-	
-	@Autowired
-	private SessionFactory sessionFactory;
 
-	@SuppressWarnings("unchecked")
+	@PersistenceContext(unitName="entityManagerFactory")
+	EntityManager entityManager;
+
 	public List<Computer> retrieveAllByWrapper(Page<Computer> pc){
-	
-			int idBegin = pc.getNumero() * Page.NBLINEPERPAGES; 
+
+			if(!pc.getDirection().equals("ASC") && !pc.getDirection().equals("DESC")){
+				pc.setDirection("ASC");
+			}
+			
+			int idBegin = pc.getNumero() * Page.NBLINEPERPAGES; 			
 			int nbLines = Page.NBLINEPERPAGES; 
 			
-			String column = "name";
-			if(pc.getColumn()!=null){
-				column = pc.getColumn();
+			String column = pc.getColumn();
+			if(column.equals("name")){
+				column = "computer.name";
 			}
+//			
+			JPAQuery query = new JPAQuery(entityManager);
+
+			String filter = pc.getFilter();
 			
-			Order order = null;
-			if(pc.getDirection().equals("DESC")){
-				order = Order.desc(column);
-			}else{
-				order = Order.asc(column);
+			QComputer computer = QComputer.computer;
+			query = query.from(computer).leftJoin(computer.company);
+			if(!"".equals(pc.getFilter())){
+				filter = new StringBuilder("%").append(filter).append("%").toString();
+				query = query.where(computer.name.like(filter).or(computer.company.name.like(filter)));
 			}
+			Ordered myOrder = new Ordered(pc.getDirection(),pc.getColumn());
+			query = query.orderBy(myOrder.getMySpecifier());
+			query = query.limit(nbLines);
+			query = query.offset(idBegin);
+			return query.list(computer);
 			
-			Session session = sessionFactory.getCurrentSession();
-			List<Computer> computers = session.createCriteria(Computer.class)
-						.createAlias("company", "company", JoinType.LEFT_OUTER_JOIN)
-						.addOrder(order)
-						.add(Restrictions.or(Restrictions.like("name", "%"+pc.getFilter()+"%"), Restrictions.like("company.name", "%"+pc.getFilter()+"%")))
-						.setMaxResults(nbLines)
-						.setFirstResult(idBegin).list();
-			return computers;
 	}
-	
+
 	public Computer retrieveByComputerId(long idComputer){
-		Session session = sessionFactory.getCurrentSession();
-		Computer computer = (Computer)session.get(Computer.class, idComputer);
-		return computer;
+		return entityManager.find(Computer.class, idComputer);
 	}
 
 	public long insert(Computer computer){
-		Session session = sessionFactory.getCurrentSession();
-		session.save(computer);
+		entityManager.persist(computer);
 		return computer.getId();
 	}
 
 	public void delete(long id){
-		Session session = sessionFactory.getCurrentSession();
-		Computer computer = (Computer)session.get(Computer.class, id);
-		session.delete(computer);
+		Computer computer = entityManager.find(Computer.class, id);
+		entityManager.remove(computer);	
 	}
 
 	public void update(Computer computer){
-		Session session = sessionFactory.getCurrentSession();
-		session.update(computer);
+		entityManager.merge(computer);
 	}
 
 	public long numberByFilter(String filter){
-		Session session = sessionFactory.getCurrentSession();
-		return session.createCriteria(Computer.class)
-				.createAlias("company", "company", JoinType.LEFT_OUTER_JOIN)
-				.add(Restrictions.or(Restrictions.like("name", "%"+filter+"%"), Restrictions.like("company.name", "%"+filter+"%")))
-				.list().size();
+		JPAQuery query = new JPAQuery(entityManager);
+		QComputer computer = QComputer.computer;
+		query = query.from(computer);
+		if(!"".equals(filter)){
+			filter = new StringBuilder("%").append(filter).append("%").toString();
+			query = query.where(computer.name.like(filter).or(computer.company.name.like(filter)));
+		}
+		return query.count();
 	}
 
 }

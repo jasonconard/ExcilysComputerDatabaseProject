@@ -43,5 +43,21 @@
 			<artifactId>ExcilysComputerDatabaseMaven-binding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- QUERY DSL -->
+		<dependency>
+			<groupId>com.mysema.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysema.querydsl</groupId>
+			<artifactId>querydsl-apt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysema.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
 	</dependencies>
 </project>
