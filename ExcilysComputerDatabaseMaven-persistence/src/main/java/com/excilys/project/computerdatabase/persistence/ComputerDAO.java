@@ -2,9 +2,11 @@ package com.excilys.project.computerdatabase.persistence;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,50 +23,66 @@ public class ComputerDAO {
 		this.computerMapper = computerMapper;
 	}
 	
-	@PersistenceContext(unitName="entityManagerFactory")
-	EntityManager entityManager;
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	@SuppressWarnings("unchecked")
 	public List<Computer> retrieveAllByWrapper(Page<Computer> pc){
-			
-			if(!pc.getDirection().equals("ASC") && !pc.getDirection().equals("DESC")){
-				pc.setDirection("ASC");
-			}
 	
 			int idBegin = pc.getNumero() * Page.NBLINEPERPAGES; 
 			int nbLines = Page.NBLINEPERPAGES; 
-	
-			String order = "ORDER BY "+pc.getColumn()+" "+pc.getDirection();
-			return entityManager.createQuery("SELECT computer FROM Computer as computer "
-					+ "LEFT JOIN computer.company company WITH company.name LIKE :search WHERE computer.name LIKE :search " + order)
-					.setParameter("search", "%" + pc.getFilter() + "%")
-					.setFirstResult(idBegin)
-					.setMaxResults(nbLines)
-					.getResultList();
+			
+			String column = "name";
+			if(pc.getColumn()!=null){
+				column = pc.getColumn();
+			}
+			
+			Order order = null;
+			if(pc.getDirection().equals("DESC")){
+				order = Order.desc(column);
+			}else{
+				order = Order.asc(column);
+			}
+			
+			Session session = sessionFactory.getCurrentSession();
+			List<Computer> computers = session.createCriteria(Computer.class)
+						.createAlias("company", "company", JoinType.LEFT_OUTER_JOIN)
+						.addOrder(order)
+						.add(Restrictions.or(Restrictions.like("name", "%"+pc.getFilter()+"%"), Restrictions.like("company.name", "%"+pc.getFilter()+"%")))
+						.setMaxResults(nbLines)
+						.setFirstResult(idBegin).list();
+			return computers;
 	}
 	
 	public Computer retrieveByComputerId(long idComputer){
-		return entityManager.find(Computer.class, idComputer);
+		Session session = sessionFactory.getCurrentSession();
+		Computer computer = (Computer)session.get(Computer.class, idComputer);
+		return computer;
 	}
 
 	public long insert(Computer computer){
-		entityManager.persist(computer);
+		Session session = sessionFactory.getCurrentSession();
+		session.save(computer);
 		return computer.getId();
 	}
 
 	public void delete(long id){
-		Computer computer = entityManager.find(Computer.class, id);
-		entityManager.remove(computer);	
+		Session session = sessionFactory.getCurrentSession();
+		Computer computer = (Computer)session.get(Computer.class, id);
+		session.delete(computer);
 	}
 
 	public void update(Computer computer){
-		entityManager.merge(computer);
+		Session session = sessionFactory.getCurrentSession();
+		session.update(computer);
 	}
 
 	public long numberByFilter(String filter){
-		return (Long)entityManager.createQuery("SELECT COUNT(computer) FROM Computer as computer LEFT JOIN computer.company company WITH company.name LIKE :search WHERE computer.name LIKE :search")
-				.setParameter("search", "%" + filter + "%")
-				.getSingleResult();
+		Session session = sessionFactory.getCurrentSession();
+		return session.createCriteria(Computer.class)
+				.createAlias("company", "company", JoinType.LEFT_OUTER_JOIN)
+				.add(Restrictions.or(Restrictions.like("name", "%"+filter+"%"), Restrictions.like("company.name", "%"+filter+"%")))
+				.list().size();
 	}
 
 }

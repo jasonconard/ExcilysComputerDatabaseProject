@@ -24,8 +24,4 @@ public class LogsServices {
 	public Logs getLog(long idLog){
 		return logsDAO.retrieveByLogId(idLog);
 	}
-
-	public void insert(String description, String type){
-		logsDAO.insert(description, type);
-	}
 }

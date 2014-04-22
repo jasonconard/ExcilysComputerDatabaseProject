@@ -5,17 +5,17 @@
 
 <thead>
 	<tr>
-		<c:if test="${page.column=='computer.name' && page.direction=='DESC'}">
+		<c:if test="${page.column=='name' && page.direction=='DESC'}">
 			<th class="col2"><spring:message code="view.dashboard.tag.header.computerName" text="Computer Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-								order="computer.name" dir="ASC"
+								order="name" dir="ASC"
 								icon="glyphicon glyphicon-arrow-up"/>
 			</th>
 		</c:if>
-		<c:if test="${!(page.column=='computer.name' && page.direction=='DESC')}">
+		<c:if test="${!(page.column=='name' && page.direction=='DESC')}">
 			<th class="col2"><spring:message code="view.dashboard.tag.header.computerName" text="Computer Name" />
 				<cm:url servlet="DashBoard" pageNo="1" search="${page.filter}"
-						order="computer.name" dir="DESC"
+						order="name" dir="DESC"
 						icon="glyphicon glyphicon-arrow-down"/>
 			</th>
 		</c:if>

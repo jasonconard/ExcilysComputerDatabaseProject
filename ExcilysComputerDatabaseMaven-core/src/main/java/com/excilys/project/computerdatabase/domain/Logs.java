@@ -1,30 +1,28 @@
 package com.excilys.project.computerdatabase.domain;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
 
 @Entity
 @Table(name="logs")
 public class Logs {
 	@Id @GeneratedValue
-	private final long id;
+	private long id;
 	
 	@Column(name="description")
-	private final String description;
+	private String description;
 	
 	@Column(name="type")
-	private final String type;
+	private String type;
 	
 	@Column(name="date_logs")
-	@Temporal(TemporalType.DATE)
-	private final Date dateLogs;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate dateLogs;
 
 	public Logs(LogsBuilder logsBuilder) {
 		this.id = logsBuilder.id;
@@ -45,17 +43,35 @@ public class Logs {
 		return type;
 	}
 	
-	public Date getDateLogs() {
+	public LocalDate getDateLogs() {
 		return dateLogs;
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setDateLogs(LocalDate dateLogs) {
+		this.dateLogs = dateLogs;
+	}
+
+
 
 	public static class LogsBuilder {
         private final long id;
         private final String description;
         private final String type;
-        private final Date dateLogs;
+        private final LocalDate dateLogs;
         
-        public LogsBuilder(long id, String description, String type, Date dateLogs) {
+        public LogsBuilder(long id, String description, String type, LocalDate dateLogs) {
             this.id = id;
             this.description = description;
             this.type = type;

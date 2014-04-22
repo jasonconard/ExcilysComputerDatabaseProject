@@ -2,37 +2,36 @@ package com.excilys.project.computerdatabase.persistence;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.project.computerdatabase.domain.Logs;
 
 @Repository
 public class LogsDAO {
-	
-	@PersistenceContext(unitName="entityManagerFactory")
-	EntityManager entityManager;
 
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	@SuppressWarnings("unchecked")
 	public List<Logs> retrieveAll(){
-		return ((List<Logs>)entityManager.createQuery("SELECT logs FROM Logs as logs").getResultList());
+		Session session = sessionFactory.getCurrentSession();
+		return  session.createQuery("FROM company").list(); 
 	}
 
 	public Logs retrieveByLogId(long idLog){
-		return entityManager.find(Logs.class, idLog);
+		Session session = sessionFactory.getCurrentSession();
+		Logs logs = (Logs)session.get(Logs.class, idLog);
+		return logs;
 	}
 
-	public void insert(String description, String type){
-		StringBuilder query = new StringBuilder();
-		query.append("INSERT INTO ")
-	     .append("logs")
-	     .append(" VALUES(0,")
-	     .append(description)
-	     .append(",")
-	     .append(type)
-	     .append(",LOCALTIME())");	
-		entityManager.createQuery(query.toString());
+	public long insert(Logs logs){
+		logs.setDateLogs(new LocalDate(LocalDate.now()));
+		Session session = sessionFactory.getCurrentSession();
+		session.save(logs);
+		return logs.getId();
 	}
 }

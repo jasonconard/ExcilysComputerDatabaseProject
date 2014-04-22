@@ -95,7 +95,7 @@ public class ComputerController{
 		String order = request.getParameter("order");
 
 		if(order == null || order.length()==0){
-			order = "computer.name";
+			order = "name";
 		}
 
 		String dir = request.getParameter("dir");
