@@ -58,7 +58,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
-		
 		<!-- QUERY DSL -->
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
@@ -73,12 +72,6 @@
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
-		
-		<!-- SPRING DATA JPA -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
 	</dependencies>
 

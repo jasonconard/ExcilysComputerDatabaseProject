@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
@@ -24,13 +23,6 @@ public class Logs {
 	@Column(name="date_logs")
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate dateLogs;
-	
-	public Logs(String description, String type, LocalDate dateLogs) {
-		super();
-		this.description = description;
-		this.type = type;
-		this.dateLogs = dateLogs;
-	}
 
 	public Logs(LogsBuilder logsBuilder) {
 		this.id = logsBuilder.id;

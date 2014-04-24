@@ -7,23 +7,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.project.computerdatabase.domain.Company;
-import com.excilys.project.computerdatabase.repository.CompanyRepository;
+import com.excilys.project.computerdatabase.persistence.CompanyDAO;
 
 @Service
 @Transactional
 public class CompanyServices {
-		
+	
 	@Autowired
-	CompanyRepository companyRepository;
-
+	CompanyDAO companyDAO;
+	public void setCompanyDAO(CompanyDAO companyDAO){
+		this.companyDAO = companyDAO;
+	}
 
 	@Transactional(readOnly = true)
 	public List<Company> getAllCompanies(){
-		return companyRepository.findAll();
+		return companyDAO.retrieveAll();
 	}
 
 	@Transactional(readOnly = true)
 	public Company getCompany(long idCompany){
-		return companyRepository.findOne(idCompany);
+		return companyDAO.retrieveByCompanyId(idCompany);
 	}
 }
