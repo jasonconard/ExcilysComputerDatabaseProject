@@ -1,18 +1,24 @@
 package com.excilys.project.computerdatabase.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import com.excilys.project.computerdatabase.common.Page;
+import com.excilys.project.computerdatabase.common.OrderBy;
+import com.excilys.project.computerdatabase.common.ComputerPage;
 import com.excilys.project.computerdatabase.common.UsefulFunctions;
 import com.excilys.project.computerdatabase.domain.Computer;
 import com.excilys.project.computerdatabase.mapper.ComputerMapper;
@@ -118,43 +124,55 @@ public class ComputerController{
 		/* Pagination managment */
 		String idPageString = request.getParameter("page");
 
-		int idPage = 1;
+		int idPage = 0;
 		if(idPageString != null && idPageString.length() != 0){
 			try{
 				idPage = Integer.parseInt(idPageString);
 			}catch(NumberFormatException e){
-				idPage = 1;
+				idPage = 0;
 			}
 		}		
 
-		Page<Computer> page = new Page<Computer>();
-		page.setNumero(idPage-1);
-		page.setColumn(order);
-		page.setDirection(dir);
-		page.setFilter(search);
-
-		page = computerServices.getAllComputers(page);
-
-		long nbPage = page.getNumber()/Page.NBLINEPERPAGES+1;
+		Page<Computer> pageComputer;
+		Pageable page = new ComputerPage(idPage, 15, OrderBy.get(order, dir));
+		pageComputer = computerServices.getAllComputers(page, search);
+		long nbPage = pageComputer.getNumberOfElements()/15;
 
 		request.setAttribute("nbPage", nbPage);
 
-		if(idPage<nbPage){
+		idPage = pageComputer.getNumber();
+		
+		if(idPage<pageComputer.getTotalPages()-1){
 			request.setAttribute("nextPage", idPage+1);
 		}else{
 			request.setAttribute("nextPage", -1);
 		}
-		if(idPage>1){
+		if(idPage>=1){
 			request.setAttribute("lastPage", idPage-1);
 		}else{
 			request.setAttribute("lastPage", -1);
 		}
 
-		request.setAttribute("page", page);
-		request.setAttribute("numero", page.getNumero()+1);
+		
+		request.setAttribute("page", pageComputer);
+		request.setAttribute("filter", search);
+		request.setAttribute("column", order);
+		request.setAttribute("direction", dir);
 
 		/* Redirection */
 		return "dashboard";
+	}
+	
+	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
+	public ModelAndView adminPage() {
+ 
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Spring Security Hello World");
+		model.addObject("message", "This is protected page!");
+		model.setViewName("admin");
+ 
+		return model;
+ 
 	}
 	
 	@RequestMapping(value = "ErrorPage404", method = RequestMethod.GET)
