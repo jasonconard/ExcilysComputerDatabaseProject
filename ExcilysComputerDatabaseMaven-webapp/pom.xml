@@ -79,6 +79,12 @@
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
 		
+		<!-- SPRING DATA JPA -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
+		
 		<!-- BROTHERS -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>

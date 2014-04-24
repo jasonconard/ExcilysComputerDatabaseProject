@@ -22,6 +22,7 @@
 		<jadira.core.version> 3.0.0.CR1 </jadira.core.version>
 		<jadira.jdtime.version> 2.0.1 </jadira.jdtime.version>
 		<spring.version> 4.0.3.RELEASE </spring.version>
+		<spring.data.version> 1.5.1.RELEASE </spring.data.version> 
 		<jxvalidation.version> 1.1.0.Final </jxvalidation.version>
 		<hib.validator.version> 5.0.1.Final </hib.validator.version>
 		<hib.em.version> 4.2.8.Final </hib.em.version>
@@ -151,6 +152,12 @@
 				<artifactId>spring-orm</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			<!-- SPRING DATA JPA -->
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-jpa</artifactId>
+				<version>${spring.data.version}</version>
+			</dependency>
 
 			<!-- VALIDATION -->
 			<dependency>
@@ -206,14 +213,6 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<warSourceDirectory>/src/main/webapp</warSourceDirectory>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
 			<plugin>

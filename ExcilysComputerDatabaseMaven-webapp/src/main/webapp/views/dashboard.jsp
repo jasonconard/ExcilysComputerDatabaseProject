@@ -5,12 +5,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <section id="main">
-	<h1 id="homeTitle">${page.number} <spring:message code="view.dashboard.computerFound" text="Computer(s) Found" /></h1>
+	<h1 id="homeTitle">${page.totalElements} <spring:message code="view.dashboard.computerFound" text="Computer(s) Found" /></h1>
 	<div id="actions">
 		<form action="" method="GET">
 			<spring:message code="view.dashboard.filterByName" var="filterByName" />
 			<spring:message code="view.dahsboard.searchName" var="searchName" />
-			<input type="search" id="searchbox" name="search" value="${page.filter}"
+			<input type="search" id="searchbox" name="search" value="${filter}"
 				placeholder="${searchName}"> <input type="submit"	id="searchsubmit" value="${filterByName}" class="btn btn-primary">
 		</form>
 		<a class="btn btn-success" id="add" href="AddComputer"><spring:message code="view.dashboard.addComputer" text="Add computer" /></a>
@@ -26,7 +26,7 @@
 		<db:header/>
 		<tbody>
 			<db:paginationTR/>
-			<c:forEach var="entry" items="${page.listElement}">
+			<c:forEach var="entry" items="${page.content}">
 				<tr>
 					<td>${entry.name}</td>
 					<td>${entry.introduced}</td>
@@ -41,9 +41,9 @@
 								computerId="${entry.id}"
 								delete="delete"
 								pageNo="${lastPage}"
-								search="${page.filter}"
-								order="${page.column}"
-								dir="${page.direction}"
+								search="${filter}"
+								order="${column}"
+								dir="${direction}"
 								icon="glyphicon glyphicon-trash"
 								myOnClick="return confirm('${deleteMessage}');"/>
 					</td>
