@@ -1,5 +1,7 @@
 package com.excilys.project.computerdatabase.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,11 @@ public class ComputerServices {
 	public Page<Computer> getAllComputers(Pageable page, String filter){
 		Page<Computer> pageComputer = computerRepository.findAll("%"+filter+"%",page);
 		return pageComputer;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Computer> findAll() {
+		 return computerRepository.findAll();
 	}
 	
 	@Transactional(readOnly = true)

@@ -14,13 +14,10 @@
 	<context:annotation-config />
 
 	<!-- ANNOTATIONS BEANS CREATION -->
-	<context:component-scan
-		base-package="com.excilys.project.computerdatabase.persistence" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.persistence" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.services" />
-	<context:component-scan
-		base-package="com.excilys.project.computerdatabase.controller" />
-	<context:component-scan
-		base-package="com.excilys.project.computerdatabase.validator" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.controller" />
+	<context:component-scan	base-package="com.excilys.project.computerdatabase.validator" />
 	<context:component-scan base-package="com.excilys.project.computerdatabase.mapper" />
 
 	<!-- ANNOTATIONS FOR AOP -->

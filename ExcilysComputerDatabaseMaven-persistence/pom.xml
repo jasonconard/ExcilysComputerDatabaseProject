@@ -60,6 +60,12 @@
 			<artifactId>querydsl-jpa</artifactId>
 		</dependency>
 		
+		<!-- GUAVA -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		
 		<!-- SPRING DATA JPA -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>

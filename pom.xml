@@ -15,7 +15,7 @@
 		<jxservlet.version> 3.0.1 </jxservlet.version>
 		<bonecp.version> 0.8.0.RELEASE </bonecp.version>
 		<bcpprovider.version> 0.7.1.RELEASE	</bcpprovider.version>
-		<guava.version> r05 </guava.version>
+		<guava.version> 13.0.1 </guava.version>
 		<mysql.version> 5.1.29 </mysql.version>
 		<slf4j.version> 1.7.6 </slf4j.version>
 		<jodatime.version> 2.3 </jodatime.version>
@@ -29,6 +29,7 @@
 		<hib.jpa.api.version> 1.0.0.Final </hib.jpa.api.version>
 		<querydsl.version> 3.3.2 </querydsl.version>
 		<spring.security.version> 3.2.3.RELEASE </spring.security.version>
+		<jaxws.spring.version>1.9</jaxws.spring.version>
 	</properties>
 
 	<dependencyManagement>
@@ -215,6 +216,27 @@
 				<artifactId>spring-security-config</artifactId>
 				<version>${spring.security.version}</version>
 			</dependency>
+			
+			<!-- JAX-WS -->
+ 			<dependency>
+ 				<groupId>org.jvnet.jax-ws-commons.spring</groupId>
+ 				<artifactId>jaxws-spring</artifactId>
+ 				<version>${jaxws.spring.version}</version>
+ 			</dependency>
+ 			<dependency>
+ 				<groupId>com.sun.xml.ws</groupId>
+ 				<artifactId>jaxws-rt</artifactId>
+ 				<version>2.2.8</version>
+ 			</dependency>
+ 			
+ 			<!-- MYSQL CONNECTOR -->
+ 			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.30</version>
+			</dependency>
+			            
+ 			
 		</dependencies>
 	</dependencyManagement>
 
