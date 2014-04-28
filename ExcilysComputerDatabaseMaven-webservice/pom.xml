@@ -71,21 +71,10 @@
 			<artifactId>spring-beans</artifactId>
 		</dependency>
 		
-		
-		<!-- JAX-WS -->
+		<!-- JAX-RS -->
 		<dependency>
-			<groupId>org.jvnet.jax-ws-commons.spring</groupId>
-			<artifactId>jaxws-spring</artifactId>
-			<exclusions>
- 				<exclusion>
- 					<artifactId>spring-core</artifactId>
- 					<groupId>org.springframework</groupId>
- 				</exclusion>
- 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-rt</artifactId>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
 		</dependency>
             
 		

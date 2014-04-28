@@ -2,22 +2,30 @@ package com.excilys.project.computerdatabase.webservice;
 
 import java.util.List;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.project.computerdatabase.domain.Computer;
+import com.excilys.project.computerdatabase.mapper.ComputerMapper;
 import com.excilys.project.computerdatabase.services.ComputerServices;
 
-@WebService
+@Component
+@Path("/webservices")
 public class ComputerWebService {
 
 	@Autowired
-	ComputerServices computerServices;
+	public ComputerServices computerService;
 
-	@WebMethod
+	@Autowired
+	public ComputerMapper computerMapper;
+
+	@GET
+	@Produces("application/xml")
 	public List<Computer> findAll() {
-		return computerServices.findAll();
+		return computerService.findAll();
 	}
 }

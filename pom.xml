@@ -30,6 +30,7 @@
 		<querydsl.version> 3.3.2 </querydsl.version>
 		<spring.security.version> 3.2.3.RELEASE </spring.security.version>
 		<jaxws.spring.version>1.9</jaxws.spring.version>
+ 		<cxf.jaxrs.version>2.7.0</cxf.jaxrs.version>
 	</properties>
 
 	<dependencyManagement>
@@ -217,16 +218,11 @@
 				<version>${spring.security.version}</version>
 			</dependency>
 			
-			<!-- JAX-WS -->
+			<!-- JAX-RS -->
  			<dependency>
- 				<groupId>org.jvnet.jax-ws-commons.spring</groupId>
- 				<artifactId>jaxws-spring</artifactId>
- 				<version>${jaxws.spring.version}</version>
- 			</dependency>
- 			<dependency>
- 				<groupId>com.sun.xml.ws</groupId>
- 				<artifactId>jaxws-rt</artifactId>
- 				<version>2.2.8</version>
+ 				<groupId>org.apache.cxf</groupId>
+ 				<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+ 				<version>${cxf.jaxrs.version}</version>
  			</dependency>
  			
  			<!-- MYSQL CONNECTOR -->
