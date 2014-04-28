@@ -32,6 +32,9 @@
  		<jaxrs:serviceBeans>
  			<bean class="com.excilys.project.computerdatabase.webservice.ComputerWebService" />
  		</jaxrs:serviceBeans>
+ 		<jaxrs:providers>
+ 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+ 		</jaxrs:providers>
  	</jaxrs:server>
 
 	<!-- ANNOTATIONS BEANS CREATION -->

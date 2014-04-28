@@ -31,6 +31,7 @@
 		<spring.security.version> 3.2.3.RELEASE </spring.security.version>
 		<jaxws.spring.version>1.9</jaxws.spring.version>
  		<cxf.jaxrs.version>2.7.0</cxf.jaxrs.version>
+ 		<cxf.jaxrs.jackson.version>1.9.0</cxf.jaxrs.jackson.version>
 	</properties>
 
 	<dependencyManagement>
@@ -223,6 +224,13 @@
  				<groupId>org.apache.cxf</groupId>
  				<artifactId>cxf-rt-frontend-jaxrs</artifactId>
  				<version>${cxf.jaxrs.version}</version>
+ 			</dependency>
+ 			
+ 			<!-- JACKSON -->
+ 			<dependency>
+ 				<groupId>org.codehaus.jackson</groupId>
+ 				<artifactId>jackson-jaxrs</artifactId>
+ 				<version>${cxf.jaxrs.jackson.version}</version>
  			</dependency>
  			
  			<!-- MYSQL CONNECTOR -->
