@@ -7,10 +7,11 @@
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
  	
 	<http auto-config="true">
-		<intercept-url pattern="/DashBoard" access="ROLE_ADMIN" />
+<!-- 		<intercept-url pattern="/DashBoard" access="ROLE_ADMIN" /> -->
 		<intercept-url pattern="/AddComputer" access="ROLE_ADMIN" />
 		<intercept-url pattern="/EditComputer" access="ROLE_ADMIN" />
-		<http-basic />
+		<logout logout-success-url="/spring_security_login" logout-url="/j_spring_security_logout" />
+<!-- 		<http-basic /> -->
 	</http>
 
 	<authentication-manager>
@@ -21,5 +22,4 @@
 				authorities-by-username-query="select username, role from user_roles where username =?" />
 		</authentication-provider>
 	</authentication-manager>
- 
 </beans:beans>

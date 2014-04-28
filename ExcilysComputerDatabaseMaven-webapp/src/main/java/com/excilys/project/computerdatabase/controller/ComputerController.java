@@ -180,6 +180,11 @@ public class ComputerController{
 		return "404";
 	}
 	
+	@RequestMapping(value = "ErrorPage403", method = RequestMethod.GET)
+	public String error403(){
+		return "403";
+	}
+	
 	@RequestMapping(value = "ErrorPage500", method = RequestMethod.GET)
 	public String error500(){
 		return "500";

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -43,6 +44,7 @@
 					<td id="colHeader3">
 						<div id="webSiteIcon"></div>
 						<a href="?language=en_EN"><img class="beautifulImg" src="img/flag_english.png"/></a>|<a href="?language=fr_FR"><img class="beautifulImg" src="img/flag_france.png"/></a>
+						<a href="<c:url value="/j_spring_security_logout"/>">Log out</a>
 					</td>
 				</tr>
 			</table>

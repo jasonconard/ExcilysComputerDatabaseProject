@@ -253,5 +253,6 @@
 		<module>ExcilysComputerDatabaseMaven-service</module>
 		<module>ExcilysComputerDatabaseMaven-binding</module>
 		<module>ExcilysComputerDatabaseMaven-webapp</module>
+		<module>ExcilysComputerDatabaseMaven-webservice</module>
 	</modules>
 </project>
