@@ -60,11 +60,6 @@ public class ComputerController{
 	public void initBinderAll(WebDataBinder binder) {
 		binder.addValidators(new ComputerValidator());
 	}
-	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(){
-		return "redirect:DashBoard";
-	}
 
 	@RequestMapping(value = "DashBoard", method = RequestMethod.GET)
 	public String listComputer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -161,32 +156,5 @@ public class ComputerController{
 
 		/* Redirection */
 		return "dashboard";
-	}
-	
-	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-	public ModelAndView adminPage() {
- 
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security Hello World");
-		model.addObject("message", "This is protected page!");
-		model.setViewName("admin");
- 
-		return model;
- 
-	}
-	
-	@RequestMapping(value = "ErrorPage404", method = RequestMethod.GET)
-	public String error404(){
-		return "404";
-	}
-	
-	@RequestMapping(value = "ErrorPage403", method = RequestMethod.GET)
-	public String error403(){
-		return "403";
-	}
-	
-	@RequestMapping(value = "ErrorPage500", method = RequestMethod.GET)
-	public String error500(){
-		return "500";
 	}
 }
