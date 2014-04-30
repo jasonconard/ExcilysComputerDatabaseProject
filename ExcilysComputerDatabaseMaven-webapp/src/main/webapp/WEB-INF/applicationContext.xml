@@ -13,66 +13,10 @@
 	<!-- ANNOTATIONS FOR IOC -->
 	<context:annotation-config />
 
-	<!-- ANNOTATIONS BEANS CREATION -->
-	<context:component-scan	base-package="com.excilys.project.computerdatabase.persistence" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.services" />
-	<context:component-scan	base-package="com.excilys.project.computerdatabase.controller" />
-	<context:component-scan	base-package="com.excilys.project.computerdatabase.validator" />
-	<context:component-scan base-package="com.excilys.project.computerdatabase.mapper" />
-
 	<!-- ANNOTATIONS FOR AOP -->
 	<aop:aspectj-autoproxy />
 
-	<!-- TRANSACTIONS -->
-	<bean id="datasource" class="com.jolbox.bonecp.BoneCPDataSource"
-		destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl"
-			value="jdbc:mysql://127.0.0.1:3306/computer-database-db?zeroDateTimeBehavior=convertToNull" />
-		<property name="username" value="jee-cdb" />
-		<property name="password" value="password" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="idleMaxAge" value="240" />
-		<property name="maxConnectionsPerPartition" value="30" />
-		<property name="minConnectionsPerPartition" value="10" />
-		<property name="partitionCount" value="3" />
-		<property name="acquireIncrement" value="5" />
-		<property name="statementsCacheSize" value="100" />
-		<property name="releaseHelperThreads" value="3" />
-	</bean>
-
-	<!-- JPA-API FOR HIBERNATE -->
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<!-- Default value for persistenceXmlLocation -->
-		<property name="persistenceXmlLocation" value="classpath:persistence.xml" />
-		<property name="persistenceUnitName" value="persistenceUnit" />
-		<property name="dataSource" ref="datasource" />
-		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
-		<property name="jpaDialect" ref="jpaDialect" />
-	</bean>
-	<bean id="jpaVendorAdapter"
-		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-		<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
-	</bean>
-
-	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
-
-	<bean id="transactionManager"
-		class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-		<property name="jpaDialect" ref="jpaDialect" />
-	</bean>
-
-
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg ref="datasource" />
-	</bean>
-
-	<tx:annotation-driven transaction-manager="transactionManager" />
-
-	<jpa:repositories base-package="com.excilys.project.computerdatabase.repository" />
-	
+	<import resource="classpath:binding-context.xml" />
 	<import resource="spring-security.xml"/>
 
 </beans>
