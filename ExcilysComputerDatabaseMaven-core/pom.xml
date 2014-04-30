@@ -3,41 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.excilys.project</groupId>
-		<artifactId>ExcilysComputerDatabaseMaven</artifactId>
+		<artifactId>computerdatabase</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>ExcilysComputerDatabaseMaven-core</artifactId>
 
 	<build>
-	<finalName>computer-db-core</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<!-- Use Maven to process QueryDSl Classes -->
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.0.9</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/generated-sources</outputDirectory>
-							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+		<finalName>computer-db-core</finalName>	
 	</build>
 
 	<dependencies>

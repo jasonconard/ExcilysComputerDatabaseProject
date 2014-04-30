@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.excilys.project</groupId>
-		<artifactId>ExcilysComputerDatabaseMaven</artifactId>
+		<artifactId>computerdatabase</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>ExcilysComputerDatabaseMaven-persistence</artifactId>
@@ -12,10 +12,6 @@
 		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -33,32 +29,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>ExcilysComputerDatabaseMaven-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>ExcilysComputerDatabaseMaven-binding</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!-- QUERY DSL -->
-		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
-			<artifactId>querydsl-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
 		
 		<!-- GUAVA -->
 		<dependency>
@@ -70,6 +40,18 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
+		</dependency>
+		
+		<!-- BROTHERS -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ExcilysComputerDatabaseMaven-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ExcilysComputerDatabaseMaven-binding</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

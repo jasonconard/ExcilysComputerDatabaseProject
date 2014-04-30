@@ -3,16 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.excilys.project</groupId>
-		<artifactId>ExcilysComputerDatabaseMaven</artifactId>
+		<artifactId>computerdatabase</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>ExcilysComputerDatabaseMaven-service</artifactId>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>

@@ -2,36 +2,36 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.excilys.project</groupId>
-	<artifactId>ExcilysComputerDatabaseMaven</artifactId>
+	<artifactId>computerdatabase</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ExcilysComputerDatabaseMaven Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<aspectj.version> 1.6.1 </aspectj.version>
-		<junit.version> 3.8.1 </junit.version>
-		<jstl.version> 1.2 </jstl.version>
-		<jxservlet.version> 3.0.1 </jxservlet.version>
-		<bonecp.version> 0.8.0.RELEASE </bonecp.version>
-		<bcpprovider.version> 0.7.1.RELEASE	</bcpprovider.version>
-		<guava.version> 13.0.1 </guava.version>
-		<mysql.version> 5.1.29 </mysql.version>
-		<slf4j.version> 1.7.6 </slf4j.version>
-		<jodatime.version> 2.3 </jodatime.version>
-		<jadira.core.version> 3.0.0.CR1 </jadira.core.version>
-		<jadira.jdtime.version> 2.0.1 </jadira.jdtime.version>
-		<spring.version> 4.0.3.RELEASE </spring.version>
-		<spring.data.version> 1.5.1.RELEASE </spring.data.version> 
-		<jxvalidation.version> 1.1.0.Final </jxvalidation.version>
-		<hib.validator.version> 5.0.1.Final </hib.validator.version>
-		<hib.em.version> 4.2.8.Final </hib.em.version>
-		<hib.jpa.api.version> 1.0.0.Final </hib.jpa.api.version>
-		<querydsl.version> 3.3.2 </querydsl.version>
-		<spring.security.version> 3.2.3.RELEASE </spring.security.version>
-		<jaxws.spring.version>1.9</jaxws.spring.version>
- 		<cxf.jaxrs.version>2.7.0</cxf.jaxrs.version>
- 		<cxf.jaxrs.jackson.version>1.9.0</cxf.jaxrs.jackson.version>
+		<aspectjVersion> 1.6.1 </aspectjVersion>
+		<junitVersion> 3.8.1 </junitVersion>
+		<jstlVersion> 1.2 </jstlVersion>
+		<jxservletVersion> 3.0.1 </jxservletVersion>
+		<bonecpVersion> 0.8.0.RELEASE </bonecpVersion>
+		<bcpproviderVersion> 0.7.1.RELEASE	</bcpproviderVersion>
+		<guavaVersion> 13.0.1 </guavaVersion>
+		<mysqlVersion> 5.1.29 </mysqlVersion>
+		<slf4jVersion> 1.7.6 </slf4jVersion>
+		<jodatimeVersion> 2.3 </jodatimeVersion>
+		<jadiraCoreVersion> 3.0.0.CR1 </jadiraCoreVersion>
+		<jadiraJdtimeVersion> 2.0.1 </jadiraJdtimeVersion>
+		<springVersion> 4.0.3.RELEASE </springVersion>
+		<springDataVersion> 1.5.1.RELEASE </springDataVersion> 
+		<jxvalidationVersion> 1.1.0.Final </jxvalidationVersion>
+		<hibValidatorVersion> 5.0.1.Final </hibValidatorVersion>
+		<hibEmVersion> 4.2.8.Final </hibEmVersion>
+		<hibJpaApiVersion> 1.0.0.Final </hibJpaApiVersion>
+		<querydslVersion> 3.3.2 </querydslVersion>
+		<springSecurityVersion> 3.2.3.RELEASE </springSecurityVersion>
+		<jaxwsSpringVersion>1.9</jaxwsSpringVersion>
+ 		<cxfJaxrsVersion>2.7.0</cxfJaxrsVersion>
+ 		<cxfJaxrsJacksonVersion>1.9.0</cxfJaxrsJacksonVersion>
 	</properties>
 
 	<dependencyManagement>
@@ -41,14 +41,14 @@
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
-				<version>${aspectj.version}</version>
+				<version>${aspectjVersion}</version>
 			</dependency>
 
 			<!-- JUNIT -->
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
+				<version>${junitVersion}</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -56,12 +56,12 @@
 			<dependency>
 				<groupId>jstl</groupId>
 				<artifactId>jstl</artifactId>
-				<version>${jstl.version}</version>
+				<version>${jstlVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
-				<version>${jxservlet.version}</version>
+				<version>${jxservletVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -69,168 +69,174 @@
 			<dependency>
 				<groupId>com.jolbox</groupId>
 				<artifactId>bonecp</artifactId>
-				<version>${bonecp.version}</version>
+				<version>${bonecpVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.jolbox</groupId>
 				<artifactId>bonecp-provider</artifactId>
-				<version>${bcpprovider.version}</version>
+				<version>${bcpproviderVersion}</version>
 			</dependency>
 
 			<!-- GUAVA -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
+				<version>${guavaVersion}</version>
 			</dependency>
 
 			<!-- MYSQL -->
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysql.version}</version>
+				<version>${mysqlVersion}</version>
 			</dependency>
 
 			<!-- SLF4J -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
+				<version>${slf4jVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
-				<version>${slf4j.version}</version>
+				<version>${slf4jVersion}</version>
 			</dependency>
 
 			<!-- JODA TIME -->
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
-				<version>${jodatime.version}</version>
+				<version>${jodatimeVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jadira.usertype</groupId>
 				<artifactId>usertype.core</artifactId>
-				<version>${jadira.core.version}</version>
+				<version>${jadiraCoreVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jadira.usertype</groupId>
 				<artifactId>usertype.jodatime</artifactId>
-				<version>${jadira.jdtime.version}</version>
+				<version>${jadiraJdtimeVersion}</version>
 			</dependency>
 
 			<!-- SPRING -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
+				<version>${springVersion}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${springVersion}</version>
+			</dependency>
+			
 			<!-- SPRING DATA JPA -->
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-jpa</artifactId>
-				<version>${spring.data.version}</version>
+				<version>${springDataVersion}</version>
 			</dependency>
 
 			<!-- VALIDATION -->
 			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
-				<version>${jxvalidation.version}</version>
+				<version>${jxvalidationVersion}</version>
 			</dependency>
 
 			<!-- HIBERNATE -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
-				<version>${hib.validator.version}</version>
+				<version>${hibValidatorVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hib.em.version}</version>
+				<version>${hibEmVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>${hib.jpa.api.version}</version>
+				<version>${hibJpaApiVersion}</version>
 			</dependency>
 
 			<!-- QUERY DSL -->
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>
 				<artifactId>querydsl-core</artifactId>
-				<version>${querydsl.version}</version>
+				<version>${querydslVersion}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>
 				<artifactId>querydsl-apt</artifactId>
-				<version>${querydsl.version}</version>
+				<version>${querydslVersion}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.mysema.querydsl</groupId>
 				<artifactId>querydsl-jpa</artifactId>
-				<version>${querydsl.version}</version>
+				<version>${querydslVersion}</version>
 			</dependency>
 			
 			<!-- Spring Security -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security.version}</version>
+				<version>${springSecurityVersion}</version>
 			</dependency>
 	 
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
-				<version>${spring.security.version}</version>
+				<version>${springSecurityVersion}</version>
 			</dependency>
 			
 			<!-- JAX-RS -->
  			<dependency>
  				<groupId>org.apache.cxf</groupId>
  				<artifactId>cxf-rt-frontend-jaxrs</artifactId>
- 				<version>${cxf.jaxrs.version}</version>
+ 				<version>${cxfJaxrsVersion}</version>
  			</dependency>
  			
  			<!-- JACKSON -->
  			<dependency>
  				<groupId>org.codehaus.jackson</groupId>
  				<artifactId>jackson-jaxrs</artifactId>
- 				<version>${cxf.jaxrs.jackson.version}</version>
+ 				<version>${cxfJaxrsJacksonVersion}</version>
  			</dependency>
  			
  			<!-- MYSQL CONNECTOR -->
@@ -254,22 +260,6 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.0.9</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/generated-sources</outputDirectory>
-							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
